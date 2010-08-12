@@ -1756,7 +1756,8 @@ instabilities.
   \plotone{fig/test9thick_efrac}
   \caption{\label{fig:test9_thick} Test 9. (Irradiated Rayleigh-Taylor
     instability; optically thick case).  Slices at $y=0$ of density
-    (top), temperature (middle), and electron fraction (bottom).}
+    (top), temperature (middle), and electron fraction (bottom).  The
+    source turns on at $t=0$.}
   \epsscale{1}
 \end{figure}
 
@@ -1765,9 +1766,8 @@ instabilities.
   \plotone{fig/test9thin_rho}
   \plotone{fig/test9thin_temp}
   \plotone{fig/test9thin_efrac}
-  \caption{\label{fig:test9_thin} Test 9. (Irradiated Rayleigh-Taylor
-    instability; optically thin case).  Slices at $y=0$ of density
-    (top), temperature (middle), and electron fraction (bottom).}
+  \caption{\label{fig:test9_thin} Same as Figure \ref{fig:test9_thick}
+    but for the optically thin case.}
   \epsscale{1}
 \end{figure}
 
@@ -1779,7 +1779,8 @@ acceleration field.  This classic test alone evaluates how subsonic
 perturbations evolve.  We consider the case of a single-mode
 perturbation.  We let the system evolve without any radiation until
 the perturbation grows considerably and then turn on the radiation
-source.
+source.  These tests demonstrate that Enzo+Moray can follow a highly
+dynamic system and resolve fine density structures.
 
 We run two cases --- an optically-thick and optically-thin case.  In
 the former, we take the parameter choices from past literature
@@ -1804,19 +1805,51 @@ radiation source starts to shine at $t = 10$ Myr.
 
 The optically-thin case is set up similarly but with three
 changes---(1) a density constrast of 10, (2) a luminosity of $10^{43}$
-ph s$^{-1}$, and (3) the source is born at 6.5 Myr. The time units are
-decreased to 200 kyr so that $(T_0, T_1) = (1.8 \times 10^3, 1.8
+ph s$^{-1}$, and (3) the source is born at 6.5 Myr.  The time units
+are decreased to 200 kyr so that $(T_0, T_1) = (1.8 \times 10^3, 1.8
 \times 10^4)$ K.  Note that in code units, pressure is unchanged.  We
 adjust the physical unit scaling, so the light fluid has $T > 10^4$ K,
-$x_e \sim 1$, and thus optically-thin.  A possible physical analogue
-could be a radiation source heating and rarefying the medium below.
+$x_e \sim 1$, and thus optically-thin.  Furthermore, the ionization
+front remains R-type before interacting with the instability.  A
+possible physical analogue could be a radiation source heating and
+rarefying the medium below.
 
 The $x$ and $y$-boundaries are periodic, and the $z$-boundaries are
-reflecting.  The radiation source is turned on at $t = 7.5$ of
-evolution and placed at the center of lower $z$-boundary face.  The
-periodic boundaries will cause features that are non-physical,
-considering a more realistic plane-parallel case.  Nevertheless, these
-tests provide a good check on a radiation hydrodynamics solver.
+reflecting.  The radiation source is placed at the center of lower
+$z$-boundary face.  The periodic boundaries will cause features that
+are non-physical, considering a more realistic plane-parallel case.
+Nevertheless, these tests provide a good check on a radiation
+hydrodynamics solver.  We show the evolution of the density,
+temperature, and ionized fraction of the optically thick and optically
+thin cases in Figures \ref{fig:test9_thick} and \ref{fig:test9_thin}.
+The initial state of the Rayleigh-Taylor instability is shown in the
+left panels.
+
+In the optically thick case, a D-type front is created, which is
+clearly illustrated by the spherical density enhancement at 0.02 Myr.
+The shock then passes through the instability at $\sim$0.25 Myr and
+reflects off the upper $z$-boundary.  This and complex shock
+reflections create a Richtmeyer-Meshkov instability, driving a chaotic
+jet-like structure downwards.  The radiation source photo-evaporates
+the outer parts of this structure.  The interaction between the dense
+cool ``jet'' and the hot medium further drives instabilities along the
+surface, which can be seen when comparing $t = 0.59$ Myr and $t =
+0.91$ Myr slices.  At the latter time, the jet cannot reach the bottom
+of the domain before being photo-evaporated.  Eventually this
+structure is completely destroyed, leaving behind a turbulent medium
+between the hot and cold regions.
+
+The optically thin problem is less violent than the optically thick
+case because the R-type front does not interact with the initial
+instability as strongly.  The radiation source provides further
+buoyance in the already $T=10^4$ K gas.  The gas first to be ionized
+and photo-evaporates is the outer regions of the instability.  The
+enhanced heating also drives the upper regions of the instability,
+making the top interface turbulent.  It then reflects off the upper
+$z$-boundary and creates a warm $T = 5 \times 10^3$ K, partially
+ionized ($x_e \sim 10^{-2}$), turbulent medium, seen in the slices $t
+\ge 0.67$ Myr.  The slices of electron fraction also show that the
+dense gas is optically thick.
 
 \subsection{Test 10: Photo-evaporation of a blastwave}
 
@@ -1886,7 +1919,7 @@ radiation source at the origin.  It has a luminosity of $5 \times
 10^{48}$ ph s$^{-1}$ and a mono-chromatic spectrum of 14.6 eV.  We
 choose this energy so the ionization front is relatively sharp but
 still heats the gas to $10^4$ K.  The ambient medium has a density of
-$10^{-3} \cubecm$ and an initial temperature of 100 K.  A point source
+$10^{-3}~\cubecm$ and an initial temperature of 100 K.  A point source
 of gravity also resides at the origin.  To have an equal gravitational
 acceleration $g(r) = g_0 / r^3$ at the Str\"{o}mgren radius $R_s =
 5.4$ kpc ($r = 0.36$) as Test 9, we set the strength of the point
