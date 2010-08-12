@@ -60,8 +60,8 @@
   using a tree method, which we briefly describe.  Our implementation
   is scalable to O(10$^3$) processors on distributed and shared memory
   machines and can include radiation pressure and secondary
-  ionizations from X-ray radiation.  Our implementation is included in
-  the newest public release of Enzo.
+  ionizations from X-ray radiation.  It is included in the newest
+  public release of Enzo.
   
 \end{abstract}
 
@@ -213,11 +213,11 @@ parent ray.  Afterwards the parent ray is discontinued.
 A ray propagates and splits until 
 %
 \begin{enumerate}
+\item the photon has travelled $c \times dt_P$, where $dt_P$ is the
+  radiative transfer timestep,
 \item its photon flux is almost fully absorbed ($>99.9\%$) in a single
   cell, which significantly reduces the computational time if the
   radiation volume filling fraction is small,
-\item the photon has travelled $c \times dt_P$, where $dt_P$ is the
-  radiative transfer timestep,
 \item the photon leaves the computational domain with isolated
   boundary conditions, or
 \item the photon travels $\sqrt{3}$ of the simulation box length with
@@ -407,11 +407,12 @@ The absorption of radiation transfers momentum from photons to the
 absorbing medium, i.e. radiation pressure.  This is easily computed by
 considering the momentum
 \begin{equation}
-  d\mathbf{p}_\gamma = \frac{dP \; E_{\rm ph}}{c} \; \hat{r}
+  d\mathbf{p}_\gamma = \frac{dP \; E_{\rm ph}}{c\;dt} \; \hat{r}
 \end{equation}
 of the absorbed radiation from the incoming ray, where $\hat{r}$ is
-the normal direction of the ray.  The resulting acceleration of the
-gas due to radiation pressure is 
+the normal direction of the ray and $dt$ is the radiative transfer
+timestep.  The resulting acceleration of the gas due to radiation
+pressure is
 \begin{equation}
   d\mathbf{a} = d\mathbf{p}_\gamma / (\rho \; V_{\rm cell}),
 \end{equation}
@@ -1874,6 +1875,20 @@ of ambient material into the shock.  The simulation is run for 25 Myr.
 
 \subsection{Test 11: Collimated radiation from a dense clump}
 
+\begin{figure}[t]
+  \epsscale{1}
+  \plotone{fig/test11_slices}
+  \caption{\label{fig:test11} Test 11 (Collimated radiation from a
+    dense clump).  Slices of density (top) and temperature (bottom) at
+    $t = 0.1, 3.25, 10.75, 23.25$ Myr.  The conical \ion{H}{2} region
+    drives shocks transversely into the overdense sphere and creates
+    polar champange flows.  The ambient medium is heated to $T \sim 3
+    \times 10^4$ K as the ionization front passes the
+    constant-pressure cloud surface.  The ionization front changes
+    from D-type to R-type after it enters the ambient medium.}
+  \epsscale{1}
+\end{figure}
+
 Some astrophysical systems produce collimated radiation either
 intrinisically by relavistic beaming or by an optically-thick torus
 absorbing radiation in the equatorial plane.  The latter case would be
@@ -1890,7 +1905,28 @@ two polar cones with $\theta_c = \pi/6$ with a total luminosity of
 $10^{49}$ erg s$^{-1}$ and a 17.6 eV mono-chromatic spectrum.  This
 results in $t_{\rm rec} = 1.22$ Myr and $R_s = 315$ pc, just outside
 of the sphere.  The base grid has a resolution of 64$^3$, and it is
-refined with the same overdensity criterion as Test 8.
+refined with the same overdensity criterion as Test 8.  We run this
+test for 25 Myr.
+
+We illustrate the expansion of the \ion{H}{2} region created by the
+beamed radiation in Figure \ref{fig:test11}.  Before 3 Myr, the
+\ion{H}{2} region is conical and contained within the dense clump,
+depicted in the $t = 0.1$ Myr snapshot of the system.  At this time,
+the ionization front is transitioning from R-type to D-type in the
+transverse direction of the cone.  This can be seen in the minute
+overdensities on the \ion{H}{2} transverse surface.  When it breaks
+out of the overdensity, it creates a champange flow, where the
+ionization front transitions back to a weak R-type front.  The cloud
+surface is a constant-pressure contact discontinuity (CD) with a
+density jump of 100.  After the front heats the gas at the CD, there
+exists a pressure difference of $\sim 100$.  In response, the high
+density gas accelerates into the ambient medium and heats it to $3
+\times 10^4$ K.  Additionally a rarefaction wave travels towards the
+clump center.  At later times, the transverse D-type front continues
+through the clump, eventually creating a disk-like structure at the
+final time.  The polar champange flows proceed to flow outwards,
+creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
+(5000 K) medium in its wake.
 
 % \subsection{Test 12: \ion{H}{2} region in a rotating medium}
 % 
@@ -1910,24 +1946,24 @@ refined with the same overdensity criterion as Test 8.
 % test uses AMR with a base grid of 64$^3$ and 2 levels of refinement,
 % using the same density criterion as in Test 8.
 
-\subsection{Test 12: \ion{H}{2} region in a static potential}
+% \subsection{Test 12: \ion{H}{2} region in a static potential}
 
-Next we construct a problem that is similar to the Rayleigh-Taylor
-test problem (Test 9) in nature but is spherically symmetric.  We use
-the same physical setup as Test 5 with a uniform medium and the
-radiation source at the origin.  It has a luminosity of $5 \times
-10^{48}$ ph s$^{-1}$ and a mono-chromatic spectrum of 14.6 eV.  We
-choose this energy so the ionization front is relatively sharp but
-still heats the gas to $10^4$ K.  The ambient medium has a density of
-$10^{-3}~\cubecm$ and an initial temperature of 100 K.  A point source
-of gravity also resides at the origin.  To have an equal gravitational
-acceleration $g(r) = g_0 / r^3$ at the Str\"{o}mgren radius $R_s =
-5.4$ kpc ($r = 0.36$) as Test 9, we set the strength of the point
-source $g_0 = 4.67 \times 10^{-3}$.  The gravity point source has the
-same effect on any pertubations as the constant gravitational force in
-Rayleigh-Taylor instability test.
+% Next we construct a problem that is similar to the Rayleigh-Taylor
+% test problem (Test 9) in nature but is spherically symmetric.  We use
+% the same physical setup as Test 5 with a uniform medium and the
+% radiation source at the origin.  It has a luminosity of $5 \times
+% 10^{48}$ ph s$^{-1}$ and a mono-chromatic spectrum of 14.6 eV.  We
+% choose this energy so the ionization front is relatively sharp but
+% still heats the gas to $10^4$ K.  The ambient medium has a density of
+% $10^{-3}~\cubecm$ and an initial temperature of 100 K.  A point source
+% of gravity also resides at the origin.  To have an equal gravitational
+% acceleration $g(r) = g_0 / r^3$ at the Str\"{o}mgren radius $R_s =
+% 5.4$ kpc ($r = 0.36$) as Test 9, we set the strength of the point
+% source $g_0 = 4.67 \times 10^{-3}$.  The gravity point source has the
+% same effect on any pertubations as the constant gravitational force in
+% Rayleigh-Taylor instability test.
 
-\subsection{Test 13: Time variations of the source luminosity}
+\subsection{Test 12: Time variations of the source luminosity}
 
 Our implementation retains the time derivative of the radiative
 transfer equation (Eq. \ref{eqn:rteqn}) if we choose a constant ray
