@@ -1,0 +1,157 @@
+\begin{thebibliography}{39}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{{Abel} {et~al.}(1997){Abel}, {Anninos}, {Zhang}, \&
+  {Norman}}]{Abel97}
+{Abel}, T., {Anninos}, P., {Zhang}, Y., \& {Norman}, M.~L. 1997, New Astronomy,
+  2, 181
+
+\bibitem[{{Abel} {et~al.}(1999){Abel}, {Norman}, \& {Madau}}]{Abel99_RT}
+{Abel}, T., {Norman}, M.~L., \& {Madau}, P. 1999, \apj, 523, 66
+
+\bibitem[{{Abel} \& {Wandelt}(2002)}]{Abel02_RT}
+{Abel}, T., \& {Wandelt}, B.~D. 2002, \mnras, 330, L53
+
+\bibitem[{{Abel} {et~al.}(2007){Abel}, {Wise}, \& {Bryan}}]{Abel07}
+{Abel}, T., {Wise}, J.~H., \& {Bryan}, G.~L. 2007, \apjl, 659, L87
+
+\bibitem[{{Alvarez} {et~al.}(2006){Alvarez}, {Bromm}, \&
+  {Shapiro}}]{Alvarez06_IFT}
+{Alvarez}, M.~A., {Bromm}, V., \& {Shapiro}, P.~R. 2006, \apj, 639, 621
+
+\bibitem[{{Alvarez} {et~al.}(2009){Alvarez}, {Wise}, \& {Abel}}]{Alvarez09}
+{Alvarez}, M.~A., {Wise}, J.~H., \& {Abel}, T. 2009, \apjl, 701, L133
+
+\bibitem[{{Anninos} {et~al.}(1997){Anninos}, {Zhang}, {Abel}, \&
+  {Norman}}]{Anninos97}
+{Anninos}, P., {Zhang}, Y., {Abel}, T., \& {Norman}, M.~L. 1997, New Astronomy,
+  2, 209
+
+\bibitem[{{Berger} \& {Colella}(1989)}]{BergerAMR}
+{Berger}, M.~J., \& {Colella}, P. 1989, Journal of Computational Physics, 82,
+  64
+
+\bibitem[{{Bisbas} {et~al.}(2009){Bisbas}, {W{\"u}nsch}, {Whitworth}, \&
+  {Hubber}}]{Bisbas09}
+{Bisbas}, T.~G., {W{\"u}nsch}, R., {Whitworth}, A.~P., \& {Hubber}, D.~A. 2009,
+  \aap, 497, 649
+
+\bibitem[{{Bryan} \& {Norman}(1997)}]{BryanNorman1997}
+{Bryan}, G.~L., \& {Norman}, M.~L. 1997, ArXiv Astrophysics e-prints
+
+\bibitem[{{Dedner} {et~al.}(2002){Dedner}, {Kemm}, {Kr{\"o}ner}, {Munz},
+  {Schnitzer}, \& {Wesenberg}}]{Dedner02}
+{Dedner}, A., {Kemm}, F., {Kr{\"o}ner}, D., {Munz}, C., {Schnitzer}, T., \&
+  {Wesenberg}, M. 2002, Journal of Computational Physics, 175, 645
+
+\bibitem[{{Draine} \& {Bertoldi}(1996)}]{Draine96}
+{Draine}, B.~T., \& {Bertoldi}, F. 1996, \apj, 468, 269
+
+\bibitem[{{Franco} {et~al.}(1990){Franco}, {Tenorio-Tagle}, \&
+  {Bodenheimer}}]{Franco90}
+{Franco}, J., {Tenorio-Tagle}, G., \& {Bodenheimer}, P. 1990, \apj, 349, 126
+
+\bibitem[{{Gnedin}(2000)}]{Gnedin00}
+{Gnedin}, N.~Y. 2000, \apj, 542, 535
+
+\bibitem[{{Gnedin} \& {Abel}(2001)}]{Gnedin01_OTVET}
+{Gnedin}, N.~Y., \& {Abel}, T. 2001, New Astronomy, 6, 437
+
+\bibitem[{{Gnedin} \& {Ostriker}(1997)}]{Gnedin97}
+{Gnedin}, N.~Y., \& {Ostriker}, J.~P. 1997, \apj, 486, 581
+
+\bibitem[{{G{\'o}rski} {et~al.}(2005){G{\'o}rski}, {Hivon}, {Banday},
+  {Wandelt}, {Hansen}, {Reinecke}, \& {Bartelmann}}]{HEALPix}
+{G{\'o}rski}, K.~M., {Hivon}, E., {Banday}, A.~J., {Wandelt}, B.~D., {Hansen},
+  F.~K., {Reinecke}, M., \& {Bartelmann}, M. 2005, \apj, 622, 759
+
+\bibitem[{{Iliev} {et~al.}(2006){Iliev}, {Ciardi}, {Alvarez}, {Maselli},
+  {Ferrara}, {Gnedin}, {Mellema}, {Nakamoto}, {Norman}, {Razoumov},
+  {Rijkhorst}, {Ritzerveld}, {Shapiro}, {Susa}, {Umemura}, \& {Whalen}}]{RT06}
+{Iliev}, I.~T., {Ciardi}, B., {Alvarez}, M.~A., {Maselli}, A., {Ferrara}, A.,
+  {Gnedin}, N.~Y., {Mellema}, G., {Nakamoto}, T., {Norman}, M.~L., {Razoumov},
+  A.~O., {Rijkhorst}, E., {Ritzerveld}, J., {Shapiro}, P.~R., {Susa}, H.,
+  {Umemura}, M., \& {Whalen}, D.~J. 2006, \mnras, 371, 1057
+
+\bibitem[{{Iliev} {et~al.}(2009){Iliev}, {Whalen}, {Mellema}, {Ahn}, {Baek},
+  {Gnedin}, {Kravtsov}, {Norman}, {Raicevic}, {Reynolds}, {Sato}, {Shapiro},
+  {Semelin}, {Smidt}, {Susa}, {Theuns}, \& {Umemura}}]{Iliev09}
+{Iliev}, I.~T., {Whalen}, D., {Mellema}, G., {Ahn}, K., {Baek}, S., {Gnedin},
+  N.~Y., {Kravtsov}, A.~V., {Norman}, M., {Raicevic}, M., {Reynolds}, D.~R.,
+  {Sato}, D., {Shapiro}, P.~R., {Semelin}, B., {Smidt}, J., {Susa}, H.,
+  {Theuns}, T., \& {Umemura}, M. 2009, \mnras, 1313
+
+\bibitem[{{Krumholz} {et~al.}(2007){Krumholz}, {Stone}, \&
+  {Gardiner}}]{Krumholz07_ART}
+{Krumholz}, M.~R., {Stone}, J.~M., \& {Gardiner}, T.~A. 2007, \apj, 671, 518
+
+\bibitem[{{Liska} \& {Wendroff}(2003)}]{Liska03}
+{Liska}, R., \& {Wendroff}, B. 2003, SIAM Journal on Scientific Computing, 25,
+  995
+
+\bibitem[{{Mellema} {et~al.}(2006){Mellema}, {Iliev}, {Alvarez}, \&
+  {Shapiro}}]{Mellema06}
+{Mellema}, G., {Iliev}, I.~T., {Alvarez}, M.~A., \& {Shapiro}, P.~R. 2006, New
+  Astronomy, 11, 374
+
+\bibitem[{{O'Shea} {et~al.}(2004){O'Shea}, {Bryan}, {Bordner}, {Norman},
+  {Abel}, {Harkness}, \& {Kritsuk}}]{OShea2004}
+{O'Shea}, B.~W., {Bryan}, G., {Bordner}, J., {Norman}, M.~L., {Abel}, T.,
+  {Harkness}, R., \& {Kritsuk}, A. 2004, ArXiv Astrophysics e-prints
+
+\bibitem[{{Petkova} \& {Springel}(2009)}]{Petkova09}
+{Petkova}, M., \& {Springel}, V. 2009, \mnras, 396, 1383
+
+\bibitem[{{Ricotti} {et~al.}(2001){Ricotti}, {Gnedin}, \& {Shull}}]{Ricotti01}
+{Ricotti}, M., {Gnedin}, N.~Y., \& {Shull}, J.~M. 2001, \apj, 560, 580
+
+\bibitem[{{Rybicki} \& {Lightman}(1979)}]{Rybicki}
+{Rybicki}, G.~B., \& {Lightman}, A.~P. 1979, {Radiative processes in
+  astrophysics}, ed. {Rybicki, G.~B.~\& Lightman, A.~P.}
+
+\bibitem[{{Shapiro} {et~al.}(2004){Shapiro}, {Iliev}, \& {Raga}}]{Shapiro04}
+{Shapiro}, P.~R., {Iliev}, I.~T., \& {Raga}, A.~C. 2004, \mnras, 348, 753
+
+\bibitem[{{Shull} \& {van Steenberg}(1985)}]{Shull85}
+{Shull}, J.~M., \& {van Steenberg}, M.~E. 1985, \apj, 298, 268
+
+\bibitem[{{Sokasian} {et~al.}(2003){Sokasian}, {Abel}, {Hernquist}, \&
+  {Springel}}]{Sokasian03}
+{Sokasian}, A., {Abel}, T., {Hernquist}, L., \& {Springel}, V. 2003, \mnras,
+  344, 607
+
+\bibitem[{{Spitzer}(1978)}]{Spitzer78}
+{Spitzer}, L. 1978, {Physical processes in the interstellar medium}, ed.
+  {Spitzer, L.}
+
+\bibitem[{{Stone} {et~al.}(2008){Stone}, {Gardiner}, {Teuben}, {Hawley}, \&
+  {Simon}}]{Stone08}
+{Stone}, J.~M., {Gardiner}, T.~A., {Teuben}, P., {Hawley}, J.~F., \& {Simon},
+  J.~B. 2008, \apjs, 178, 137
+
+\bibitem[{{Str{\"o}mgren}(1939)}]{Stroemgren39}
+{Str{\"o}mgren}, B. 1939, \apj, 89, 526
+
+\bibitem[{{Trac} \& {Cen}(2007)}]{Trac07}
+{Trac}, H., \& {Cen}, R. 2007, \apj, 671, 1
+
+\bibitem[{{Truelove} \& {McKee}(1999)}]{Truelove99}
+{Truelove}, J.~K., \& {McKee}, C.~F. 1999, \apjs, 120, 299
+
+\bibitem[{{Turk}(2008)}]{yt}
+{Turk}, M.~J. 2008, in Proceedings of the 7th Python in Science Conference, ed.
+  G.~Varoquaux, T.~Vaught, \& J.~Millman, Pasadena, CA USA, 46 -- 50
+
+\bibitem[{{Wang} \& {Abel}(2009)}]{Wang09}
+{Wang}, P., \& {Abel}, T. 2009, \apj, 696, 96
+
+\bibitem[{{Wang} {et~al.}(2010){Wang}, {Li}, {Abel}, \& {Nakamura}}]{Wang10}
+{Wang}, P., {Li}, Z., {Abel}, T., \& {Nakamura}, F. 2010, \apj, 709, 27
+
+\bibitem[{{Wise} \& {Abel}(2008)}]{Wise08b}
+{Wise}, J.~H., \& {Abel}, T. 2008, \apj, 684, 1
+
+\bibitem[{{Yorke}(1986)}]{Yorke86}
+{Yorke}, H.~W. 1986, \araa, 24, 49
+
+\end{thebibliography}

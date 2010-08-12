@@ -838,42 +838,32 @@ not introduce any inaccuracies in both test problems (see
 
 There have been several methods of choosing a timestep to solve
 radiation transfer equation because an accurate yet large timestep is
-not trivial to compute.  With a small enough timestep, the solution is
-guaranteed to avoid any inaccuracies (ignoring any systematic ones)
-due to timestepping, but the solver must be called many times.  These
-frequent calls may be unneccesary because the same solution may be
-accomplished with a longer timestep.  Furthermore with ray tracing,
-the photon packages only advance a short distance, and they will exist
-in every $dx/dt_P$ cells with radiation and are stored between
-timesteps, excessively consuming memory.  If the timestep is too
-large, the solution will become inaccurate; specifically, ionization
-fronts will advance too slowly, as radiation intensity exponentially
-drops with a scale length of the mean free path
+not trivial to compute.  We describe several methods to calculate the
+radiative transfer timestep in this section.  With a small enough
+timestep, the solution is guaranteed to avoid any inaccuracies
+(ignoring any systematic ones) due to timestepping, but the solver
+must be called many times.  These frequent calls may be unneccesary
+because the same solution may be accomplished with a longer timestep.
+Furthermore with ray tracing, the photon packages only advance a short
+distance, and they will exist in every $dx/dt_P$ cells with radiation
+and are stored between timesteps, excessively consuming memory.  On
+the shortest timescale, one can safely set the timestep to the
+light-crossing time of a cell \citep{Abel99_RT, Trac07} but encounters
+the problems stated above.
+
+If the timestep is too large, the solution will become inaccurate;
+specifically, ionization fronts will advance too slowly, as radiation
+intensity exponentially drops with a scale length of the mean free
+path
 \begin{equation}
   \label{eqn:mfp}
   \lambda_{\rm mfp} = \frac{1}{n_{\rm abs} \; \sigma_{\rm abs}}
 \end{equation}
 past the ionization front.  For example in our implementation, the
-chemo-thermal state of the system will remain constant as the rays are
+chemo-thermal state of the system remains constant as the rays are
 traced through the cells.  Thus in the case of a single \ion{H}{2}
 region, the speed of the ionization front is limited to approximately
-the $\lambda_{\rm mfp} / dt_P$.  We can investigate this further by
-evaluating the ionization front velocity in a growing Str\"{o}mgren
-sphere, where $\dot{N}_\gamma = 4 \pi R^2 n_{\rm H} v_{\rm IF}$.
-Using $\kph \propto \dot{n}_{\rm H} / n_{\rm H}$ and $\kph =
-\dot{N}_\gamma \sigma / 4\pi R^2 A_{\rm cell}$, we can make
-substitutions on both sides of the equation to arrive at the
-ionization front velocity
-%
-\begin{equation}
-  \label{eqn:vifront1}
-  v_{\rm IF} \propto \frac{n_{\rm H}}{\dot{n}_{\rm H}}.
-\end{equation}
-
-On the shortest timescale, one can safely set the timestep to the
-light-crossing time of a cell \citep{Abel99_RT, Trac07} but encounters
-the problems stated above.  Next we describe several methods to
-calculate the radiative transfer timestep.
+the $\lambda_{\rm mfp} / dt_P$.
 
 \subsubsection{Minimizing neutral fraction change}
 \label{sec:dt_hi}
@@ -901,16 +891,23 @@ gas to change a small amount, i.e. for a single cell,
 \end{equation}
 where $\epsilon_{\rm ion}$ is the maximum fraction change in neutral
 fraction.  \citet{Shapiro04} found that this limited the speed of the
-ionization front for the same reasons described in Equation
-\ref{eqn:vifront1}.  We have implemented this method but we only
-consider cells within the ionization front (by experiment we choose
-$\tau > 0.5$) because we are interested in evolving ionization fronts
-at the correct speed.  In the ionized region, the absolute changes in
-neutral fraction are small and will not significantly affect the
-ionization front evolution.  In other words, $n_{\rm HI}/(dn_{\rm
-  HI}/dt)$ may be large but $(dn_{\rm HI}/dt) \sim 0$, thus we can
-safely ignore these cells when determining the timestep without
-sacrificing accuracy.
+ionization front.  We can investigate this further by evaluating the
+ionization front velocity in a growing Str\"{o}mgren sphere without
+recombinations, where $\dot{N}_\gamma = 4 \pi R^2 n_{\rm H} v_{\rm
+  IF}$.  Using $\kph \propto \dot{n}_{\rm H} / n_{\rm H}$ and $\kph =
+\dot{N}_\gamma \sigma / 4\pi R^2 A_{\rm cell}$, we can make
+substitutions on both sides of the equation to arrive at the
+ionization front velocity $v_{\rm IF} \propto n_{\rm H} /\dot{n}_{\rm
+  H}$.  
+
+We have implemented this method but we only consider cells within the
+ionization front (by experiment we choose $\tau > 0.5$) because we are
+interested in evolving ionization fronts at the correct speed.  In the
+ionized region, the absolute changes in neutral fraction are small and
+will not significantly affect the ionization front evolution.  In
+other words, $n_{\rm HI}/(dn_{\rm HI}/dt)$ may be large but $(dn_{\rm
+  HI}/dt) \sim 0$, thus we can safely ignore these cells when
+determining the timestep without sacrificing accuracy.
 
 We search for the cell with the smallest $dt_P$ based on Equation
 \ref{eqn:dtelec}.  In principle, one could use this value without
@@ -1012,14 +1009,14 @@ timestep is $dt_{\rm P} = \min(dt_{\rm P, cell})$.
 
 To make this approach computationally straightforward, we consider a
 spherically symmetric case without recombinations.  Thus all photons
-emitted from the source result in an ionization (see
-Eq. \ref{eqn:vifront1} and its derivation).  Ultimately in any
-approach, we are focused on accurately following the time evolution of
-the radiation field.  In this method, we base the timestep directly on
-the change in radiation field, the specific intensity, $I/\dot{I}$.
-We consider the field after propagating through the cell, so $I = I_0
-\exp(-\tau)$, where $\tau = n_{\rm H} \sigma dl$ is the optical depth
-through the cell.  The change in specific intensity is
+emitted from the source result in an ionization (also see
+\S\ref{sec:dt_hi}).  Ultimately in any approach, we are focused on
+accurately following the time evolution of the radiation field.  In
+this method, we base the timestep directly on the change in radiation
+field, the specific intensity, $I/\dot{I}$.  We consider the field
+after propagating through the cell, so $I = I_0 \exp(-\tau)$, where
+$\tau = n_{\rm H} \sigma dl$ is the optical depth through the cell.
+The change in specific intensity is
 %
 \begin{equation}
   \label{eqn:vifront2}
