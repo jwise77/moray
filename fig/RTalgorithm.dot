@@ -1,0 +1,51 @@
+digraph algorithm {
+  //compound=true;
+  ordering=out;
+  //nodesep=equally;
+  //concentrate=true;
+  splines=ortho;
+  //font=Helvetica;
+
+  Invis [style=invisible, size="0,0"]
+  PreCompute [shape=box, label="Pre-compute ray normal, ray position,\ncurrent cell, and cross-section"]
+  NextCross [shape=box, label="Compute next cell crossing"]
+  MovePhoton [shape=box, style=filled, label="Put photon in move list\nEXIT"]
+  ChildGrid [shape=diamond, margin="0,0", label="Does a child grid\nexist under this cell?"]
+  Split [shape=box, style=filled, label="Split ray. Delete parent ray\nEXIT"]
+  CheckSplit [shape=diamond, label="Does the ray need\nsplitting at r+dr?"]
+  Compute [shape=box, label="Calculate\n1. Geometric correction\n2. Optical depth\n3. Photo-ionization and photo-heating rates\n4. Add to column density"]
+  RadPress [shape=box, label="Optional: add radiation pressure"]
+  Update [shape=box label="Update photon time, flux, and radius"]
+
+  CheckDelete [shape=diamond, label="Zero flux or\nlarge optical depth?"]
+  Delete [shape=box, style=filled, label="Delete photon\nEXIT"]
+  CheckDist [shape=diamond, label="Is r > cdt or\nr > box length?"]
+  Halt [shape=box, style=filled, label="If constant timestep, halt photon.\nIf infinite c, delete.\nEXIT"]
+  UpdateCell [shape=box, label="Update cell position"]
+  CheckGrid [shape=diamond, label="Has ray exited grid?"]
+  //MovePhoton2 [shape=box, style=filled, label="Put in move list\nEXIT"]
+
+  { rank=same; MovePhoton; ChildGrid; }
+  { rank=same; Split; CheckGrid; CheckSplit; }
+  { rank=same; Update; CheckDelete; Delete; }
+  { rank=same; RadPress; CheckDist; Halt; }
+  { rank=same; UpdateCell; Compute; }
+
+  PreCompute -> ChildGrid;
+  ChildGrid -> MovePhoton [label="YES"];  // How to move closer to arrow?
+  ChildGrid -> NextCross [label="NO"];
+  NextCross -> CheckSplit;
+  CheckSplit -> Split [label="YES"];
+  CheckSplit -> Compute [label="NO"];
+  Compute -> RadPress;
+  RadPress -> Update;
+  Update -> CheckDelete;
+  CheckDelete -> Delete [label="YES"];
+  CheckDelete -> CheckDist [label="NO"];
+  CheckDist -> Halt [label="YES"];
+  CheckDist -> UpdateCell [label="NO"];
+  UpdateCell -> CheckGrid;
+  CheckGrid -> MovePhoton [label="YES"];
+  CheckGrid -> ChildGrid [label="NO"];
+
+}

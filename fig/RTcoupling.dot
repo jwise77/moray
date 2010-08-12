@@ -1,0 +1,53 @@
+digraph coupling {
+  //compound=true;
+  splines=true;
+  //font=Helvetica;
+  //graph [ labelloc=t, label = "Repeat until (PhotonTime > HydroTime)\n\n" ];
+  //rankdir=BT;
+  //ordering=out;
+  //node [shape=box];
+
+  Shine [shape=box, label="Create base photons\nfrom pt. sources"];
+  Initialize [shape=box, label="Initialize radiation fields"];
+//  Trace [shape=box, label="Trace Rays"];
+//  MoveList [shape=box, label="Collect rays to transfer\nto other grids"];
+  Trace [shape=box, color=white, style=filled, label="Trace Rays"];
+  MoveList [shape=box, color=white, style=filled, label="Collect rays to transfer\nto other grids"];
+  MoveRays [shape=box, label="Move (communicate)\nrays to new grids"];
+  FinishedRays [shape=diamond, label="All rays absorbed\nor halted?"];
+  ChemEnergy [shape=box, label="Update chemistry and energies\nin cells with radiation"]
+  Finished [shape=diamond, label="if (PhotonTime\n > HydroTime)"];
+  Exit [shape=box, style=filled, label="EXIT to\nmain grid loop"];
+  
+  Invis0 [label="", style=invisible, size="0.1,0.1"]
+//  Invis1 [size="0,0", style=invisible]
+//  Invis2 [size="0,0", style=invisible]
+
+
+  subgraph cluster0 {
+    color = grey;
+    style = filled;
+    labeljust = "l";
+    label="For each grid";
+    Trace -> MoveList;
+  }
+
+//  Shine -> Initialize;
+//  Initialize -> Trace;
+  Shine -> Initialize -> Trace;
+  MoveList -> MoveRays -> FinishedRays;
+  FinishedRays -> ChemEnergy [label="YES"];
+  ChemEnergy -> Finished;
+  Finished -> Exit [label="YES"];
+  FinishedRays -> Trace [weight=0,label="NO"];
+  Finished -> Shine [weight=0,label="NO"];
+
+  { rank=min; Shine }
+  { rank=same; FinishedRays; MoveRays; }
+  { rank=same; ChemEnergy; Trace; }
+  { rank=same; Finished; Initialize; Exit; }
+//  { rank=same; MoveRays; Finished }
+//  { rank=same; MoveRays; FinishedRays; }
+
+
+}
