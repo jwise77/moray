@@ -1,4 +1,4 @@
-\begin{thebibliography}{39}
+\begin{thebibliography}{45}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{{Abel} {et~al.}(1997){Abel}, {Anninos}, {Zhang}, \&
@@ -65,6 +65,20 @@
 {G{\'o}rski}, K.~M., {Hivon}, E., {Banday}, A.~J., {Wandelt}, B.~D., {Hansen},
   F.~K., {Reinecke}, M., \& {Bartelmann}, M. 2005, \apj, 622, 759
 
+\bibitem[{Harten {et~al.}(1983)Harten, Lax, \& van Leer}]{HLL}
+Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
+
+\bibitem[{{Hester} {et~al.}(1996){Hester}, {Scowen}, {Sankrit}, {Lauer},
+  {Ajhar}, {Baum}, {Code}, {Currie}, {Danielson}, {Ewald}, {Faber},
+  {Grillmair}, {Groth}, {Holtzman}, {Hunter}, {Kristian}, {Light}, {Lynds},
+  {Monet}, {O'Neil}, {Shaya}, {Seidelmann}, \& {Westphal}}]{Hester96}
+{Hester}, J.~J., {Scowen}, P.~A., {Sankrit}, R., {Lauer}, T.~R., {Ajhar},
+  E.~A., {Baum}, W.~A., {Code}, A., {Currie}, D.~G., {Danielson}, G.~E.,
+  {Ewald}, S.~P., {Faber}, S.~M., {Grillmair}, C.~J., {Groth}, E.~J.,
+  {Holtzman}, J.~A., {Hunter}, D.~A., {Kristian}, J., {Light}, R.~M., {Lynds},
+  C.~R., {Monet}, D.~G., {O'Neil}, Jr., E.~J., {Shaya}, E.~J., {Seidelmann},
+  K.~P., \& {Westphal}, J.~A. 1996, \aj, 111, 2349
+
 \bibitem[{{Iliev} {et~al.}(2006){Iliev}, {Ciardi}, {Alvarez}, {Maselli},
   {Ferrara}, {Gnedin}, {Mellema}, {Nakamoto}, {Norman}, {Razoumov},
   {Rijkhorst}, {Ritzerveld}, {Shapiro}, {Susa}, {Umemura}, \& {Whalen}}]{RT06}
@@ -94,10 +108,21 @@
 {Mellema}, G., {Iliev}, I.~T., {Alvarez}, M.~A., \& {Shapiro}, P.~R. 2006, New
   Astronomy, 11, 374
 
+\bibitem[{{Miralda-Escud{\'e}} {et~al.}(2000){Miralda-Escud{\'e}}, {Haehnelt},
+  \& {Rees}}]{Miralda00}
+{Miralda-Escud{\'e}}, J., {Haehnelt}, M., \& {Rees}, M.~J. 2000, \apj, 530, 1
+
 \bibitem[{{O'Shea} {et~al.}(2004){O'Shea}, {Bryan}, {Bordner}, {Norman},
   {Abel}, {Harkness}, \& {Kritsuk}}]{OShea2004}
 {O'Shea}, B.~W., {Bryan}, G., {Bordner}, J., {Norman}, M.~L., {Abel}, T.,
   {Harkness}, R., \& {Kritsuk}, A. 2004, ArXiv Astrophysics e-prints
+
+\bibitem[{{Osterbrock}(1989)}]{Osterbrock89}
+{Osterbrock}, D.~E. 1989, {Astrophysics of gaseous nebulae and active galactic
+  nuclei}, ed. {Osterbrock, D.~E.}
+
+\bibitem[{{Pawlik} \& {Schaye}(2010)}]{Pawlik10}
+{Pawlik}, A.~H., \& {Schaye}, J. 2010, ArXiv e-prints
 
 \bibitem[{{Petkova} \& {Springel}(2009)}]{Petkova09}
 {Petkova}, M., \& {Springel}, V. 2009, \mnras, 396, 1383
@@ -141,6 +166,9 @@
 \bibitem[{{Turk}(2008)}]{yt}
 {Turk}, M.~J. 2008, in Proceedings of the 7th Python in Science Conference, ed.
   G.~Varoquaux, T.~Vaught, \& J.~Millman, Pasadena, CA USA, 46 -- 50
+
+\bibitem[{{van Leer}(1977)}]{PLM}
+{van Leer}, B. 1977, Journal of Computational Physics, 23, 276
 
 \bibitem[{{Wang} \& {Abel}(2009)}]{Wang09}
 {Wang}, P., \& {Abel}, T. 2009, \apj, 696, 96
