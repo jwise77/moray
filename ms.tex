@@ -407,18 +407,19 @@ The absorption of radiation transfers momentum from photons to the
 absorbing medium, i.e. radiation pressure.  This is easily computed by
 considering the momentum
 \begin{equation}
-  d\mathbf{p}_\gamma = \frac{dP \; E_{\rm ph}}{c\;dt} \; \hat{r}
+  d\mathbf{p}_\gamma = \frac{dP \; E_{\rm ph}}{c} \; \hat{r}
 \end{equation}
 of the absorbed radiation from the incoming ray, where $\hat{r}$ is
-the normal direction of the ray and $dt$ is the radiative transfer
-timestep.  The resulting acceleration of the gas due to radiation
-pressure is
+the normal direction of the ray.  We do not include radiation pressure
+on dust, and thus our treatment underestimates its effects in
+applicable environments.  The resulting acceleration of the gas due to
+radiation pressure is
 \begin{equation}
-  d\mathbf{a} = d\mathbf{p}_\gamma / (\rho \; V_{\rm cell}),
+  d\mathbf{a} = \frac{d\mathbf{p}_\gamma} {dt\; \rho \; V_{\rm cell}},
 \end{equation}
-where $\rho$ is the gas density inside the cell.  This acceleration is
-then added to the other forces, e.g. gravity and gas pressure, in the
-calculation.
+where $\rho$ is the gas density inside the cell and $dt$ is the
+radiative transfer timestep.  This acceleration is then added to the
+other forces, e.g. gravity and gas pressure, in the calculation.
 
 \subsection{Geometric Corrections}
 \label{sec:meth_fc}
@@ -1965,6 +1966,19 @@ creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 
 \subsection{Test 12: Time variations of the source luminosity}
 
+\begin{figure}[t]
+  \epsscale{0.6}
+  \plotone{fig/test12_kph}
+  \caption{\label{fig:test12_kph} Test 12 (Time variations of the
+    source luminosity).  Slice of the photo-ionization rate
+    \kph~through the origin.  The source has a duty cycle of 0.5 Myr,
+    and the box has a light crossing time of 3.3 Myr.  The shells of
+    high \kph~originate from radiation that was emitted when the
+    source was at its peak luminosity, illustrating the
+    time-dependence of the radiative transfer equation.}
+  \epsscale{1}
+\end{figure}
+
 Our implementation retains the time derivative of the radiative
 transfer equation (Eq. \ref{eqn:rteqn}) if we choose a constant ray
 tracing timestep, which saves the photon packages between timesteps if
@@ -1977,15 +1991,17 @@ functional form, this can be described as
 %
 \begin{equation}
   \label{eqn:test13}
-  L(t) = L_{\rm max} \times \exp(t_f/t_0 - 1),
+  L(t) = L_{\rm max} \times \exp[A(t_f/t_0 - 1)]
 \end{equation}
 %
-where $t_f = \mathrm{mod}(t,t_0)$ and $t_0$ is the duty cycle.  To
-illustrate the variations in the photo-ionization rates due to a
-varying source, we remove any dependence on the medium by considering
-an optically-thin uniform density.  We take $L_{\rm box} = 1$ Mpc,
-which has a light crossing time of 3.3 Myr.  Thus we consider a source
-at the origin with $L_{\rm max} = 10^{50}$ ph s$^{-1}$ and $t_0 = 0.5$
+where $t_f = 2 \times |t - t_0 \times \mathrm{round}(t/t_0)|$, $t_0$
+is the duty cycle, and $A=4$ controls the width of the radiation
+pulse.  To illustrate the variations in the photo-ionization rates,
+shown in Figure \ref{fig:test12_kph}, due to a varying source, we
+remove any dependence on the medium by considering an optically-thin
+uniform density $\rho 10^{-4}~\cubecm$.  We take $L_{\rm box} = 1$
+Mpc, which has a light crossing time of 3.3 Myr.  A source is placed
+at the origin with $L_{\rm max} = 10^{55}$ ph s$^{-1}$ and $t_0 = 0.5$
 Myr.  We use a radiative transfer timestep of 50 kyr to resolve the
 duty cycle by 10 timesteps.
 
