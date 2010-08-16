@@ -72,15 +72,39 @@
 
 Radiative transfer is ubiquitous in many astrophysical problems,
 encompassing topics such as stellar atmospheres, the interstellar
-medium (ISM), galaxy formation, and cosmology.  Thus it is a
-well-studied problem \citep[e.g.][and more!]{Rybicki}; however, its
+medium (ISM), star formation, galaxy formation, supernovae (SNe) and
+cosmology.  Thus it is a well-studied problem
+\citep[e.g.][]{Mathews65, Rybicki, Mihalas84, Yorke86}; however, its
 treatment in multi-dimensional calculations is difficult because of
 the dependence on seven variables --- three spatial, two angular,
 frequency, and time.  The non-local nature of the thermal and
 hydrodynamical response to radiation sources further adds to the
 difficulty.  In the general case, one must consider all radiation
-sources at every point in calculation.  (add: simplify by symmetries
-and special cases)
+sources at every point in calculation.  Fortunately problems can be
+simplified by exploiting symmetries and special cases.  The most basic
+case was first considered by \citet{Stroemgren39} for a radiation
+source ionizing a static uniform neutral medium.  He found that the
+delineation between the neutral and ionized medium was found to be
+approximately the mean free path of the ionizing radiation.  His
+seminar work was expanded upon by \citet{Spitzer48, Spitzer49,
+  Spitzer54} and \citet{Spitzer50}, who showed that the ionizing
+radiation heated the medium to $T \sim 10^4$ K.  If the density is
+equal on both sides of the ionization front, then this
+over-pressurized region would expand and drive a shock outwards
+\citep[e.g.][]{Oort54, Schatzman55}.  These early works provided the
+basis for the modern topic of radiation hydrodynamics.  A decade
+later, radiation hydrodynamical numerical models of \ion{H}{2} regions
+in spherical symmetry were developed that described the expansion of
+the ionization front and the evolution of its associated shock wave
+that carries most of the gas outwards \citep[e.g.][]{Mathews65,
+  Lasker66, Hjellming66}.  At the same time, theoretical models of
+ionization fronts matured and were classified by \citet{Kahn54} and
+\citet{Axford61} as either R-type (rare) or D-type (dense).  R-type
+fronts travel supersonically with respect to the neutral gas, whereas
+D-type front are subsonic.  Furthermore ``weak'' and ``strong'' R-type
+fronts move subsonically and supersonically with respect to the
+ionized gas.  The same terminology conversely applies to D-type
+fronts.
 
 There are several methods to solve the radiative transfer.
 
@@ -2334,22 +2358,22 @@ We compare nearly identical simulations but one with radiation
 pressure and one without radiation pressure to quantify its effects.
 Radial profiles of density, temperature, neutral fraction, and radial
 velocity are shown in Figure \ref{fig:rp_profiles} for both
-simulations.  Without radiation pressure, the evolution of the
-\ion{H}{2} is matches the analytical expectations described in
-\S\ref{sec:test5}.  At $t=140$ kyr, the ionization front radius is
-increased by $\sim5\% = 0.16$ pc.  However radiation pressure impacts
-the system the greatest inside the ionization front.  At $t = 40$ kyr,
-the central density is smaller by a factor of 20 with radiation
-pressure, but the temperatures are almost equal.  A rarefaction wave
-thus propagates toward the center, depicted by the negative radial
-velocities at $t = 60$ kyr.  This raises the central density to
-$10^{-21}$ g \cubecm~at $t = 80$ kyr.  Afterwards, the radiation
-continues to force gas outwards.  From $t = 100$ kyr to $t = 140$ kyr,
-the maximum radial velocity of the ionized gas increases from 10
-\kms~to 50 \kms.  This leaves behind an even more diffuse medium,
-lowering the gas density by a factor of 10 at $t = 140$ kyr.  Thus the
-recombination rates are lower, resulting in increased ionization
-fractions and temperatures in the \ion{H}{2} region.
+simulations at several times.  Without radiation pressure, the
+evolution of the \ion{H}{2} is matches the analytical expectations
+described in \S\ref{sec:test5}.  At $t=140$ kyr, the ionization front
+radius is increased by $\sim5\% = 0.16$ pc.  However radiation
+pressure impacts the system the greatest inside the ionization front.
+At $t = 40$ kyr, the central density is smaller by a factor of 20 with
+radiation pressure, but the temperatures are almost equal.  A
+rarefaction wave thus propagates toward the center, depicted by the
+negative radial velocities at $t = 60$ kyr.  This raises the central
+density to $10^{-21}$ g \cubecm~at $t = 80$ kyr.  Afterwards, the
+radiation continues to force gas outwards.  From $t = 100$ kyr to $t =
+140$ kyr, the maximum radial velocity of the ionized gas increases
+from 10 \kms~to 50 \kms.  This leaves behind an even more diffuse
+medium, lowering the gas density by a factor of 10 at $t = 140$ kyr.
+Thus the recombination rates are lower, resulting in increased
+ionization fractions and temperatures in the \ion{H}{2} region.
 
 \subsection{Consolidated \ion{H}{2} region with two sources}
 
@@ -2358,8 +2382,9 @@ use the same test problem as \citet[][\S5.1.2]{Petkova09}, which has
 two sources with luminosities of $5 \times 10^{48}$ ph s$^{-1}$ and
 are separated by 8 kpc.  The ambient medium is static with a uniform
 density of $10^{-3}$ \cubecm and $T = 10^4$ K.  This setup is similar
-to Test 1.  The domain has a resolution of $128^3$ and is 20 kpc in
-width, and the problem is run for 500 Myr.  
+to Test 1.  The domain has a resolution of $128 \times 64 \times 64$
+It is 20 kpc in width and is 10 kpc in height and depth.  The problem
+is run for 500 Myr.
 
 The \ion{H}{2} regions grow to $r = 4$ kpc where they overlap.  Then
 the two sources are enveloped in a common, elongated \ion{H}{2}
