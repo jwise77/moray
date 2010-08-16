@@ -1893,10 +1893,10 @@ of ambient material into the shock.  The simulation is run for 25 Myr.
 Some astrophysical systems produce collimated radiation either
 intrinisically by relavistic beaming or by an optically-thick torus
 absorbing radiation in the equatorial plane.  The latter case would be
-applicable in a subgrid model of an AGN or a protostar, for example.
-Simulating collimated radiation with ray tracing is trivially
-accomplished by only initializing rays that are within some opening
-angle $\theta_c$.
+applicable in a subgrid model of active galactic nuclei (AGN) or
+protostars, for example.  Simulating collimated radiation with ray
+tracing is trivially accomplished by only initializing rays that are
+within some opening angle $\theta_c$.
 
 We use a domain that is 2 kpc wide and has an ambient medium with
 $\rho_0 = 10^{-3}$ \cubecm, $T = 10^4$ K, $x_e = 0.99$.  We place a
@@ -1910,7 +1910,7 @@ refined with the same overdensity criterion as Test 8.  We run this
 test for 25 Myr.
 
 We illustrate the expansion of the \ion{H}{2} region created by the
-beamed radiation in Figure \ref{fig:test11}.  Before 3 Myr, the
+beamed radiation in Figure \ref{fig:test11}.  Before $t = 3$ Myr, the
 \ion{H}{2} region is conical and contained within the dense clump,
 depicted in the $t = 0.1$ Myr snapshot of the system.  At this time,
 the ionization front is transitioning from R-type to D-type in the
@@ -1967,15 +1967,16 @@ creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 \subsection{Test 12: Time variations of the source luminosity}
 
 \begin{figure}[t]
-  \epsscale{0.6}
-  \plotone{fig/test12_kph}
+  \epsscale{1.15}
+  \plottwo{fig/test12_kph}{fig/test12_radial}
   \caption{\label{fig:test12_kph} Test 12 (Time variations of the
-    source luminosity).  Slice of the photo-ionization rate
+    source luminosity).  Left: Slice of the photo-ionization rate
     \kph~through the origin.  The source has a duty cycle of 0.5 Myr,
     and the box has a light crossing time of 3.3 Myr.  The shells of
     high \kph~originate from radiation that was emitted when the
     source was at its peak luminosity, illustrating the
-    time-dependence of the radiative transfer equation.}
+    time-dependence of the radiative transfer equation.  Right: Radial
+    profile \kph~with the inverse square law overplotted.}
   \epsscale{1}
 \end{figure}
 
@@ -1985,9 +1986,11 @@ tracing timestep, which saves the photon packages between timesteps if
 the $c\;dt_{\rm P} < L_{\rm box}$.  This effect only becomes apparent
 when the variation timescale of the point source is smaller than the
 light crossing time of the simulation.  Furthermore, the timestep
-should resolve the variation timescale by a few times.  To test this,
-we can use an exponentially varying source with some duty cycle.  In a
-functional form, this can be described as
+should resolve the variation timescale by a few times.  This property
+might be important in large box simulations with variable sources,
+e.g. AGN radiative feedback.  To test this, we can use an
+exponentially varying source with some duty cycle.  In a functional
+form, this can be described as
 %
 \begin{equation}
   \label{eqn:test13}
@@ -1996,14 +1999,27 @@ functional form, this can be described as
 %
 where $t_f = 2 \times |t - t_0 \times \mathrm{round}(t/t_0)|$, $t_0$
 is the duty cycle, and $A=4$ controls the width of the radiation
-pulse.  To illustrate the variations in the photo-ionization rates,
-shown in Figure \ref{fig:test12_kph}, due to a varying source, we
-remove any dependence on the medium by considering an optically-thin
-uniform density $\rho 10^{-4}~\cubecm$.  We take $L_{\rm box} = 1$
-Mpc, which has a light crossing time of 3.3 Myr.  A source is placed
-at the origin with $L_{\rm max} = 10^{55}$ ph s$^{-1}$ and $t_0 = 0.5$
-Myr.  We use a radiative transfer timestep of 50 kyr to resolve the
-duty cycle by 10 timesteps.
+pulse.  To illustrate the effects of source varability, we remove any
+dependence on the medium by considering an optically-thin uniform
+density $\rho 10^{-4}~\cubecm$.  We take $L_{\rm box} = 1$ Mpc, which
+has a light crossing time of 3.3 Myr.  A source is placed at the
+origin with $L_{\rm max} = 10^{55}$ ph s$^{-1}$ and $t_0 = 0.5$ Myr.
+We use a radiative transfer timestep of 50 kyr to resolve the duty
+cycle by 10 timesteps.  The simulation is run for 6 Myr, so the
+radiation propagates throughout the box.
+
+The variability of the source is clearly illustrated in the
+photo-ionization rates, shown in Figure \ref{fig:test12_kph}.  The
+shells of relative maximum \kph~corresponds to radiation that was
+emitted when the source was at its peak luminosity.  They are
+separated by $ct_0$ Mpc and are geometrically diluted with increasing
+radius.  Averaged over shells of the same width, photo-ionization
+rates decrease as $1/r^2$.
+
+Next we test the hydrodynamical response to a varying source by
+repeating Test 5.  We set the peak luminosity $L_{\rm max} = 2 \times
+10^{49}$ erg s$^{-1}$ that is a factor of 4 more luminous than Test
+5, so the average luminosity is $\sim 5 \times 10^{48}$ erg s$^{-1}$.
 
 \subsection{Test 14: \ion{H}{2} region with MHD}
 
@@ -2051,8 +2067,8 @@ gas can only flow along field lines.  \citeauthor{Krumholz07_ART}
 observed some carbuncle artifacts along the ionization front; whereas
 we see smooth density gradients, which is most likely caused by our
 more diffusive choice of the HLL Riemann solver when compared to Roe's
-Riemann solver used in \citet{Krumholz07_ART}, which also uses PLM as
-a reconstruction method.  The evolution of the magnetic field lines
+Riemann solver used in \citet{Krumholz07_ART}, who also use PLM as a
+reconstruction method.  The evolution of the magnetic field lines
 evolve in a similar manner as their results.
 
 \section{Resolution Tests}
@@ -2248,10 +2264,11 @@ resolution test (\S\ref{sec:ang_dep}) to show these artifacts in \kph.
   \plotone{fig/xray_profiles.eps}
   \caption{\label{fig:xray_fig} Radial profiles of temperature and
     ionized fraction showing the effects of secondary ionizations from
-    a mono-chromatic 1 keV spectrum.  The high energy photons can
-    ionize multiple hydrogen atoms, increasing the ionized fraction.
-    In part, less radiation goes into thermal energy, lowering the
-    temperature.}
+    a mono-chromatic 1 keV spectrum.  The discontinuity at $r \sim
+    0.4$ is caused by artifacts in the ray tracing, which is described
+    in Test 1.  The high energy photons can ionize multiple hydrogen
+    atoms, increasing the ionized fraction.  In part, less radiation
+    goes into thermal energy, lowering the temperature.}
   \epsscale{1}
 \end{figure}
 
@@ -2266,11 +2283,27 @@ considering secondary ionizations and reduced photo-heating and
 considering only one ionization per photon and the remaining energy
 being thermalized.
 
+Figure \ref{fig:xray_fig} shows the main effects of secondary
+ionizations from the 1 keV spectrum on the ionization and thermal
+state of the system.  Without secondary ionizations, each absorption
+results in one ionization with the remaining energy transferred into
+thermal energy.  But with secondary ionizations, recall that most of
+the radiation energy goes into hydrogen and helium ionizations in
+neutral gas; whereas in ionized gas, most of the energy is
+thermalized.  In this test, only the inner 300 pc is completely
+ionized because of the small cross-section of hydrogen at $E_{\rm ph}
+= 1$ keV.  Beyond this core, the medium is only partially ionized.
+This process expands the hot $T = 10^5$ K core by a factor of 2.  In
+the outer neutral regions, the ionization fraction is larger by a
+factor of $\sim 10$, which in turn results in less photo-heating,
+lowering the temperature by a factor 2--3.
+
 \subsection{Radiation pressure}
 
 \begin{figure}[t]
+  \epsscale{1.075}
   \plottwo{fig/noRP_profiles.eps}{fig/RP_profiles.eps}
-  \caption{\label{fig:rp_profile150} (a) No radiation pressure.
+  \caption{\label{fig:rp_profiles} (a) No radiation pressure.
     Radial profiles of (clockwise from top left) density, temperature,
     radial velocity, and neutral fraction.  Time units in the legned
     are in kyr.  (b) Radial profiles with radiation pressure.  The
@@ -2280,20 +2313,43 @@ being thermalized.
     center, as seen at t = 60 kyr.  Then the radiation pressure
     continues to force the gas outwards, increasing gas velocites up
     to 50 km/s.}
+  \epsscale{1}
 \end{figure}
 
 Radiation pressure affects gas dynamics in an \ion{H}{2} region when
 its force is comparable to the acceleration created by gas pressure of
 the heated region.  The imparted acceleration on a hydrogen atom
 $\mathbf{a}_{\rm rp} = E_{\rm ph}/c$.  This is especially important
-when the ionization front is in its initial R-type phase.  Thus we
-construct a test that focuses on a small scales, compared to the
-Str\"{o}mgren radius.  The domain has a size of 8 pc with a uniform
-density $\rho = 2900 \cubecm$ and initial temperature $T = 10^3$ K.
-The source is located at the origin with a luminosity $L = 10^{50}$ ph
-s$^{-1}$ and a $T=10^5$ K blackbody spectrum.  We use one energy group
-$E_{\rm ph} = 29.6$ eV.  The grid is adaptively refined on overdensity
-with the same criteron as Test 8.  The simulation is run for 150 kyr.
+when the ionization front is in its initial R-type phase, where the
+gas has not reacted to the thermal pressure yet.  Thus we construct a
+test that focuses on a small scales, compared to the Str\"{o}mgren
+radius.  The domain has a size of 8 pc with a uniform density $\rho =
+2900 \cubecm$ and initial temperature $T = 10^3$ K.  The source is
+located at the origin with a luminosity $L = 10^{50}$ ph s$^{-1}$ and
+a $T=10^5$ K blackbody spectrum.  We use one energy group $E_{\rm ph}
+= 29.6$ eV.  The grid is adaptively refined on overdensity with the
+same criteron as Test 8.  The simulation is run for 140 kyr.
+
+We compare nearly identical simulations but one with radiation
+pressure and one without radiation pressure to quantify its effects.
+Radial profiles of density, temperature, neutral fraction, and radial
+velocity are shown in Figure \ref{fig:rp_profiles} for both
+simulations.  Without radiation pressure, the evolution of the
+\ion{H}{2} is matches the analytical expectations described in
+\S\ref{sec:test5}.  At $t=140$ kyr, the ionization front radius is
+increased by $\sim5\% = 0.16$ pc.  However radiation pressure impacts
+the system the greatest inside the ionization front.  At $t = 40$ kyr,
+the central density is smaller by a factor of 20 with radiation
+pressure, but the temperatures are almost equal.  A rarefaction wave
+thus propagates toward the center, depicted by the negative radial
+velocities at $t = 60$ kyr.  This raises the central density to
+$10^{-21}$ g \cubecm~at $t = 80$ kyr.  Afterwards, the radiation
+continues to force gas outwards.  From $t = 100$ kyr to $t = 140$ kyr,
+the maximum radial velocity of the ionized gas increases from 10
+\kms~to 50 \kms.  This leaves behind an even more diffuse medium,
+lowering the gas density by a factor of 10 at $t = 140$ kyr.  Thus the
+recombination rates are lower, resulting in increased ionization
+fractions and temperatures in the \ion{H}{2} region.
 
 \subsection{Consolidated \ion{H}{2} region with two sources}
 
