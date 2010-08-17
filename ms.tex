@@ -83,11 +83,20 @@ difficulty.  In the general case, one must consider all radiation
 sources at every point in calculation.  
 
 Fortunately problems can be simplified by exploiting symmetries and
-special cases.  The most basic case was first considered by
-\citet{Stroemgren39} for a radiation source ionizing a static uniform
-neutral medium.  He found that the delineation between the neutral and
-ionized medium was found to be approximately the mean free path of the
-ionizing radiation.  His seminar work was expanded upon by
+special cases.  The first case was considered by \citet{Stroemgren39}
+for a radiation source ionizing a static uniform neutral medium, where
+recombinations balnace photo-ionizations.  He derived a radius of an
+\ion{H}{2} region,
+%
+\begin{equation}
+  \label{eqn:Rstr}
+  R_s = \left(\frac{3\dot{N}_\gamma}{4\pi \alpha_{\rm B} n_H^2}\right)^{1/3},
+\end{equation}
+where $\dot{N}_\gamma$ is the ionizing photon luminosity, $\alpha_{\rm
+  B}$ is the recombination rate, and $n_H$ is the ambient hydrogen
+number density.  Furthermore he found that the delineation between the
+neutral and ionized medium to be approximately the mean free path of
+the ionizing radiation.  His seminar work was expanded upon by
 \citet{Spitzer48, Spitzer49, Spitzer54} and \citet{Spitzer50}, who
 showed that the ionizing radiation heated the medium to $T \sim 10^4$
 K.  If the density is equal on both sides of the ionization front,
@@ -101,12 +110,41 @@ fronts were developed \citep[e.g.][]{Mathews65, Lasker66,
 and the evolution of its associated shock wave that carries most of
 the gas away from the source.  At the same time, theoretical models of
 ionization fronts matured and were classified by \citet{Kahn54} and
-\citet{Axford61} as either R-type (rare) or D-type (dense).  R-type
-fronts travel supersonically with respect to the neutral gas, whereas
-D-type front are subsonic.  Furthermore ``weak'' and ``strong'' R-type
-fronts move subsonically and supersonically with respect to the
-ionized gas.  The same terminology conversely applies to D-type
-fronts. (add evolution of an \ion{H}{2} region)
+\citet{Axford61} as either R-type (rare) or D-type (dense).  In R-type
+fronts, the ionized gas density is higher than the neutral gas
+density, and in D-type fronts, the opposite is true.  R-type fronts
+travel supersonically with respect to the neutral gas, whereas D-type
+front are subsonic.  Furthermore ``weak'' and ``strong'' R-type fronts
+move supersonically and subsonically with respect to the ionized gas,
+respectively.  The same terminology conversely applies to D-type
+fronts.  ``Critical'' fronts are defined as moving exactly at the
+sound speed.  These works established the evolutionary track of an
+expanding \ion{H}{2} illuminated by a massive star in a uniform
+medium:
+%
+\begin{enumerate}
+\item Weak R-type---When the star (gradually) starts to shine, the
+  ionization front will move supersonically through the ambient
+  medium.  The gas is heated and ionized, but otherwise left
+  undisturbed.  This stage continues until $r \sim 0.02R_s$.
+\item Critical R-type---As the ionization front moves outwards, it
+  begins to slow because of the geometric dilution of the radiation.
+  It becomes a critical R-type front, which is equivalent to an
+  isothermal shock in the neutral gas.
+\item Strong and weak D-type---The front continues to slow, becoming a
+  strong D-type front, and then a critical D-type front.  From this
+  point forward, it is moving subsonically with respect to the ionized
+  gas, i.e. a weak D-type front.  Thus sound waves can travel across
+  the ionization front and form a shock.  The ionization front
+  detaches from the shock, putting the shock ahead of the ionization
+  front.
+\item Expansion phase---After the shock forms, the \ion{H}{2} region
+  starts to expand, lowering the interior density and thus the
+  recombination rates.  This increases the number of photons available
+  for ionizing the gas.  The sphere expands until it reaches pressure
+  equilibrium with the ambient medium at $r \sim 5R_s$.
+\end{enumerate}
+%
 
 In the 1970's and 1980's, algorithmic and computational advances
 allowed numerical models to be expanded to two dimensions, mainly
@@ -127,7 +165,7 @@ enough, along with further algorithmic advances, to cope with the
 requirements of three-dimensional calculations.  There are two popular
 methods to solve the radiative transfer equation in three-dimensions:
 %
-\begin{enumerate}
+\begin{itemize}
 \item Moment methods---The angular moments of the radiation field can
   describe its angular structure, which are related to the energy
   energy, flux, and radiation pressure \citep{Auer70, Norman98}.
@@ -143,12 +181,12 @@ methods to solve the radiative transfer equation in three-dimensions:
   through the compuational grid \citep[e.g.][]{Razoumov99, Abel99_RT,
     Ciardi01, Sokasian01, Whalen06, Rijkhorst06, Mellema06, Alvarez06,
     Trac07, Krumholz07_ART, Paardekooper10} or particle set
-  \citep[e.g.][]{Susa06, Johnson07, Pawlik08, Altay08, Hasegawa09,
-    Pawlik10}.  In general, these methods are very accurate but
+  \citep[e.g.][]{Susa06, Johnson07, Pawlik08, Pawlik10, Altay08,
+    Hasegawa09}.  In general, these methods are very accurate but
   computationally expensive because the radiation field must be well
   sampled by the rays with respect to the spatial resolution of the
   grid or particles.
-\end{enumerate}
+\end{itemize}
 %
 Until the mid-2000's the vast majority of the three-dimensional
 calculations were performed with static density distributions.  One
@@ -178,8 +216,8 @@ reionization from Pop III stars \citep{Wise08_Reion}, ultraviolet
 radiation escape fractions from dwarf galaxies before reionization
 \citep{Wise09}, radiative negative feedback from accreting Pop III
 seed black holes \citep{Alvarez09}, and radiative feedback in
-accreting supermassive black holes \citep{Kim11}.  We have included
-Enzo+Moray in the latest public release of
+accreting supermassive black holes \citep[][in prep.]{Kim11}.  We have
+included Enzo+Moray in the latest public release of
 \enzo\footnote{http://lca.ucsd.edu/enzo}, and it is also coupled with
 the newly added MHD solver in \enzo~\citep{Wang09}.
 
@@ -1306,17 +1344,9 @@ medium is a classic problem first studied by \citet{Stroemgren39}.
 This simple but useful test can uncover any asymmetries or artifacts
 that may arise from deficiencies in the method or newly introduced
 bugs in the development process.  In this problem, the ionized region
-grows until recombinations balance photo-ionizations, which happens at
-a radius of
-%
-\begin{equation}
-  \label{eqn:Rstr}
-  R_s = \left(\frac{3\dot{N}_\gamma}{4\pi \alpha_{\rm B} n_H^2}\right)^{1/3},
-\end{equation}
-where $\dot{N}_\gamma$ is the ionizing photon luminosity, $\alpha_{\rm
-  B}$ is the recombination rate, and $n_H$ is the ambient hydrogen
-number density.  The evolution of the radius $r_s$ and velocity $v_s$
-of the ionization front has an exact solution of
+grows until recombinations balance photo-ionizations
+(Eq. \ref{eqn:Rstr}).  The evolution of the radius $r_s$ and velocity
+$v_s$ of the ionization front has an exact solution of
 %
 \begin{equation}
   \label{eqn:rstr}
@@ -2292,6 +2322,20 @@ deviation from an inverse square law decreases as $\sigma \propto
 \Phi_c^{-0.6}$.
 
 \subsection{Frequency resolution}
+
+\begin{figure}[t]
+  \epsscale{1.05}
+  \plottwo{fig/nures040}{fig/nures100}
+  \caption{\label{fig:nu_dep} Radial profiles of (clockwise from the
+    upper left) density, temperature, radial velocity, and ionized
+    fraction for Test 5 with $n_\nu = 1$, 2, 4, 8, and 16 frequency
+    bins sampling the $T=10^5$ K blackbody spectrum.  The data are
+    shown at $t = 200$ Myr (left) and $t = 500$ Myr (right).  The
+    double-peaked structure in the shock only appears with a
+    multi-frequency spectrum.  The solution converges at $n_\nu \ge
+    4$.}  
+  \epsscale{1}
+\end{figure}
 
 In practice, we find good agreement within 5--10\% of analytical
 solutions in Tests 1, 2, and 5 with only one energy group.  We use
