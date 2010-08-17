@@ -1,4 +1,4 @@
-%\documentclass[apj]{emulateapj}
+%\documentclass[apj,onecolumn]{emulateapj}
 \documentclass[12pt,preprint]{aastex}
 
 \usepackage{graphicx}
@@ -80,33 +80,131 @@ the dependence on seven variables --- three spatial, two angular,
 frequency, and time.  The non-local nature of the thermal and
 hydrodynamical response to radiation sources further adds to the
 difficulty.  In the general case, one must consider all radiation
-sources at every point in calculation.  Fortunately problems can be
-simplified by exploiting symmetries and special cases.  The most basic
-case was first considered by \citet{Stroemgren39} for a radiation
-source ionizing a static uniform neutral medium.  He found that the
-delineation between the neutral and ionized medium was found to be
-approximately the mean free path of the ionizing radiation.  His
-seminar work was expanded upon by \citet{Spitzer48, Spitzer49,
-  Spitzer54} and \citet{Spitzer50}, who showed that the ionizing
-radiation heated the medium to $T \sim 10^4$ K.  If the density is
-equal on both sides of the ionization front, then this
-over-pressurized region would expand and drive a shock outwards
-\citep[e.g.][]{Oort54, Schatzman55}.  These early works provided the
-basis for the modern topic of radiation hydrodynamics.  A decade
-later, radiation hydrodynamical numerical models of \ion{H}{2} regions
-in spherical symmetry were developed that described the expansion of
-the ionization front and the evolution of its associated shock wave
-that carries most of the gas outwards \citep[e.g.][]{Mathews65,
-  Lasker66, Hjellming66}.  At the same time, theoretical models of
+sources at every point in calculation.  
+
+Fortunately problems can be simplified by exploiting symmetries and
+special cases.  The most basic case was first considered by
+\citet{Stroemgren39} for a radiation source ionizing a static uniform
+neutral medium.  He found that the delineation between the neutral and
+ionized medium was found to be approximately the mean free path of the
+ionizing radiation.  His seminar work was expanded upon by
+\citet{Spitzer48, Spitzer49, Spitzer54} and \citet{Spitzer50}, who
+showed that the ionizing radiation heated the medium to $T \sim 10^4$
+K.  If the density is equal on both sides of the ionization front,
+then this over-pressurized region would expand and drive a shock
+outwards \citep[e.g.][]{Oort54, Schatzman55}.  These early works
+provided the basis for the modern topic of radiation hydrodynamics.  A
+decade later, the first radiation hydrodynamical numerical models of
+\ion{H}{2} regions in spherical symmetry and plane-parallel ionization
+fronts were developed \citep[e.g.][]{Mathews65, Lasker66,
+  Hjellming66}.  They described the expansion of the ionization front
+and the evolution of its associated shock wave that carries most of
+the gas away from the source.  At the same time, theoretical models of
 ionization fronts matured and were classified by \citet{Kahn54} and
 \citet{Axford61} as either R-type (rare) or D-type (dense).  R-type
 fronts travel supersonically with respect to the neutral gas, whereas
 D-type front are subsonic.  Furthermore ``weak'' and ``strong'' R-type
 fronts move subsonically and supersonically with respect to the
 ionized gas.  The same terminology conversely applies to D-type
-fronts.
+fronts. (add evolution of an \ion{H}{2} region)
 
-There are several methods to solve the radiative transfer.
+In the 1970's and 1980's, algorithmic and computational advances
+allowed numerical models to be expanded to two dimensions, mainly
+using axi-symmetric to simplify the problem
+\citep[e.g.][]{Bodenheimer79, Sandford82, Yorke83}.  One topic that was
+studied extensively were champange flows.  Here the source is embedded
+in an overdense region, and the \ion{H}{2} region escapes from this
+region in one direction.  The interface between the ambient and dense
+medium was usually set up to be a constant pressure boundary.  When
+the ionization front passes this boundary, the dense, ionized gas is
+orders of magnitude out of pressure equilibrium as the temperatures on
+both sides of initial boundary are within a factor of a few.  In
+response, the gas is accelerated outwards in this direction, creating
+a fan-shaped outflow.
+
+Only in the past 15 years, computational resources have become large
+enough, along with further algorithmic advances, to cope with the
+requirements of three-dimensional calculations.  There are two popular
+methods to solve the radiative transfer equation in three-dimensions:
+%
+\begin{enumerate}
+\item Moment methods---The angular moments of the radiation field can
+  describe its angular structure, which are related to the energy
+  energy, flux, and radiation pressure \citep{Auer70, Norman98}.
+  These have been implemented in conjunction with short
+  characteristics \citep{Stone92_RT}, with long characteristics
+  \citep{Finlator08}, and with a variable Eddington tensor in the
+  optically thin limit \citep[OTVET;][]{Gnedin01_OTVET, Petkova09}.
+  Moment methods have the advantage of being fast, being independent
+  of the number of radiation point sources.  However, they are
+  diffusive and result in incorrect shadows in some situations.
+\item Ray tracing---Radiation can be propagated along rays that extend
+  through the compuational grid \citep[e.g.][]{Mellema98, Razoumov99,
+    Abel99, Ciardi00, Ritzerveld03, Whalen05, Rijkhorst05, Mellema06,
+    Alvarez06, Trac07, Krumholz07_ART, Paardekooper10} or particle set
+  \citep[e.g.][]{Susa06, Johnson07, Pawlik08, Altay08, Hasegawa09,
+    Pawlik10}.  In general, these methods are very accurate but
+  computationally expensive because the radiation field must be well
+  sampled by the rays with respect to the spatial resolution of the
+  grid or particles.
+\end{enumerate}
+%
+Until the mid-2000's the vast majority of the three-dimensional
+calculations were performed with static density distributions.  One
+example is calculating cosmological reionization by post-processing of
+density fields from N-body simulations \citep{Ciardi01, Sokasian01,
+  McQuinn05, Iliev07}.  Any hydrodynamical response to the radiation
+field was thus ignored.  Several radiative transfer codes were
+compared in four purely radiative transfer tests in \citet[hereafter
+RT06]{RT06}.  Only recently has the radiative transfer equation been
+coupled to the hydrodynamics in three-dimensions.  In the second
+comparision paper \citep[hereafter RT09]{Iliev09}, results from these
+radiation hydrodynamics codes were compared.  Even more rare are ones
+that couple it with magneto-hydrodynamics
+\citep[e.g.][]{Krumholz07_ART}.  The tests in RT06 and RT09 were kept
+relatively simple to ease the comparison.
+
+In this paper, we present our implementation, Enzo+Moray, of adaptive
+ray tracing \citep{Abel02_RT} in the cosmological hydrodynamics
+adaptive mesh refinement (AMR) code, \enzo~\citep{BryanNorman1997,
+  OShea2004}.  The radiation field is coupled to the hydrodynamics
+solver at small timescales, enabling it to study radiation
+hydrodynamical problems.  We have used this code to investigate the
+growth of an \ion{H}{2} region from a 100\Ms~Population III (Pop III)
+star \citep{Abel07}, radiative feedback on the formation of high
+redshift dwarf galaxies \citep{Wise08_Gal}, the early stages of
+reionization from Pop III stars \citep{Wise08_Reion}, ultraviolet
+radiation escape fractions from dwarf galaxies before reionization
+\citep{Wise09}, radiative negative feedback from accreting Pop III
+seed black holes \citep{Alvarez09}, and radiative feedback in
+accreting supermassive black holes \citep{Kim11}.  We have included
+Enzo+Moray in the latest public release of
+\enzo\footnote{http://lca.ucsd.edu/enzo}, and it is also coupled with
+the newly added MHD solver in \enzo~\citep{Wang09}.
+
+We have structured this paper as follows.  In Section 2, we describe
+the connections between adaptive ray tracing and the radiative
+transfer equation.  Furthermore, we detail how physics other than
+photo-ionization and photo-heated are included.  We then derive a
+geometric correction factor to any ray tracing method to improve
+accuracy.  We end the section by describing a new computational
+technique to approximate an optically-thin radiation field with ray
+tracing and multiple sources.  In Section 3, we cover the details of
+our radiation hydrodynamics implementation in \enzo, specifically (1)
+the ray tracing algorithms, (2) coupling with the hydrodynamics
+solver, (3) several methods to calculate the radiative transfer
+timestep, and (4) our parallelization strategy.  We present our
+results from the RT06 radiative transfer tests in Section 4.
+Afterwards in Section 5, we show the results from the RT09 radiation
+hydrodynamics tests.  We expand on these tests to include more
+dynamical and complex setups to demonstrate the flexibility and high
+fidelity of Enzo+Moray.  Section 6 reports the results from spatial,
+angular, frequency, and temporal resolution tests.  In Section 7, we
+illustrate the improvements from the geometric correction factor and
+our optically-thin approximation.  We also show the effects of X-ray
+radiation and radiation pressure in this section.  Finally in Section
+8, we demonstrate the parallel scalability of Enzo+Moray.  Last
+Section 9 summarizes our method and results.
 
 \section{Treatment of Radiative Transfer}
 
@@ -572,16 +670,16 @@ false, then we can add the optically thin approximation
 \section{Numerical Implementation in Enzo}
 
 \enzo~is a parallel block-structured AMR \citep{BergerAMR} code that
-is publicly available\footnote{http://lca.ucsd.edu/enzo}
-\citep{BryanNorman1997, OShea2004}.  In this section, we describe our
-parallel implementation of the adaptive ray tracing method into \enzo.
-First we explain the programming design of handling the ``photon
-packages'' that are traced along the adaptive rays.  We use the terms
-photon packages and rays interchangably.  Next we focus on the details
-of the radiation hydrodynamics and then the importance of correct
-timestepping.  Last we give our parallelization strategy of tracing
-rays through an AMR hierarchy.  This implementation is included in the
-\texttt{v2.0} public version of \enzo.
+is publicly available \citep{BryanNorman1997, OShea2004}.  In this
+section, we describe our parallel implementation of the adaptive ray
+tracing method into \enzo.  First we explain the programming design of
+handling the ``photon packages'' that are traced along the adaptive
+rays.  We use the terms photon packages and rays interchangably.  Next
+we focus on the details of the radiation hydrodynamics and then the
+importance of correct timestepping.  Last we give our parallelization
+strategy of tracing rays through an AMR hierarchy.  This
+implementation is included in the \texttt{v2.0} public version of
+\enzo.
 
 \subsection{Programming Design}
 \label{sec:design}
@@ -734,28 +832,29 @@ finest AMR level, return to step 1.
 
 \subsection{Energy groups}
 
-In our implementation, photon packages are mono-chromatic and are
-assigned a photon type that corresponds whether it is a photon that
-(1) ionizes hydrogen, (2) singly ionizes helium, (3) doubly ionizes
-helium, (4) has an X-ray energy, or (5) dissociates molecular hydrogen
-(Lyman-Werner radiation).  One disadvantage of mono-chromatic rays is
-the number of rays increase with the number of frequency bins.
-However this allows for early termination of rays that are fully
-absorbed, which are likely to have high absorption cross-sections
-(e.g. \ion{H}{1} ionizations near 13.6 eV) or a low initial intensity
-(e.g. \ion{He}{2} ionizing photons in typical stellar populations).
-The other approach used by some groups \citep[e.g.][]{Trac07} is to
-store all energy groups in a single ray.  This reduces the number of
-the rays generated and the computation associated with the ray
-tracing.  Unless the ray dynamically adjusts its memory allocation for
-the energy groups as they become depleted, this method is also memory
-intensive in the situation where most of the energy groups are
-completely absorbed but a few groups still have significant flux.
+In our implementation, photon packages are mono-chromatic, i.e. energy
+groups \citep[][Ch. 6]{Mihalas84}, and are assigned a photon type that
+corresponds whether it is a photon that (1) ionizes hydrogen, (2)
+singly ionizes helium, (3) doubly ionizes helium, (4) has an X-ray
+energy, or (5) dissociates molecular hydrogen (Lyman-Werner
+radiation).  One disadvantage of mono-chromatic rays is the number of
+rays increase with the number of frequency bins.  However this allows
+for early termination of rays that are fully absorbed, which are
+likely to have high absorption cross-sections (e.g. \ion{H}{1}
+ionizations near 13.6 eV) or a low initial intensity (e.g. \ion{He}{2}
+ionizing photons in typical stellar populations).  The other approach
+used by some groups \citep[e.g.][]{Trac07} is to store all energy
+groups in a single ray.  This reduces the number of the rays generated
+and the computation associated with the ray tracing.  Unless the ray
+dynamically adjusts its memory allocation for the energy groups as
+they become depleted, this method is also memory intensive in the
+situation where most of the energy groups are completely absorbed but
+a few groups still have significant flux.
 
 In practice, we have found that one energy group per photon type is
 sufficent to match expected analytical tests.  For example when
 modeling Population III stellar radiation \citep[e.g.][for hydrogen
-  ionizing radiation only]{Abel07, Wise08b}, we have 3 energy
+  ionizing radiation only]{Abel07, Wise08_Gal}, we have 3 energy
 groups---\ion{H}{1}, \ion{He}{1}, \ion{He}{2}---each with an energy
 that equals the average photon energy above the ionization threshold.
 
@@ -987,7 +1086,7 @@ enough to evolve ionization fronts accurately, as discussed earlier.
 The timestep can be based on physical arguments, for example, the
 sound-crossing time of an ionized region at $T > 10^4$ K.  To be
 conservative, one may choose the sound-crossing time of a cell
-\citep[e.g.][]{Abel07, Wise08b}.  Alternatively, the diameter of the
+\citep[e.g.][]{Abel07, Wise08_Gal}.  Alternatively, the diameter of the
 smallest relevant system (e.g., an accretion radius, transition radius
 to a D-type ionization front, etc.) in the simulation may be chosen to
 calculate the sound-crossing time.
@@ -1162,22 +1261,21 @@ thread work on each list.
 
 Tests plays an important role in creating and maintaining
 computational tools.  In this section, we present tests drawn from the
-Cosmological Radiative Transfer Codes Comparison Project
-\citep[][hereafter RT06]{RT06}, where results from 11 different
-radiative transfer codes compared results in four test problems.  The
-codes use various methods for radiation transport: ray tracing with
-short, long, and hybrid characteristics, Monte Carlo casting;
-ionization front tracking \citep{Alvarez06_IFT}; variable Eddington
-Tensor formalism \citep{Gnedin01_OTVET}.  They conducted tests that
-investigated (1) the growth of a single Str\"{o}mgren sphere enforcing
-isothermal conditions, (2) the same test with an evolving temperature
-field, (3) shadowing created by a dense, opticlally thick clump, and
-(4) multiple \ion{H}{2} regions in a cosmological density field.  In
-all of the tests presented here, we use the method of restricted
-neutral fraction changes (\S\ref{sec:dt_hi}) for choosing a radiative
-transfer timestep.  We cast 48 rays (HEALPix level 1) from the point
-source and require a sampling of at least $\Phi_c = 5.1$ rays per
-cell.
+Cosmological Radiative Transfer Codes Comparison Project \citep{RT06},
+where results from 11 different radiative transfer codes compared
+results in four test problems.  The codes use various methods for
+radiation transport: ray tracing with short, long, and hybrid
+characteristics, Monte Carlo casting; ionization front tracking
+\citep{Alvarez06_IFT}; variable Eddington Tensor formalism
+\citep{Gnedin01_OTVET}.  They conducted tests that investigated (1)
+the growth of a single Str\"{o}mgren sphere enforcing isothermal
+conditions, (2) the same test with an evolving temperature field, (3)
+shadowing created by a dense, opticlally thick clump, and (4) multiple
+\ion{H}{2} regions in a cosmological density field.  In all of the
+tests presented here, we use the method of restricted neutral fraction
+changes (\S\ref{sec:dt_hi}) for choosing a radiative transfer
+timestep.  We cast 48 rays (HEALPix level 1) from the point source and
+require a sampling of at least $\Phi_c = 5.1$ rays per cell.
 
 \subsection{Test 1. Pure hydrogen isothermal \ion{H}{2} region
   expansion}

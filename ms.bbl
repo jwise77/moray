@@ -1,4 +1,4 @@
-\begin{thebibliography}{57}
+\begin{thebibliography}{62}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{{Abel} {et~al.}(1997){Abel}, {Anninos}, {Zhang}, \&
@@ -39,6 +39,10 @@
   {Hubber}}]{Bisbas09}
 {Bisbas}, T.~G., {W{\"u}nsch}, R., {Whitworth}, A.~P., \& {Hubber}, D.~A. 2009,
   \aap, 497, 649
+
+\bibitem[{{Bodenheimer} {et~al.}(1979){Bodenheimer}, {Tenorio-Tagle}, \&
+  {Yorke}}]{Bodenheimer79}
+{Bodenheimer}, P., {Tenorio-Tagle}, G., \& {Yorke}, H.~W. 1979, \apj, 233, 85
 
 \bibitem[{{Bryan} \& {Norman}(1997)}]{BryanNorman1997}
 {Bryan}, G.~L., \& {Norman}, M.~L. 1997, ArXiv Astrophysics e-prints
@@ -157,6 +161,11 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 {Rybicki}, G.~B., \& {Lightman}, A.~P. 1979, {Radiative processes in
   astrophysics}, ed. {Rybicki, G.~B.~\& Lightman, A.~P.}
 
+\bibitem[{{Sandford} {et~al.}(1982){Sandford}, {Whitaker}, \&
+  {Klein}}]{Sandford82}
+{Sandford}, II, M.~T., {Whitaker}, R.~W., \& {Klein}, R.~I. 1982, \apj, 260,
+  183
+
 \bibitem[{{Schatzman} \& {Kahn}(1955)}]{Schatzman55}
 {Schatzman}, E., \& {Kahn}, F.~D. 1955, in IAU Symposium, Vol.~2, Gas Dynamics
   of Cosmic Clouds, 163--+
@@ -215,10 +224,20 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 \bibitem[{{Wang} {et~al.}(2010){Wang}, {Li}, {Abel}, \& {Nakamura}}]{Wang10}
 {Wang}, P., {Li}, Z., {Abel}, T., \& {Nakamura}, F. 2010, \apj, 709, 27
 
-\bibitem[{{Wise} \& {Abel}(2008)}]{Wise08b}
-{Wise}, J.~H., \& {Abel}, T. 2008, \apj, 684, 1
+\bibitem[{{Wise} \& {Abel}(2008{\natexlab{a}})}]{Wise08_Reion}
+{Wise}, J.~H., \& {Abel}, T. 2008{\natexlab{a}}, \apj, 684, 1
+
+\bibitem[{{Wise} \& {Abel}(2008{\natexlab{b}})}]{Wise08_Gal}
+---. 2008{\natexlab{b}}, \apj, 685, 40
+
+\bibitem[{{Wise} \& {Cen}(2009)}]{Wise09}
+{Wise}, J.~H., \& {Cen}, R. 2009, \apj, 693, 984
 
 \bibitem[{{Yorke}(1986)}]{Yorke86}
 {Yorke}, H.~W. 1986, \araa, 24, 49
+
+\bibitem[{{Yorke} {et~al.}(1983){Yorke}, {Tenorio-Tagle}, \&
+  {Bodenheimer}}]{Yorke83}
+{Yorke}, H.~W., {Tenorio-Tagle}, G., \& {Bodenheimer}, P. 1983, \aap, 127, 313
 
 \end{thebibliography}
