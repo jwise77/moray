@@ -133,11 +133,12 @@ methods to solve the radiative transfer equation in three-dimensions:
   energy, flux, and radiation pressure \citep{Auer70, Norman98}.
   These have been implemented in conjunction with short
   characteristics \citep{Stone92_RT}, with long characteristics
-  \citep{Finlator08}, and with a variable Eddington tensor in the
-  optically thin limit \citep[OTVET;][]{Gnedin01_OTVET, Petkova09}.
-  Moment methods have the advantage of being fast, being independent
-  of the number of radiation point sources.  However, they are
-  diffusive and result in incorrect shadows in some situations.
+  \citep{Finlator08}, with a variable Eddington tensor in the
+  optically thin limit \citep[OTVET;][]{Gnedin01_OTVET, Petkova09},
+  and with an M1 closer relation \citep{Gonzalez07, Aubert08}.  Moment
+  methods have the advantage of being fast, being independent of the
+  number of radiation point sources.  However, they are diffusive and
+  result in incorrect shadows in some situations.
 \item Ray tracing---Radiation can be propagated along rays that extend
   through the compuational grid \citep[e.g.][]{Mellema98, Razoumov99,
     Abel99, Ciardi00, Ritzerveld03, Whalen05, Rijkhorst05, Mellema06,
@@ -1981,8 +1982,8 @@ A supernova blastwave being irradiated by a nearby star is a likely
 occurence in massive-star forming regions.  In this test, we set up an
 idealized test that mimics this scenario.  The problem is similar to
 Test 5 with two changes --- (1) the domain has been decreased to
-$L_{\rm box} = 1.5$ kpc; and (2) a mild blastwave is initialized in
-the center of the domain.  We use 3 levels of AMR with a base grid of
+$L_{\rm box} = 1.5$ kpc; and (2) a blastwave is initialized in the
+center of the domain.  We use 3 levels of AMR with a base grid of
 64$^3$, which is refined if the density slope is greater than 0.4.
 The blastwave is initially in the free expansion phase with a total
 energy of $10^{50}$ erg and total mass of $100 \Ms$, corresponding to
@@ -2475,6 +2476,17 @@ ionization fractions and temperatures in the \ion{H}{2} region.
 
 \subsection{Consolidated \ion{H}{2} region with two sources}
 
+\begin{figure}[t]
+  \epsscale{0.6}
+  \plotone{fig/two_sources.eps}
+  \caption{\label{fig:twosrc} Slice of neutral fraction at $t = 500$
+    Myr through the sources in the consolidated \ion{H}{2} test.
+    There are no artifacts associated with rays being emitted from two
+    sources.  Both of the ionized regions are spherically symmetric
+    before they overlap.}
+  \epsscale{1}
+\end{figure}
+
 Here we test for any inaccuracies in the case of multiple sources.  We
 use the same test problem as \citet[][\S5.1.2]{Petkova09}, which has
 two sources with luminosities of $5 \times 10^{48}$ ph s$^{-1}$ and
@@ -2486,7 +2498,10 @@ is run for 500 Myr.
 
 The \ion{H}{2} regions grow to $r = 4$ kpc where they overlap.  Then
 the two sources are enveloped in a common, elongated \ion{H}{2}
-region.
+region.  To illustrate this, we show the neutral fraction in Figure
+\ref{fig:twosrc}.  Our method keeps spherical symmetry close to the
+individual sources, and there are no perceptible artifacts from having
+multiple sources.
 
 \section{Parallel Performance}
 
