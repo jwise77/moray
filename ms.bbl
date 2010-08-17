@@ -1,4 +1,4 @@
-\begin{thebibliography}{62}
+\begin{thebibliography}{84}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{{Abel} {et~al.}(1997){Abel}, {Anninos}, {Zhang}, \&
@@ -15,9 +15,17 @@
 \bibitem[{{Abel} {et~al.}(2007){Abel}, {Wise}, \& {Bryan}}]{Abel07}
 {Abel}, T., {Wise}, J.~H., \& {Bryan}, G.~L. 2007, \apjl, 659, L87
 
-\bibitem[{{Alvarez} {et~al.}(2006){Alvarez}, {Bromm}, \&
+\bibitem[{{Altay} {et~al.}(2008){Altay}, {Croft}, \& {Pelupessy}}]{Altay08}
+{Altay}, G., {Croft}, R.~A.~C., \& {Pelupessy}, I. 2008, \mnras, 386, 1931
+
+\bibitem[{{Alvarez} {et~al.}(2006{\natexlab{a}}){Alvarez}, {Bromm}, \&
+  {Shapiro}}]{Alvarez06}
+{Alvarez}, M.~A., {Bromm}, V., \& {Shapiro}, P.~R. 2006{\natexlab{a}}, \apj,
+  639, 621
+
+\bibitem[{{Alvarez} {et~al.}(2006{\natexlab{b}}){Alvarez}, {Bromm}, \&
   {Shapiro}}]{Alvarez06_IFT}
-{Alvarez}, M.~A., {Bromm}, V., \& {Shapiro}, P.~R. 2006, \apj, 639, 621
+---. 2006{\natexlab{b}}, \apj, 639, 621
 
 \bibitem[{{Alvarez} {et~al.}(2009){Alvarez}, {Wise}, \& {Abel}}]{Alvarez09}
 {Alvarez}, M.~A., {Wise}, J.~H., \& {Abel}, T. 2009, \apjl, 701, L133
@@ -26,6 +34,12 @@
   {Norman}}]{Anninos97}
 {Anninos}, P., {Zhang}, Y., {Abel}, T., \& {Norman}, M.~L. 1997, New Astronomy,
   2, 209
+
+\bibitem[{{Aubert} \& {Teyssier}(2008)}]{Aubert08}
+{Aubert}, D., \& {Teyssier}, R. 2008, \mnras, 387, 295
+
+\bibitem[{{Auer} \& {Mihalas}(1970)}]{Auer70}
+{Auer}, L.~H., \& {Mihalas}, D. 1970, \mnras, 149, 65
 
 \bibitem[{{Axford}(1961)}]{Axford61}
 {Axford}, W.~I. 1961, Royal Society of London Philosophical Transactions Series
@@ -47,6 +61,11 @@
 \bibitem[{{Bryan} \& {Norman}(1997)}]{BryanNorman1997}
 {Bryan}, G.~L., \& {Norman}, M.~L. 1997, ArXiv Astrophysics e-prints
 
+\bibitem[{{Ciardi} {et~al.}(2001){Ciardi}, {Ferrara}, {Marri}, \&
+  {Raimondo}}]{Ciardi01}
+{Ciardi}, B., {Ferrara}, A., {Marri}, S., \& {Raimondo}, G. 2001, \mnras, 324,
+  381
+
 \bibitem[{{Dedner} {et~al.}(2002){Dedner}, {Kemm}, {Kr{\"o}ner}, {Munz},
   {Schnitzer}, \& {Wesenberg}}]{Dedner02}
 {Dedner}, A., {Kemm}, F., {Kr{\"o}ner}, D., {Munz}, C., {Schnitzer}, T., \&
@@ -54,6 +73,10 @@
 
 \bibitem[{{Draine} \& {Bertoldi}(1996)}]{Draine96}
 {Draine}, B.~T., \& {Bertoldi}, F. 1996, \apj, 468, 269
+
+\bibitem[{{Finlator} {et~al.}(2009){Finlator}, {{\"O}zel}, \&
+  {Dav{\'e}}}]{Finlator09}
+{Finlator}, K., {{\"O}zel}, F., \& {Dav{\'e}}, R. 2009, \mnras, 393, 1090
 
 \bibitem[{{Franco} {et~al.}(1990){Franco}, {Tenorio-Tagle}, \&
   {Bodenheimer}}]{Franco90}
@@ -68,6 +91,10 @@
 \bibitem[{{Gnedin} \& {Ostriker}(1997)}]{Gnedin97}
 {Gnedin}, N.~Y., \& {Ostriker}, J.~P. 1997, \apj, 486, 581
 
+\bibitem[{{Gonz{\'a}lez} {et~al.}(2007){Gonz{\'a}lez}, {Audit}, \&
+  {Huynh}}]{Gonzalez07}
+{Gonz{\'a}lez}, M., {Audit}, E., \& {Huynh}, P. 2007, \aap, 464, 429
+
 \bibitem[{{G{\'o}rski} {et~al.}(2005){G{\'o}rski}, {Hivon}, {Banday},
   {Wandelt}, {Hansen}, {Reinecke}, \& {Bartelmann}}]{HEALPix}
 {G{\'o}rski}, K.~M., {Hivon}, E., {Banday}, A.~J., {Wandelt}, B.~D., {Hansen},
@@ -75,6 +102,10 @@
 
 \bibitem[{Harten {et~al.}(1983)Harten, Lax, \& van Leer}]{HLL}
 Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
+
+\bibitem[{{Hasegawa} {et~al.}(2009){Hasegawa}, {Umemura}, \&
+  {Susa}}]{Hasegawa09}
+{Hasegawa}, K., {Umemura}, M., \& {Susa}, H. 2009, \mnras, 395, 1280
 
 \bibitem[{{Hester} {et~al.}(1996){Hester}, {Scowen}, {Sankrit}, {Lauer},
   {Ajhar}, {Baum}, {Code}, {Currie}, {Danielson}, {Ewald}, {Faber},
@@ -90,13 +121,23 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 \bibitem[{{Hjellming}(1966)}]{Hjellming66}
 {Hjellming}, R.~M. 1966, \apj, 143, 420
 
-\bibitem[{{Iliev} {et~al.}(2006){Iliev}, {Ciardi}, {Alvarez}, {Maselli},
-  {Ferrara}, {Gnedin}, {Mellema}, {Nakamoto}, {Norman}, {Razoumov},
+\bibitem[{{Iliev} {et~al.}(2006{\natexlab{a}}){Iliev}, {Ciardi}, {Alvarez},
+  {Maselli}, {Ferrara}, {Gnedin}, {Mellema}, {Nakamoto}, {Norman}, {Razoumov},
   {Rijkhorst}, {Ritzerveld}, {Shapiro}, {Susa}, {Umemura}, \& {Whalen}}]{RT06}
 {Iliev}, I.~T., {Ciardi}, B., {Alvarez}, M.~A., {Maselli}, A., {Ferrara}, A.,
   {Gnedin}, N.~Y., {Mellema}, G., {Nakamoto}, T., {Norman}, M.~L., {Razoumov},
   A.~O., {Rijkhorst}, E., {Ritzerveld}, J., {Shapiro}, P.~R., {Susa}, H.,
-  {Umemura}, M., \& {Whalen}, D.~J. 2006, \mnras, 371, 1057
+  {Umemura}, M., \& {Whalen}, D.~J. 2006{\natexlab{a}}, \mnras, 371, 1057
+
+\bibitem[{{Iliev} {et~al.}(2006{\natexlab{b}}){Iliev}, {Mellema}, {Pen},
+  {Merz}, {Shapiro}, \& {Alvarez}}]{Iliev06}
+{Iliev}, I.~T., {Mellema}, G., {Pen}, U., {Merz}, H., {Shapiro}, P.~R., \&
+  {Alvarez}, M.~A. 2006{\natexlab{b}}, \mnras, 369, 1625
+
+\bibitem[{{Iliev} {et~al.}(2007){Iliev}, {Mellema}, {Shapiro}, \&
+  {Pen}}]{Iliev07}
+{Iliev}, I.~T., {Mellema}, G., {Shapiro}, P.~R., \& {Pen}, U. 2007, \mnras,
+  376, 534
 
 \bibitem[{{Iliev} {et~al.}(2009){Iliev}, {Whalen}, {Mellema}, {Ahn}, {Baek},
   {Gnedin}, {Kravtsov}, {Norman}, {Raicevic}, {Reynolds}, {Sato}, {Shapiro},
@@ -106,8 +147,14 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
   {Sato}, D., {Shapiro}, P.~R., {Semelin}, B., {Smidt}, J., {Susa}, H.,
   {Theuns}, T., \& {Umemura}, M. 2009, \mnras, 1313
 
+\bibitem[{{Johnson} {et~al.}(2007){Johnson}, {Greif}, \& {Bromm}}]{Johnson07}
+{Johnson}, J.~L., {Greif}, T.~H., \& {Bromm}, V. 2007, \apj, 665, 85
+
 \bibitem[{{Kahn}(1954)}]{Kahn54}
 {Kahn}, F.~D. 1954, \bain, 12, 187
+
+\bibitem[{{Kim} {et~al.}(2011){Kim}, {Wise}, {Alvarez}, \& {Abel}}]{Kim11}
+{Kim}, J.~H., {Wise}, J.~H., {Alvarez}, M.~A., \& {Abel}, T. 2011, \apj
 
 \bibitem[{{Krumholz} {et~al.}(2007){Krumholz}, {Stone}, \&
   {Gardiner}}]{Krumholz07_ART}
@@ -123,6 +170,11 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 \bibitem[{{Mathews}(1965)}]{Mathews65}
 {Mathews}, W.~G. 1965, \apj, 142, 1120
 
+\bibitem[{{McQuinn} {et~al.}(2007){McQuinn}, {Lidz}, {Zahn}, {Dutta},
+  {Hernquist}, \& {Zaldarriaga}}]{McQuinn07}
+{McQuinn}, M., {Lidz}, A., {Zahn}, O., {Dutta}, S., {Hernquist}, L., \&
+  {Zaldarriaga}, M. 2007, \mnras, 377, 1043
+
 \bibitem[{{Mellema} {et~al.}(2006){Mellema}, {Iliev}, {Alvarez}, \&
   {Shapiro}}]{Mellema06}
 {Mellema}, G., {Iliev}, I.~T., {Alvarez}, M.~A., \& {Shapiro}, P.~R. 2006, New
@@ -136,6 +188,9 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
   \& {Rees}}]{Miralda00}
 {Miralda-Escud{\'e}}, J., {Haehnelt}, M., \& {Rees}, M.~J. 2000, \apj, 530, 1
 
+\bibitem[{{Norman} {et~al.}(1998){Norman}, {Paschos}, \& {Abel}}]{Norman98}
+{Norman}, M.~L., {Paschos}, P., \& {Abel}, T. 1998, \memsai, 69, 455
+
 \bibitem[{{Oort}(1954)}]{Oort54}
 {Oort}, J.~H. 1954, \bain, 12, 177
 
@@ -148,14 +203,29 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 {Osterbrock}, D.~E. 1989, {Astrophysics of gaseous nebulae and active galactic
   nuclei}, ed. {Osterbrock, D.~E.}
 
+\bibitem[{{Paardekooper} {et~al.}(2010){Paardekooper}, {Kruip}, \&
+  {Icke}}]{Paardekooper10}
+{Paardekooper}, J., {Kruip}, C.~J.~H., \& {Icke}, V. 2010, \aap, 515, A79+
+
+\bibitem[{{Pawlik} \& {Schaye}(2008)}]{Pawlik08}
+{Pawlik}, A.~H., \& {Schaye}, J. 2008, \mnras, 389, 651
+
 \bibitem[{{Pawlik} \& {Schaye}(2010)}]{Pawlik10}
-{Pawlik}, A.~H., \& {Schaye}, J. 2010, ArXiv e-prints
+---. 2010, ArXiv e-prints
 
 \bibitem[{{Petkova} \& {Springel}(2009)}]{Petkova09}
 {Petkova}, M., \& {Springel}, V. 2009, \mnras, 396, 1383
 
+\bibitem[{{Razoumov} \& {Scott}(1999)}]{Razoumov99}
+{Razoumov}, A.~O., \& {Scott}, D. 1999, \mnras, 309, 287
+
 \bibitem[{{Ricotti} {et~al.}(2001){Ricotti}, {Gnedin}, \& {Shull}}]{Ricotti01}
 {Ricotti}, M., {Gnedin}, N.~Y., \& {Shull}, J.~M. 2001, \apj, 560, 580
+
+\bibitem[{{Rijkhorst} {et~al.}(2006){Rijkhorst}, {Plewa}, {Dubey}, \&
+  {Mellema}}]{Rijkhorst06}
+{Rijkhorst}, E., {Plewa}, T., {Dubey}, A., \& {Mellema}, G. 2006, \aap, 452,
+  907
 
 \bibitem[{{Rybicki} \& {Lightman}(1979)}]{Rybicki}
 {Rybicki}, G.~B., \& {Lightman}, A.~P. 1979, {Radiative processes in
@@ -181,6 +251,10 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 {Sokasian}, A., {Abel}, T., {Hernquist}, L., \& {Springel}, V. 2003, \mnras,
   344, 607
 
+\bibitem[{{Sokasian} {et~al.}(2001){Sokasian}, {Abel}, \&
+  {Hernquist}}]{Sokasian01}
+{Sokasian}, A., {Abel}, T., \& {Hernquist}, L.~E. 2001, \na, 6, 359
+
 \bibitem[{{Spitzer}(1978)}]{Spitzer78}
 {Spitzer}, L. 1978, {Physical processes in the interstellar medium}, ed.
   {Spitzer, L.}
@@ -202,8 +276,14 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 {Stone}, J.~M., {Gardiner}, T.~A., {Teuben}, P., {Hawley}, J.~F., \& {Simon},
   J.~B. 2008, \apjs, 178, 137
 
+\bibitem[{{Stone} {et~al.}(1992){Stone}, {Mihalas}, \& {Norman}}]{Stone92_RHD}
+{Stone}, J.~M., {Mihalas}, D., \& {Norman}, M.~L. 1992, \apjs, 80, 819
+
 \bibitem[{{Str{\"o}mgren}(1939)}]{Stroemgren39}
 {Str{\"o}mgren}, B. 1939, \apj, 89, 526
+
+\bibitem[{{Susa}(2006)}]{Susa06}
+{Susa}, H. 2006, \pasj, 58, 445
 
 \bibitem[{{Trac} \& {Cen}(2007)}]{Trac07}
 {Trac}, H., \& {Cen}, R. 2007, \apj, 671, 1
@@ -223,6 +303,9 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 
 \bibitem[{{Wang} {et~al.}(2010){Wang}, {Li}, {Abel}, \& {Nakamura}}]{Wang10}
 {Wang}, P., {Li}, Z., {Abel}, T., \& {Nakamura}, F. 2010, \apj, 709, 27
+
+\bibitem[{{Whalen} \& {Norman}(2006)}]{Whalen06}
+{Whalen}, D., \& {Norman}, M.~L. 2006, \apjs, 162, 281
 
 \bibitem[{{Wise} \& {Abel}(2008{\natexlab{a}})}]{Wise08_Reion}
 {Wise}, J.~H., \& {Abel}, T. 2008{\natexlab{a}}, \apj, 684, 1
