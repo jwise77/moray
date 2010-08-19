@@ -1614,7 +1614,7 @@ the latter tests, we will indicate whether we use those capabilities
 of \enzo.  Lastly, we use the new MHD implementation in \enzo~v2.0 in
 the problem of a growing \ion{H}{2} region in a magnetic field.
 
-\subsection{Test 5: Classical \ion{H}{2} region expansion}
+\subsection{Test 5. Classical \ion{H}{2} region expansion}
 \label{sec:test5}
 
 \begin{figure}[t]
@@ -1706,7 +1706,7 @@ HEALPix pixelization differences between the polar and equatorial
 regions.  This artifact diminishes as the ray-to-cell sampling is
 increased.
 
-\subsection{Test 6: \ion{H}{2} region expansion in an isothermal
+\subsection{Test 6. \ion{H}{2} region expansion in an isothermal
   sphere}
 
 \begin{figure}[t]
@@ -1799,7 +1799,7 @@ reflecting boundaries in Enzo might be responsible for this artifact
 because this is not seen when the problem is centered in the domain,
 removing any boundary effects.
 
-\subsection{Test 7: Photo-evaporation of a dense clump}
+\subsection{Test 7. Photo-evaporation of a dense clump}
 
 \begin{figure}[t]
   \plotone{fig/test7_lines}
@@ -1854,7 +1854,7 @@ densities seen at $t = 50$ Myr.  The non-spherical artifacts on the
 inner boundary of the warm outermost shell are caused by the initial
 discretization of the sphere, as discussed in \S\ref{sec:test3}.
 
-\subsection{Test 8: Champange flow from a dense clump}
+\subsection{Test 8. Champange flow from a dense clump}
 
 \begin{figure}[t]
   \plotone{fig/test8_slices}
@@ -1902,7 +1902,7 @@ stable against such fragmentation.  To investigate this scenario
 further, our next tests involve radiation driven Rayleigh-Taylor
 instabilities.
 
-\subsection{Test 9: Irradiated Rayleigh-Taylor instability}
+\subsection{Test 9. Irradiated Rayleigh-Taylor instability}
 
 \begin{figure}[t]
   \epsscale{0.5}
@@ -2006,7 +2006,7 @@ ionized ($x_e \sim 10^{-2}$), turbulent medium, seen in the slices $t
 \ge 0.67$ Myr.  The slices of electron fraction also show that the
 dense gas is optically thick.
 
-\subsection{Test 10: Photo-evaporation of a blastwave}
+\subsection{Test 10. Photo-evaporation of a blastwave}
 
 A supernova blastwave being irradiated by a nearby star is a likely
 occurence in massive-star forming regions.  In this test, we set up an
@@ -2027,7 +2027,7 @@ and the blastwave transitions into the Sedov-Taylor phase at $r \sim
 100$ pc and $t \sim 225$ kyr after it has accumulated an equal amount
 of ambient material into the shock.  The simulation is run for 25 Myr.
 
-\subsection{Test 11: Collimated radiation from a dense clump}
+\subsection{Test 11. Collimated radiation from a dense clump}
 
 \begin{figure}[t]
   \epsscale{1}
@@ -2082,7 +2082,7 @@ final time.  The polar champange flows proceed to flow outwards,
 creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 (5000 K) medium in its wake.
 
-% \subsection{Test 12: \ion{H}{2} region in a rotating medium}
+% \subsection{Test 12. \ion{H}{2} region in a rotating medium}
 % 
 % Angular momentum is prevalent throughout all astrophysical systems.
 % We construct a problem with an \ion{H}{2} region that is completely
@@ -2100,7 +2100,7 @@ creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 % test uses AMR with a base grid of 64$^3$ and 2 levels of refinement,
 % using the same density criterion as in Test 8.
 
-% \subsection{Test 12: \ion{H}{2} region in a static potential}
+% \subsection{Test 12. \ion{H}{2} region in a static potential}
 
 % Next we construct a problem that is similar to the Rayleigh-Taylor
 % test problem (Test 9) in nature but is spherically symmetric.  We use
@@ -2117,7 +2117,7 @@ creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 % same effect on any pertubations as the constant gravitational force in
 % Rayleigh-Taylor instability test.
 
-\subsection{Test 12: Time variations of the source luminosity}
+\subsection{Test 12. Time variations of the source luminosity}
 
 \begin{figure}[t]
   \epsscale{1.15}
@@ -2174,7 +2174,7 @@ repeating Test 5.  We set the peak luminosity $L_{\rm max} = 2 \times
 10^{49}$ erg s$^{-1}$ that is a factor of 4 more luminous than Test
 5, so the average luminosity is $\sim 5 \times 10^{48}$ erg s$^{-1}$.
 
-\subsection{Test 14: \ion{H}{2} region with MHD}
+\subsection{Test 14. \ion{H}{2} region with MHD}
 
 \begin{figure}[t]
   \plotone{fig/test14_slices_xy}
@@ -2337,29 +2337,115 @@ deviation from an inverse square law decreases as $\sigma \propto
   \epsscale{1}
 \end{figure}
 
-In practice, we find good agreement within 5--10\% of analytical
-solutions in Tests 1, 2, and 5 with only one energy group.  We use
-Test 5 (\S\ref{sec:test5}; an expanding \ion{H}{2} region with
-hydrodynamics) to probe any differences in the solution when varying
-the resolution of the spectrum.  In RT09, ZEUS-MP was used to
-demonstrate the effect of a multi-frequency spectrum on the dynamics
-of the ionization front in this test.  Instead of a single shock seen
-in the mono-chromatic spectrum, a the shock obtained a double-peaked
-structure in density and radial velocity.  We rerun Test 5 with a
-$T=10^5$ K blackbody spectrum sampled by 1, 2, 4, 8, and 16 frequency
-bins.
+The ionization front radius is within 5--10\% of analytical solutions
+in Tests 1, 2, and 5 with only one energy group; however a
+multi-frequency spectrum can create differences in the reactive
+flows.  We use Test 5 (\S\ref{sec:test5}; an expanding \ion{H}{2}
+region with hydrodynamics) to probe any differences in the solution
+when varying the resolution of the spectrum.  In RT09, ZEUS-MP was
+used to demonstrate the effect of a multi-frequency spectrum on the
+dynamics of the ionization front in this test.  Instead of a single
+shock seen in the mono-chromatic spectrum, a the shock obtained a
+double-peaked structure in density and radial velocity.  We rerun Test
+5 with a $T=10^5$ K blackbody spectrum sampled by $n_\nu = 1$, 2, 4,
+8, and 16 frequency bins.  We use the following energies:
+%
+\begin{itemize}
+\item $n_\nu = 1$: Mean energy of 29.6 eV
+\item $n_\nu = 2$: Mean energies in bins 13.6--30 and $>$30 eV---21.1,
+  43.0 eV
+\item $n_\nu = 4$: Mean energies in bins 13.6--20, 20--30, 30--40, and
+  $>$40 eV---16.7, 24.6, 34.5, 52.1 eV
+\item $n_\nu = 8, 16$: Logarithmically spaced between 13.6 and 50 eV
+  for the first $n_\nu-1$ bins, and the last bin is the mean energy
+  above 50 eV.
+\end{itemize}
+
+Figure \ref{fig:nu_dep} shows the radial profiles of density,
+temperature, ionized fraction, and radial velocity at $t = 200$ Myr
+and $t = 500$ Myr.  All of the runs with $n_\nu > 1$ show the double
+peaked features in density and radial velocities.  The mono-chromatic
+spectrum misses this feature completely because all of the radiation
+is absorbed at a characteristic column density.  In the
+multi-frequency spectra, the higher energy photons are absorbed at
+larger column densities and photo-heated this gas.  This heated gas
+creates a photo-evaporative flow that collides with the innermost
+shock, forming the double peaked density profile.  The $n_\nu \ge 4$
+runs are indistinguishable, and the $n_\nu = 2$ spectrum only leads to
+a marginally higher density in the outer shock and lower ionized
+fractions and tempeatures in the ambient medium.  In effect, a
+mono-chromatic spectrum can be sufficient if the problem focuses on
+large-scale quantities, e.g. ionized filling fractions in reionization
+calculations.  Conversely these effects may be important when studying
+small-scale, e.g. photo-evaporation.
 
 \subsection{Temporal resolution}
 \label{sec:dt_dep}
 
+\begin{figure}[t]
+  \epsscale{0.75}
+  \plotone{fig/ifront_dt}
+  \caption{\label{fig:dt_dep1} Growth of the ionization front radius,
+    compared to the analytical radius, in Test 1 with varying
+    radiative transfer timesteps.  The $dn_{\rm H}/dt$ and $dI/dt$
+    based timesteps provide the best accuracy, combined with
+    computational efficiency because they take short timesteps when
+    the \ion{H}{2} is expanding rapidly but take long timesteps when
+    the photon gradients are small when $r_{\rm IF}$ is large.  At the
+    final time, all but the $t = 5$ Myr constant timestep produce
+    identical ionization front radii.}
+  \epsscale{1}
+\end{figure}
+\begin{figure}[t]
+  \epsscale{0.75}
+  \plotone{fig/vary_dt}
+  \caption{\label{fig:dt_dep2} Variable timestepping for the methods
+    that limit change in neutral fraction (solid) and specific
+    intensity (dotted).  The horizontal lines show the constant
+    timesteps that were used in the tests.  The crossing time of a
+    mean free path by the ionization front is plotted for reference.}
+  \epsscale{1}
+\end{figure}
+
 The previous three dependencies did not affect the propagation of the
 ionization front greatly.  However in our and others' past experience
-\citep[e.g.][\bf{+others!}]{Petkova09}, the timestep, especially too
-small of one, can drastically affect the ionization front velocity.
-Here we use Test 1 but with $64^3$ resolution to compare different
-timestepping methods --- restricted changes in \ion{H}{2}
-(\S\ref{sec:dt_hi}), constant timesteps (\S\ref{sec:dt_const}), and
-based on incident radiation (\S\ref{sec:dt_tau}).
+\citep[e.g.]{Shapiro04, Mellema06, Petkova09}, the timestep,
+especially too small of one, can drastically underestimate the
+ionization front velocity.  Here we use Test 1 but with $64^3$
+resolution to compare different timestepping methods --- restricted
+changes in \ion{H}{2} ($dn_{\rm H}/dt$ based; \S\ref{sec:dt_hi}),
+constant timesteps (\S\ref{sec:dt_const}), and based on incident
+radiation ($dI/dt$ based; \S\ref{sec:dt_tau}).  The growth of the
+ionization front radius is shown in Figure \ref{fig:dt_dep1}.  Both
+the \ion{H}{2} restricted and incident radiation variable timestepping
+methods agree within a few percent throughout the entire simulation,
+as does the run with constant $dt = 0.1$ Myr timesteps.  With the
+larger constant timesteps, the numerical solution lags behind the
+analytical one, but they converge to an accurate \ion{H}{2} radii at
+late times.  Even $dt = 5$ Myr timestep, which underestimated it by
+35\% at 50 Myr, is within a percent of the analytical solution.
+
+The larger constant timesteps deviate from these more accurate
+solutions at early times because the photon energy gradient is large,
+and thus so is the ionization front velocity.  To understand this, the
+ionization front can be considered static in a given timestep.  Here
+the ionizing radiation can only penetrate into the neutral gas by
+roughly a photon mean path $\lambda_{\rm mfp}$.  Only in the next
+timestep, the ionization front can advance.  If the timestep is larger
+than $\lambda_{\rm mfp} / v_{\rm IF, anyl}$, then the numerical
+solution may fall behind.
+
+The variable timestepping of the $dn_{\rm H}/dt$ and $dI/dt$ methods
+adjust accordingly to the physical situation, as seen in the plot of
+timestep versus time (Figure \ref{fig:dt_dep2}).  They provide high
+accuracy when the source first starts to shine.  At later times, the
+ionization front slows as it approaches the Str\"{o}mgren radius, and
+large timesteps are no longer necessary.  The $dI/dt$ method has a
+similar timestep as the $dn_{\rm H}/dt$ method.  It is larger by a
+factor of $\sim 2$ because of our choice of the safety factor $C_{\rm
+  RT, cfl} = 0.5$.  This causes its calculated radius to be smaller by
+1\% at $t < t_{\rm rec}$, which is still in good agreement with the
+analytical value.
 
 \section{Methodology Tests}
 
