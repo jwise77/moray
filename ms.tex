@@ -2503,12 +2503,32 @@ correction smooths this artifact but does not completely remove it.
 
 In practice, we have found it difficult to transition from this
 optically-thin approximation to the optically-thick regime without
-producing artifacts in the photo-ionization rate \kph.  The artifacts
-exist in cells that intersect the $\tau_{\rm thin} \equiv 0.1$
-surface.  These cells are split into the optically thin and thick
-definitions, and we have not determined a good technique to avoid any
-artifacts.  We use the optically thin problem used in the angular
-resolution test (\S\ref{sec:ang_dep}) to show these artifacts in \kph.
+producing artifacts in the photo-ionization rate \kph.  We use the
+optically thin problem used in the angular resolution test
+(\S\ref{sec:ang_dep}) with $\Phi_c = 5.1$ to show these artifacts in
+\kph~in Figure \ref{fig:rayopt}.  The radiation field strictly follows
+a $1/r^2$ profile until it reaches $\tau_{\rm thin} \equiv 0.1$, which
+is denoted by the white quarter circle in the figure.  At this radius,
+the rays are then split until a sampling of $\Phi_c$ is satisfied.
+Angular spike artifacts beyond this radius arise because of the
+interface between the optically-thin approximation and full ray
+tracing treatment.  They originate in cells that intersect the
+$\tau_{\rm thin}$ surface, which are split into the optically thin and
+thick definitions.  Unfortunately we have not determined a good
+technique to avoid such artifacts.  They occur because of the
+following reason.  When the first ray with $\tau < 0.1$ exits such a
+cell, it applies the optically-thin approximation and marks the cell
+so no other ray from the same source contributes to its \kph~and
+$\Gamma$ field.  However other rays may exit the cell with $\tau >
+0.1$ because the maximum distance between the far cell faces and the
+source is not always $\tau < 0.1$.  Then these rays will split in this
+cell and add to \kph~and become attenuated, reducing its photon
+fluxes.  When the rays continue to the next cell after this
+transition, the photon fluxes are not necessarily equal to each other,
+creating the angular artifacts seen in Figure \ref{fig:rayopt}.  We
+are continuing to formulate a scheme that avoids these artifacts
+because this approximation will be very advantageous in simulations
+with large ionized filling factors.
 
 \subsection{X-Ray secondary ionizations and reduced photo-heating}
 
