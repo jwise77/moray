@@ -2501,6 +2501,16 @@ correction smooths this artifact but does not completely remove it.
 
 \subsection{Optically-thin approximation}
 
+\begin{figure}[t]
+  \epsscale{0.6}
+  \plotone{fig/rayopt}
+  \caption{\label{fig:rayopt} Optically-thin approximation to the
+    radiation field with one ray per cell in optically thin regions.
+    The angular artifacts result from the transition to optically
+    thick (white line) at an optical depth $\tau = 0.1$.}
+  \epsscale{1}
+\end{figure}
+
 In practice, we have found it difficult to transition from this
 optically-thin approximation to the optically-thick regime without
 producing artifacts in the photo-ionization rate \kph.  We use the
