@@ -2705,6 +2705,52 @@ sources in this calculation at this redshift.
 
 \section{Summary}
 
+In this paper, we have presented our implementation of adaptive ray
+tracing \citep{Abel02_RT} and its coupling to the hydrodynamics in the
+cosmology AMR code \enzo, making it a fully functional radiation
+hydrodynamics code.  As this method is photon conserving, accurate
+solutions are possible with coarse spatial resolution.  A new
+geometric correction factor to ray tracing on a Cartesian grid was
+described, and it is general to any implementation.  We have
+exhaustively tested the code to problems with known analytical
+solutions and the problems presented in the RT06 and RT09 radiative
+transfer comparison papers.  Additionally we have tested our code with
+more dynamical problems---champange flows, Rayleigh-Taylor
+instabilities, photo-evaporation of a blastwave, beamed radiation, a
+time-varying source, and an \ion{H}{2} region with MHD---to
+demonstrate the flexibility and fidelity of Enzo+Moray.  Because
+production simulations may not have the resolution afforded in these
+test problems, we have tested the dependence on spatial, angular,
+frequency, and temporal resolution.  It provides accurate solutions
+even at low resolution, except for the large constant timesteps.
+However, we have described two methods to determine the radiative
+transfer timestep that are based on the variations in specific
+intensity or changes in neutral fraction inside the ionization front.
+Both methods give very accurate results and provide the largest
+timestep to obtain an accurate solution, ultimately leading to higher
+computational efficiency.  On the same topic, we have described a
+method to calculate the radiation field in the optically-thin limit
+with ray tracing.
+
+Being a ray tracing code, it scales with the number of radiation
+sources, albeit lessened with ray merging; nevertheless, it scales
+well to O($10^3$) processors for problems with $\sim10^9$
+computational cells and $\sim10^4$ sources, such as reionization
+calculations.  We have also shown that the code shows good strong
+scaling in AMR calculations, given a large enough problem.  The
+combination of the AMR and adaptive ray tracing allows for
+high-resolution and high-dynamical range problems, e.g. molecular
+cloud resolving galaxy formation simulations and \ion{H}{2} regions of
+Population III stars.  Furthermore, we have included Lyman-Werner
+absorption, secondary ionizations from X-ray radiation, Compton
+heating from photon scattering, and radiation pressure, into the code,
+which extends the reach of Enzo+Moray to study AGN feedback, stellar
+winds, and local star formation.  Coupling the radiative transfer with
+MHD further broadens the applicability of our code.  The full
+implementation is included in the latest public version of
+\enzo\footnote{http://lca.ucsd.edu/enzo}, providing the community with
+a full-featured radiation hydrodynamics AMR code.
+
 \acknowledgments
 
 J.H.W. is supported by the Hubble Fellowship etc.  The majority of the
