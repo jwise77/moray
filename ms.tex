@@ -1138,18 +1138,20 @@ by a slower I-front velocity.  One example is an expanding \ion{H}{2}
 region in a power-law density gradient.  After a brief, initial R-type
 phase, the I-front becomes D-type phase, where the ionization and
 shock front progress jointly at the sound speed of the ionized region.
-A moderately large (\textbf{show how large!}) timestep can accurately
-follow its evolution.  However after the I-front passes a critical
-radius \citep[show this!][]{Franco90}, the I-front detaches from the
-shock front and accelerates.  The I-front velocities in these two
-stages differ up to a factor of $\sim100$ (\textbf{check this!}).
-Although the solution is accurate with a large timestep in the D-type
-phase, the I-front may lag behind because of the constant timestep.
-After a few recombination times, the numerical solution evenutally
-approaches the analytical solution.  If such a simulation focuses on
-the density core expansion and any small scale structures, such as
-cometary structures and photo-dissociation regions, one can cautiously
-sacrifice temporal accuracy at large scales for computational savings.
+A moderately large (0.1 Myr) timestep can accurately follow its
+evolution.  However after the I-front passes a critical radius
+\citep{Franco90}, the I-front detaches from the shock front,
+accelerates, and transitions back to an R-type front.  This can also
+occur in champange flows when the ionization front passes a density
+discontinuity.  The I-front velocities in these two stages differ up
+to a factor of $\sim10$.  Although the solution is accurate with a
+large timestep in the D-type phase, the I-front may lag behind because
+of the constant timestep.  After a few recombination times, the
+numerical solution evenutally approaches the analytical solution.  If
+such a simulation focuses on the density core expansion and any small
+scale structures, such as cometary structures and photo-dissociation
+regions, one can cautiously sacrifice temporal accuracy at large
+scales for computational savings.
 
 \subsubsection{Change of incident radiation}
 \label{sec:dt_tau}
