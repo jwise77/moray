@@ -289,9 +289,6 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 \bibitem[{{Trac} \& {Cen}(2007)}]{Trac07}
 {Trac}, H., \& {Cen}, R. 2007, \apj, 671, 1
 
-\bibitem[{{Truelove} \& {McKee}(1999)}]{Truelove99}
-{Truelove}, J.~K., \& {McKee}, C.~F. 1999, \apjs, 120, 299
-
 \bibitem[{{Turk}(2008)}]{yt}
 {Turk}, M.~J. 2008, in Proceedings of the 7th Python in Science Conference, ed.
   G.~Varoquaux, T.~Vaught, \& J.~Millman, Pasadena, CA USA, 46 -- 50
@@ -307,6 +304,9 @@ Harten, A., Lax, P.~D., \& van Leer, B. 1983, SIAM Review, 25, 35
 
 \bibitem[{{Whalen} \& {Norman}(2006)}]{Whalen06}
 {Whalen}, D., \& {Norman}, M.~L. 2006, \apjs, 162, 281
+
+\bibitem[{{Whalen} \& {Norman}(2008)}]{Whalen08_Instab}
+---. 2008, \apj, 673, 664
 
 \bibitem[{{Wise} \& {Abel}(2008{\natexlab{a}})}]{Wise08_Reion}
 {Wise}, J.~H., \& {Abel}, T. 2008{\natexlab{a}}, \apj, 684, 1
