@@ -1211,6 +1211,7 @@ with analytical solutions with this approximation.  We show the
 accuracy using this timestep method in \S\ref{sec:dt_dep}.
 
 \subsection{Parallelization Strategy}
+\label{sec:parallel}
 
 Parallelization of the ray tracing code is essential when exploring
 problems that require high resolution and thus large memory
@@ -2788,18 +2789,59 @@ in the near future to larger processor counts.
 \subsection{Strong Scaling}
 \label{sec:strong_sc}
 
+\begin{figure}[t]
+  \epsscale{0.8}
+  \plotone{fig/strong_v1.eps}
+  \caption{\label{fig:strong} Strong scaling test with a $256^3$ AMR
+    calculation of cosmological reionization.  The error bars
+    represent the minimum and maximum time spent on a single core and
+    measures load balancing.  The hydrodynamics and non-equilibrium
+    chemistry solvers scale well.  Unfortunately the communication of
+    rays does not scale in this problem, where as the ray tracing
+    scales relatively well.}
+  \epsscale{1}
+\end{figure}
+
+
 Strong scaling tests shows how the problem scales with the number of
 processors for the same problem.  The overhead associated with the
 structured AMR framework in \enzo~can limit the strong scalability.
 One key property of strong scaling is that each processor must have
 sufficient work to compute, compared to the communication involved.
 Here we use a small-box reionization calculation with $L_{\rm box} =
-3$ Mpc/h, a resolution of $256^3$, and 6 levels of refinement.  We
+3$ Mpc/h, a resolution of $256^3$, and six levels of refinement.  We
 measure the time spent on the hydrodynamics, non-equilibrium
-chemistry, the rebuilding of the AMR hierarchy, and ray tracing in a
-single level-0 timestep, lasting 5 Myr, at $z=9.5$.  There are ??? point
-sources in this calculation at this redshift.  The ionized volume
-fraction is ???.
+chemistry, ray tracing, and radiation transport communication in a
+timestep lasting 1 Myr, at $z=10$.  There are nine radiative transfer
+timesteps in this period.  The box has 675 point sources, ??? AMR
+grids, and ??? computational cells in this calculation at this
+redshift.  In the first radiative transfer timestep, ??? and ??? ray
+segments are traced with and without ray merging.  The ionized volume
+fraction is ???.  The calculations are performed on the Nehalam nodes
+on Pleiades on 2$^n$ cores, where $n = [2,...,8]$.  
+
+Figure \ref{fig:strong} shows the strong scaling results of this
+calculation.  The hydrodynamics and non-equilbrium chemistry routines
+scale very well in this range because they depend on local phenomena.
+Note that the dominant process is the radiation transport instead of
+the hydrodynamics when compared to the weak scaling tests.  The error
+bars in the figure represent the deviations across all cores, and it
+shows that load balancing becomes an issue at 128 and 256 cores.  This
+is an even larger problem for the ray tracing because the grids that
+host multiple radiation sources will have significantly more work than
+a distant grid.  For example if a few central grids host several point
+sources, the exterior grids must wait until those grids are finished
+ray tracing in order to receive the rays.  This idle time constitutes
+the majority of the time spent in the ray communication routines
+despite our efforts (see \S\ref{sec:parallel}) to minimize idle time.
+For this reason, the communication of rays does not scale in this
+problem.  One solution is to split the AMR grids into smaller blocks
+based on the ray tracing work.  This could impact the performance of
+the rest of Enzo by increasing the number of boundaries and thus
+communication.  Nevertheless in simulations that are dominated by
+radiation transport, it will be advantageous to construct such a
+scheme to increase the feasbility of running larger problems with the
+continually increasing computational resources.
 
 \section{Summary}
 
