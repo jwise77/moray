@@ -759,11 +759,13 @@ commences.
 \end{figure}
 
 \begin{figure}[t]
+  \epsscale{1.1}
   \plotone{fig/RTalgorithm.eps}
   \caption{\label{fig:RTalgorithm} Flow chart for the ray tracing
     algorithm for one photon passing through a grid.  Note that only
     one step is needed in the routine to adaptively split rays.  The
     remainder is a typical ray tracing method.}
+  \epsscale{1}
 \end{figure}
 
 We illustrate the underlying algorithm of the ray tracing module in
@@ -1479,7 +1481,7 @@ transition to the neutral ambient medium.
 \end{figure}
 
 \begin{figure}[t]
-  \epsscale{0.75}
+  \epsscale{0.85}
   \plotone{fig/test3_clump.eps}
   \caption{\label{fig:test3_2} Test 3. (I-front trapping in a dense
     clump and shadowing).  Evolution of the average ionized fraction
@@ -1623,7 +1625,7 @@ the problem of a growing \ion{H}{2} region in a magnetic field.
 \label{sec:test5}
 
 \begin{figure}[t]
-  \epsscale{0.75}
+  \epsscale{0.8}
   \plotone{fig/test5_ifront}
   \caption{\label{fig:test5_1} Test 5. (\ion{H}{2} region in a uniform
     medium).  Top: Growth of the computed ionization front radius at
@@ -1715,7 +1717,7 @@ increased.
   sphere}
 
 \begin{figure}[t]
-  \epsscale{0.75}
+  \epsscale{0.8}
   \plotone{fig/test6_ifront}
   \caption{\label{fig:test6_1} Test 6. (\ion{H}{2} region in a 1/$r^2$
     density profile).  Top: Growth of the computed ionization front
@@ -1807,11 +1809,13 @@ removing any boundary effects.
 \subsection{Test 7. Photo-evaporation of a dense clump}
 
 \begin{figure}[t]
+  \epsscale{0.9}
   \plotone{fig/test7_lines}
   \caption{\label{fig:test7_1} Test 7. (Photo-evaporation of a dense
     clump).  Line cuts from the point source through the middle of the
     dense clump at $t = 1, 10, 50$ Myr of (clockwise from the upper
     left) density, temperature, pressure, and neutral fraction.}
+  \epsscale{1}
 \end{figure}
 
 \begin{figure}[t]
@@ -1910,7 +1914,7 @@ instabilities.
 \subsection{Test 9. Irradiated Rayleigh-Taylor instability}
 
 \begin{figure}[t]
-  \epsscale{0.5}
+  \epsscale{0.75}
   \plotone{fig/test9thick_rho}
   \plotone{fig/test9thick_temp}
   \plotone{fig/test9thick_efrac}
@@ -1922,7 +1926,7 @@ instabilities.
 \end{figure}
 
 \begin{figure}[t]
-  \epsscale{0.5}
+  \epsscale{0.75}
   \plotone{fig/test9thin_rho}
   \plotone{fig/test9thin_temp}
   \plotone{fig/test9thin_efrac}
@@ -2820,12 +2824,12 @@ resolution of $256^3$, and six levels of refinement.  We measure the
 time spent on the hydrodynamics, non-equilibrium chemistry, ray
 tracing, and radiation transport communication in a timestep lasting 1
 Myr, at $z=10$.  There are nine radiative transfer timesteps in this
-period.  The box has 675 point sources, ??? AMR grids, and ???
-computational cells in this calculation at this redshift.  In the
-first radiative transfer timestep, ??? and ??? ray segments are traced
-with and without ray merging.  The ionized volume fraction is ???.
-The calculations are performed on the Nehalam nodes on Pleiades on
-2$^n$ cores, where $n = [2,...,8]$.
+period.  The box has 675 point sources, 15,943 AMR grids, and $6.01
+\times 10^7 \approx 392^3$ computational cells in this calculation at
+this redshift.  On average, $4.6 \times 10^8$ ray segments are traced
+each timestep.  The ionized volume fraction is 0.10.  The calculations
+are performed on the Nehalam nodes on Pleiades on 2$^n$ cores, where
+$n = [2,...,9]$.
 
 Figure \ref{fig:strong} shows the strong scaling results of this
 calculation.  The hydrodynamics and non-equilbrium chemistry routines
@@ -2847,8 +2851,7 @@ based on the ray tracing work.  This could impact the performance of
 the rest of Enzo by increasing the number of boundaries and thus
 communication.  Nevertheless in simulations that are dominated by
 radiation transport, it will be advantageous to construct such a
-scheme to increase the feasbility of running larger problems with the
-continually increasing computational resources.
+scheme to increase the feasbility of running larger problems.
 
 \section{Summary}
 
