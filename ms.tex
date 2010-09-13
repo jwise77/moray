@@ -42,26 +42,28 @@
   We describe a photon-conserving numerical method that solves the
   radiative transfer equation, using a spatially-adaptive ray tracing
   scheme, and its parallel implementation into the adaptive mesh
-  refinement (AMR) code, Enzo.  Coupling the solver with the energy
+  refinement (AMR) code, Enzo.  By coupling the solver with the energy
   equation and non-equilibrium chemistry network, our radiation
   hydrodynamics framework can be utilized to study a broad range of
   astrophysical problems, such as stellar and black hole (BH)
   feedback.  Inaccuracies can arise from large timesteps and poor
-  sampling, therefore we devised an adaptive time-stepping scheme and a
-  fast approximation of the optically-thin radiation field with
+  sampling, therefore we devised an adaptive time-stepping scheme and
+  a fast approximation of the optically-thin radiation field with
   multiple sources.  We test the method with several radiative
   transfer and radiation hydrodynamics tests that are given in
   \citet{RT06, Iliev09}.  We further test our method with more
   dynamical situations, for example, the propagation of an ionization
   front through a Rayleigh-Taylor instability, time-varying
-  luminosities, and collimated radiation.  This method linearly scales
-  with the number of point sources and number of grid cells.  To
-  combat this, we use a novel method of merging rays at large radius,
-  using a tree method, which we briefly describe.  Our implementation
-  is scalable to O(10$^3$) processors on distributed and shared memory
-  machines and can include radiation pressure and secondary
-  ionizations from X-ray radiation.  It is included in the newest
-  public release of Enzo.
+  luminosities, and collimated radiation.  The test suite also
+  includes an expanding \ion{H}{2} region in a magnetized medium,
+  utilizing the newly implemented magnetohydrodynamics module in
+  \enzo.  This method linearly scales with the number of point sources
+  and number of grid cells.  To combat this, we use a novel method of
+  merging rays at large radius, using a tree method, which we briefly
+  describe.  Our implementation is scalable to 512 processors on
+  distributed memory machines and can include radiation pressure and
+  secondary ionizations from X-ray radiation.  It is included in the
+  newest public release of Enzo.
   
 \end{abstract}
 
@@ -114,7 +116,7 @@ ionization fronts matured and were classified by \citet{Kahn54} and
 fronts, the ionized gas density is higher than the neutral gas
 density, and in D-type fronts, the opposite is true.  R-type fronts
 travel supersonically with respect to the neutral gas, whereas D-type
-front are subsonic.  Furthermore ``weak'' and ``strong'' R-type fronts
+fronts are subsonic.  Furthermore ``weak'' and ``strong'' R-type fronts
 move supersonically and subsonically with respect to the ionized gas,
 respectively.  The same terminology conversely applies to D-type
 fronts.  ``Critical'' fronts are defined as moving exactly at the
@@ -173,10 +175,10 @@ methods to solve the radiative transfer equation in three-dimensions:
   characteristics \citep[2D]{Stone92_RHD}, with long characteristics
   \citep{Finlator09}, with a variable Eddington tensor in the
   optically thin limit \citep[OTVET;][]{Gnedin01_OTVET, Petkova09},
-  and with an M1 closer relation \citep{Gonzalez07, Aubert08}.  Moment
-  methods have the advantage of being fast, being independent of the
-  number of radiation point sources.  However, they are diffusive and
-  result in incorrect shadows in some situations.
+  and with an M1 closure relation \citep{Gonzalez07, Aubert08}.
+  Moment methods have the advantage of being fast, being independent
+  of the number of radiation point sources.  However, they are
+  diffusive and result in incorrect shadows in some situations.
 \item Ray tracing---Radiation can be propagated along rays that extend
   through the computational grid \citep[e.g.][]{Razoumov99, Abel99_RT,
     Ciardi01, Sokasian01, Whalen06, Rijkhorst06, Mellema06, Alvarez06,
@@ -210,11 +212,11 @@ adaptive mesh refinement (AMR) code, \enzo~\citep{BryanNorman1997,
 solver at small timescales, enabling it to study radiation
 hydrodynamical problems.  We have used this code to investigate the
 growth of an \ion{H}{2} region from a 100\Ms~Population III (Pop III)
-star \citep{Abel07}, radiative feedback on the formation of high
-redshift dwarf galaxies \citep{Wise08_Gal}, the early stages of
-reionization from Pop III stars \citep{Wise08_Reion}, ultraviolet
-radiation escape fractions from dwarf galaxies before reionization
-\citep{Wise09}, radiative negative feedback from accreting Pop III
+star \citep{Abel07}, the early stages of reionization from Pop III
+stars \citep{Wise08_Reion}, radiative feedback on the formation of
+high redshift dwarf galaxies \citep{Wise08_Gal}, ultraviolet radiation
+escape fractions from dwarf galaxies before reionization
+\citep{Wise09}, negative radiative feedback from accreting Pop III
 seed black holes \citep{Alvarez09}, and radiative feedback in
 accreting supermassive black holes \citep[][in prep.]{Kim11}.  We have
 included Enzo+Moray in the latest public release of
@@ -222,9 +224,9 @@ included Enzo+Moray in the latest public release of
 the newly added MHD solver in \enzo~\citep{Wang09}.
 
 We have structured this paper as follows.  In Section 2, we describe
-the connections between adaptive ray tracing and the radiative
-transfer equation.  Furthermore, we detail how physics other than
-photo-ionization and photo-heated are included.  We then derive a
+the mathematical connections between adaptive ray tracing and the
+radiative transfer equation.  Furthermore, we detail how physics other
+than photo-ionization and photo-heated are included.  We then derive a
 geometric correction factor to any ray tracing method to improve
 accuracy.  We end the section by describing a new computational
 technique to approximate an optically-thin radiation field with ray
@@ -237,7 +239,7 @@ results from the RT06 radiative transfer tests in Section 4.
 Afterwards in Section 5, we show the results from the RT09 radiation
 hydrodynamics tests.  We expand on these tests to include more
 dynamical and complex setups to demonstrate the flexibility and high
-fidelity of Enzo+Moray.  Section 6 reports the results from spatial,
+fidelity of Enzo+Moray.  Section 6 gives the results from spatial,
 angular, frequency, and temporal resolution tests.  In Section 7, we
 illustrate the improvements from the geometric correction factor and
 our optically-thin approximation.  We also show the effects of X-ray
@@ -265,9 +267,9 @@ unit area per frequency $\nu$.  $H = \dot{a}/a$ is the Hubble
 constant, where $a$ is the scale factor.  $\bar{a} = a/a_{em}$ is the
 ratio of scale factors at the current time and time of emission.  The
 second term represents the propagation of radiation, where the factor
-$1/a$ accounts for cosmic expansion.  The third term describes both
-the cosmological redshift and dilution of radiation.  On the right
-hand side, the first term considers the absorption coefficient
+$1/\bar{a}$ accounts for cosmic expansion.  The third term describes
+both the cosmological redshift and dilution of radiation.  On the
+right hand side, the first term considers the absorption coefficient
 $\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$, and the second term
 $j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ is the emission coefficient
 that includes any point sources of radiation or diffuse radiation.
@@ -285,9 +287,8 @@ is $\ll 1$, we can ignore the third term.  For example at $z=5$, this
 ratio is 0.1 when $L = c/H(z=5)$ = 53 proper Mpc.  In large boxes
 where the light crossing time is comparable to the Hubble time, then
 it could be important to consider cosmological redshifting and
-dilution of the radiation, which we will describe later in
-\S\ref{sec:ART}.  Thus equation (\ref{eqn:rteqn}) reduces to the
-non-cosmological form in this local approximation,
+dilution of the radiation.  Thus equation (\ref{eqn:rteqn}) reduces to
+the non-cosmological form in this local approximation,
 %
 \begin{equation}
   \frac{1}{c} \frac{\partial I_\nu}{\partial t} + 
@@ -306,8 +307,9 @@ discretization and its contribution to the radiation field.
 \label{sec:ART}
 
 Ray tracing is an accurate method to propagate radiation from point
-sources on a computational grid, given that there are rays passing
-through each cell.  Along a ray, the radiative transfer equation reads
+sources on a computational grid, given that there are a sufficient
+number of rays passing through each cell.  Along a ray, the radiative
+transfer equation reads
 %
 \begin{equation}
 \label{eqn:rtray}
@@ -334,7 +336,7 @@ evenly divides a sphere into equal areas.  The rays are initialized at
 each point source with the photon luminosity (ph s$^{-1}$) equally
 spread across $N_{\rm pix} = 12 \times 4^l$ rays, where $l$ is the
 initial HEALPix level.  We usually find $l$ = 0 or 1 is sufficient
-because these coarse rays will be usually be split before traversing
+because these coarse rays will usually be split before traversing
 the first cell.
 
 The rays are traced through the grid in a typical fashion
@@ -349,7 +351,7 @@ boundary crossing.  The ray segment length crossing the cell is
 %
 where $R_0$, $\hat{n}_{\rm ray}$, $x_{\rm cell,i}$, and $x_{\rm
   src,i}$ are the initial distance travelled by the ray, normal
-direction of the ray, the next cell boundary crossing on the $i$-th
+direction of the ray, the next cell boundary crossing in the $i$-th
 dimension, and the position of the point source that emitted the ray,
 respectively.  However before the ray travels across the cell, we
 evaluate the ratio of the face area $A_{\rm cell}$ of the current cell
@@ -361,7 +363,7 @@ and the solid angle $\Omega_{\rm ray}$ of the ray,
   \frac{N_{\rm pix} (\Delta x)^2} {4\pi R_0^2}.
 \end{equation}
 %
-If $\Phi_c$ is less than a pre-determined value (usually $>2$), the
+If $\Phi_c$ is less than a pre-determined value (usually $>3$), the
 ray is split into 4 child rays.  We investigate the variations in
 solutions with $\Phi_c$ in \S\ref{sec:ang_dep}.  The pixel numbers
 of the child rays $p^\prime$ are given by the ``nested'' scheme of
@@ -385,7 +387,7 @@ A ray propagates and splits until
   periodic boundary conditions.
 \end{enumerate}
 %
-In the second case, the photon is halted at that position and saved,
+In the first case, the photon is halted at that position and saved,
 where it will be considered in the solution of $I_\nu$ at the next
 timestep.  In the next timestep, the photon will encounter a different
 hydrodynamical and ionization state, hence $\kappa$, in its path.
@@ -404,18 +406,21 @@ region.  In each case, the factor $\Phi_c$ can be much higher than the
 desired value, and it would be efficient to merge these rays.  We have
 devised a new scheme that merges rays from clustered sources based on
 a hierarchical binary tree, which is analogous to the gravity tree
-solvers.  We show the performance improvements in the strong scaling
-tests (\S\ref{sec:strong_sc}).  However we leave its full details for
-a later paper.
+solvers.  In principle, this should increase the efficiency of the
+solver, but currently in most problems the overhead is greater than
+the compuational savings.  Nevertheless the biggest advantage of this
+method is the memory savings in simulations with clustered sources.
+We leave its full details for a later paper and now describe our
+photon-conserving transport method.
 
 \subsection{Radiation Field}
 
 The radiation field is calculated by integrating equation
-\ref{eqn:rtray} along each ray, which is done by considering the
+(\ref{eqn:rtray}) along each ray, which is done by considering the
 discretization of the ray into segments.  In the following section, we
 assume the rays are monochromatic.  For convenience, we express the
-integration in terms of optical depth $\tau = \int \kappa(r,t) \;
-dr$, and for a ray segment,
+integration in terms of optical depth $\tau = \int \kappa(r,t) \; dr$,
+and for a ray segment,
 %
 \begin{equation}
   \label{eqn:dtau}
@@ -424,10 +429,10 @@ dr$, and for a ray segment,
 Here $\sigma_{\rm abs}$ and $n_{\rm abs}$ are the cross section and
 number density of the absorbing medium, respectively.  We use the
 cell-centered density in our calculations but have experimented with
-trilinearly interpolated densities \citep[see][]{Mellema06} without
-producing considerable artifacts.  Equation (\ref{eqn:rtray}) has a
-simple exponential analytic solution, and the photon flux of a ray is
-reduced by
+trilinearly interpolated densities \citep[see][]{Mellema06} but could
+not devise a method that did not produce considerable artifacts.
+Equation (\ref{eqn:rtray}) has a simple exponential analytic solution,
+and the photon flux of a ray is reduced by
 %
 \begin{equation}
   \label{eqn:flux}
@@ -460,14 +465,147 @@ in neutral hydrogen is
 \frac{dn_{\rm H}}{dt} = \alpha_B n_e n_p - C_{\rm H} n_e n_{\rm
   H} - k_{\rm ph},
 \end{equation}
-where $\alpha_B = 2.59 \times 10^{-13} \mathrm{cm}^3 \mathrm{s}^{-1}$
-is the recombination coefficient at 10$^4$ K in the Case B on-the-spot
-approximation, in which all recombinations are locally reabsorbed,
-\citep{Spitzer78}, and $C_{\rm H}$ is the collisional ionization rate.
-However for more accurate solutions in calculations that consider
-several chemical species, the photo-ionization rates are better
-utilized in solvers that consider chemical networks
-\citep[e.g.][]{Abel97}.
+where $\alpha_B = 2.59 \times 10^{-13} \mathrm{cm}^3 \;
+\mathrm{s}^{-1}$ is the recombination coefficient at 10$^4$ K in the
+Case B on-the-spot approximation in which all recombinations are
+locally reabsorbed, \citep{Spitzer78}, and $C_{\rm H}$ is the
+collisional ionization rate.  However for more accurate solutions in
+calculations that consider several chemical species, the
+photo-ionization rates are better utilized in solvers that consider
+chemical networks \citep[e.g.][]{Abel97}.
+
+\subsection{Geometric Corrections}
+\label{sec:meth_fc}
+
+\begin{figure}[t]
+  \plottwo{fig/covering.eps}{fig/calc_fc.eps}
+  \caption{\label{fig:covering} (a) A two-dimensional illustration of
+    the overlap between the beam associated with a ray $\gamma$ and a
+    computational cell.  The ray has a segment length of $dr$ passing
+    through the cell.  The covering area is denoted by dark grey,
+    where the full area $(dr \times L_{\rm pix})$ is colored by the
+    dark and light grey.  The photo-ionization and photo-heating rates
+    should be corrected by this overlap fraction $f_c$.  (b)
+    Annotation of quantities used in this geometric correction.}
+\end{figure}
+
+For a ray tracing method to accurately, i.e. without non-spherical
+artifacts, compute the radiation field, the computational grid must be
+well-sampled by the rays.  The main source of these artifacts is the
+geometrical difference between the cell and the HEALPix pixel.  In
+this section, we devise a correction scheme to account for these
+differences.  Consider the solid angle $\Omega_{\rm ray}$ and photon
+flux $P$ associated with a single ray, and assume the flux is constant
+across $\Omega_{\rm ray}$.  There exists a discrepancy between the
+geometry cell face and HEALPix pixel when the pixel does not cover the
+entire cell face, which is illustrated in Figure \ref{fig:covering}.
+This mismatch causes non-spherical artifacts and is most apparent in
+the optically thin case, where the area of the pixel is dominant over
+$(1 - e^\tau)$ when calculating $k_{\rm ph}$.  One can avoid these
+artifacts by increasing the sampling $\Phi_c$ to high values ($>10$)
+but we have formulated a simple geometric correction to the
+calculation of the radiation field.  This correction is not unique to
+the HEALPix formalism but can be applied to any type of pixelization.
+
+The contribution to $k_{\rm ph}$ and $\Gamma_{\rm ph}$ must be
+corrected by the covering factor $f_c$ of the pixel with respect to
+the cell.  When the pixel is fully contained within the cell face,
+$f_c \equiv 1$.  Because the geometry of the pixel can be complex with
+curved edges, we approximate $f_c$ by assuming the pixel is square.
+The covering factor is thus related to the width of a pixel, $L_{\rm
+  pix} = R_0 \, \theta_{\rm pix}$, and the distance from the ray
+segment midpoint to the closest cell boundary $D_{\rm c,i}$, which is
+depicted in Figure \ref{fig:covering}.  To estimate $f_c$, we first
+find the distance $d_{\rm center,i}$ from the midpoint of the ray
+segment to the cell center $x_{\rm 0,i}$ in orthogonal directions,
+%
+\begin{equation}
+  \label{eqn:midpoint}
+  D_{\rm c,i} = \left| R_{\rm 0,i} + \hat{n}_i\,\frac{dr}{2} - x_{\rm
+      0,i} \right|,
+\end{equation}
+where $R_{\rm 0,i}$ is the distance travelled by the ray in each
+orthogonal direction.  The distance to the closest cell boundary is
+$D_{\rm edge} = dx/2 - \min_{i=1 \rightarrow 3} (D_{\rm c,i})$.  Thus
+the covering factor is related to the square of the ratio between the
+$L_{\rm pix}$ and $D_{\rm edge}$ by
+%
+\begin{equation}
+  \label{eqn:fc}
+  f_c = \left( \frac{1}{2} + \frac{D_{\rm edge}}{L_{\rm pix}} \right)^2
+\end{equation}
+One half of the pixel is always contained within the cell, which
+results in the factor of 1/2.  Finally we multiply $k_{\rm ph}$ and
+$\Gamma_{\rm ph}$ by $f_c$ but leave the absorbed radiation $dP$
+untouched because this would underestimate the attenuation of the
+incoming radiation.  Using $f_c$ calculated like above, the method is
+no longer photon conserving.  In our implementation, we felt that the
+spherical symmetry obtained outweighed the loss of photon
+conservation.  However we show that there are no perceptible
+deviations from photon conservation in \S\ref{sec:test1} and
+\S\ref{sec:dx_dep}.
+
+We briefly next describe how to retain photon conservation with a
+geometric correction.  Notice that we compute $f_c$ by only
+considering the distances in orthogonal directions.  A better estimate
+would consider the distance between the cell boundary and ray segment
+midpoint in the direction between the midpoint and cell center of
+$\mathbf{x}_{\rm mid} - \mathbf{x}_0$.  We find that the method
+outlined here provides a sufficient correction factor to avoid any
+non-spherical artifacts and deviations from photon conservation.
+Furthermore in principle, the ray should also contribute to any
+neighboring cells that overlap with $\Omega_{\rm ray}$, which is the
+key to be photon conservative with such a geometric correction.
+
+\subsection{Optically Thin Approximation}
+
+In an optically thin medium, radiation is only attenuated by geometric
+dilution in the local approximation to Equation (\ref{eqn:rteqn}),
+i.e. the inverse square law.  With such a simple solution, the tracing
+of rays is wasteful, however these rays must be propagated because the
+the medium farther awap can be optically thick.  Here we describe a
+method that minimizes the computational work of ray tracing in the
+optically thin regime by exploiting this fact.  Each ray tracks the
+total column density $N_{\rm abs}$ and the equivalent total optical
+depth $\tau$ traversed by the photon.  If $\tau < \tau_{\rm thin} \sim
+0.1$ after the ray exits the cell, we calculate the photo-ionization
+and photo-heating rates directly from the incoming ray instead of the
+luminosity of the source.
+\begin{equation}
+  \label{eqn:optthin}
+  k_{\rm ph} = \frac{\sigma_{\rm abs} \; P}{dt_P \; \theta_{\rm pix}}
+  \; \frac{r_{\rm cell}}{r_{\rm ray}}.
+\end{equation}
+Note that the photon number $P$ in the ray has already been
+geometrically diluted by ray splitting.  Here $r_{\rm cell}$ and
+$r_{\rm ray}$ are the radii from the radiation source to the cell
+center and where the ray exits the cell.  Thus the last factor
+corrects the flux to a value appropriate for the cell center.  The
+photo-heating ray is calculated in the same manner as the general
+case, $\Gamma_{\rm ph} = k_{\rm ph} (E_{\rm ph} - E_i)$.  This should
+only be evaluated once per cell per radiation source.  No photons are
+removed from the ray.  With this method, we only require one ray
+travel through each cell where the gas is optically thin, thus
+reducing the computational expense.
+
+We must be careful not the overestimate the radiation when multiple
+rays enter a single cell.  In the case of a single radiation source,
+the solution is simple --- only assign the cell the photo-ionization
+and photo-heating rates when $k_{\rm ph} = 0$.  However in the case
+with multiple sources, this is no longer valid, and we must sum the
+flux from all optically thin sources.  Only one ray per source must
+contribute to a single cell in this framework.  We create a flagging
+field that marks whether a cell has already been touched by an
+optically thin photon from a particular radiation source.  Naively, we
+would be restricted to tracing rays from a single source at a time if
+we use a boolean flagging field.  However we can trace rays for 32
+sources at a time by using bitwise operations on a 32-bit integer
+field.  For example in \texttt{C}, we would check if an optically thin
+ray from the \texttt{n}-th source has propagated through cell
+\texttt{i} by evaluating \texttt{(MarkerField[i] $\gg$ n \& 1)}.  If
+false, then we can add the optically thin approximation
+(Eq. \ref{eqn:optthin}) to the cell and set \texttt{MarkerField[i] |=
+  (1 $\gg$ n);} to mark the cell.
 
 \subsection{Additional Physics}
 \label{sec:addphysics}
@@ -475,14 +613,16 @@ utilized in solvers that consider chemical networks
 Other radiative processes can also be important in some situations,
 such as attenuation of radiation in the Lyman-Werner bands, secondary
 ionizations from X-ray radiation, Compton heating of from scattered
-photons, and radiation pressure.
+photons, and radiation pressure.  We describe our implementation of
+these physics next.
 
 \subsubsection{Absorption of Lyman-Werner Radiation}
 
-Molecular hydrogen can absorb photons in the Lyman-Werner bands that
-are composed of 76 absorption lines ranging from 10.2 to 13.6 eV.
-Each of these spectral lines can be modelled with a typical
-exponential attenuation equation \citep{Ricotti01}, but
+Molecular hydrogen can absorb photons in the Lyman-Werner bands
+through the two-step Solomon process that are composed of 76
+absorption lines ranging from 11.1 to 13.6 eV \citep{Stecher67,
+  Dalgarno70}.  Each of these spectral lines can be modelled with a
+typical exponential attenuation equation \citep{Ricotti01}, but
 \citet{Draine96} showed that this self-shielding is well modeled with
 the following relation to total \hh~column density
 %
@@ -504,9 +644,8 @@ by summing the contribution of all rays,
     \Omega_{\rm ray} \; r^2 \; dr}{A_{\rm cell} \; dV \; dt_P},
 \end{equation}
 where $\sigma_{\rm LW} = 3.71 \times 10^{18} \mathrm{cm}^2$ is the
-effective cross-section of \hh~\citep{Abel97}.  To account for any
-absorption in each photon package, we attenuate the photon number
-flux by
+effective cross-section of \hh~\citep{Abel97}.  To account for
+absorption, we attenuate the photon number flux by
 %
 \begin{equation}
   \label{eqn:LWdP}
@@ -517,14 +656,15 @@ where $dN_{\rm H2}$ is the \hh~column density in the current cell.
 \subsubsection{Secondary Ionizations from X-rays}
 \label{sec:xrays}
 
-A high-energy ($E_{\rm ph} \gsim 100$ eV) photon can ionize multiple
-neutral hydrogen and helium atoms, and this should be considered in
-such radiation fields.  \citet{Shull85} studied this effect with Monte
-Carlo calculations over varying electron fractions and photon energies
-up to 3 keV.  They find that the excitation of hydrogen and helium and
-the ionization of \ion{He}{2} is negligible.  The number of secondary
-ionizations of H and He is reduced from the ratio of the photon and
-ionization energies ($E_{\rm ph} / E_i$) by a factor of
+At the other end of the spectrum, a high-energy ($E_{\rm ph} \gsim
+100$ eV) photon can ionize multiple neutral hydrogen and helium atoms,
+and this should be considered in such radiation fields.
+\citet{Shull85} studied this effect with Monte Carlo calculations over
+varying electron fractions and photon energies up to 3 keV.  They find
+that the excitation of hydrogen and helium and the ionization of
+\ion{He}{2} is negligible.  The number of secondary ionizations of H
+and He is reduced from the ratio of the photon and ionization energies
+($E_{\rm ph} / E_i$) by a factor of
 %
 \begin{equation}
   Y_{\rm k,H} = 0.3908 (1 - x^{0.4092})^{1.7592},
@@ -555,18 +695,18 @@ factor of
   \frac{dP_C}{P} = (1 - e^{-\tau_e}) \frac{\Delta(T_e)}{E_{ph}},
 \end{equation}
 which is the equivalent of the photon energy decreasing.  Here $\tau_e
-= n_e \sigma_{KN} dl$ is the optical depth to Compton scattering, and
-$\sigma_{KN}$ is the non-relativistic Klein-Nishina cross section
-\citep{Rybicki}.  The Compton heating rate is thus
+= n_e \sigma_{\rm KN} dl$ is the optical depth to Compton scattering,
+and $\sigma_{\rm KN}$ is the non-relativistic Klein-Nishina cross
+section \citep{Rybicki}.  The Compton heating rate is thus
 \begin{equation}
-  \Gamma_{\rm ph,C} = \frac{dP_C}{n_e \; V_{\rm cell} \; dt}.
+  \Gamma_{\rm ph,C} = \frac{dP_C}{n_e \; V_{\rm cell} \; dt_P}.
 \end{equation}
 
 \subsubsection{Radiation Pressure}
 
-The absorption of radiation transfers momentum from photons to the
-absorbing medium, i.e. radiation pressure.  This is easily computed by
-considering the momentum
+Another relevant process is radiation pressure, where the absorption
+of radiation transfers momentum from photons to the absorbing medium.
+This is easily computed by considering the momentum
 \begin{equation}
   d\mathbf{p}_\gamma = \frac{dP \; E_{\rm ph}}{c} \; \hat{r}
 \end{equation}
@@ -576,149 +716,24 @@ on dust, and thus our treatment underestimates its effects in
 applicable environments.  The resulting acceleration of the gas due to
 radiation pressure is
 \begin{equation}
-  d\mathbf{a} = \frac{d\mathbf{p}_\gamma} {dt\; \rho \; V_{\rm cell}},
+  d\mathbf{a} = \frac{d\mathbf{p}_\gamma} {dt_P\; \rho \; V_{\rm cell}},
 \end{equation}
-where $\rho$ is the gas density inside the cell and $dt$ is the
-radiative transfer timestep.  This acceleration is then added to the
-other forces, e.g. gravity and gas pressure, in the calculation.
-
-\subsection{Geometric Corrections}
-\label{sec:meth_fc}
-
-\begin{figure}[t]
-  \plottwo{fig/covering.eps}{fig/calc_fc.eps}
-  \caption{\label{fig:covering} (a) A two-dimensional illustration of
-    the overlap between the beam associated with a ray $\gamma$ and a
-    computational cell.  The ray has a segment length of $dr$ passing
-    through the cell.  The covering area is denoted by dark grey,
-    where the full area $(dr \times L_{\rm pix})$ is colored by the
-    dark and light grey.  The photo-ionization and photo-heating rates
-    should be corrected by this overlap fraction $f_c$.  (b)
-    Annotation of quantities used in this geometric correction.}
-\end{figure}
-
-Consider the solid angle $\Omega_{\rm ray}$ and photon flux $P$
-associated with a single ray, and assume the flux is constant across
-$\Omega_{\rm ray}$.  There exists a discrepancy between the geometry
-cell face and HEALPix pixel when the pixel does not cover the entire
-cell face, which is illustrated in Figure \ref{fig:covering}.  This
-mismatch causes non-spherical artifacts and is most apparent in the
-optically thin case, where the area of the pixel is dominant over $(1
-- e^\tau)$ when calculating $k_{\rm ph}$.  One can avoid these
-artifacts by increasing the sampling $\Phi_c$ to high values,
-e.g. $>10$, but we have formulated a simple geometric correction to
-the calculation of the radiation field.  This correction is not unique
-to the HEALPix formalism but can be applied to any type of
-pixelization.
-
-The contribution to $k_{\rm ph}$ and $\Gamma_{\rm ph}$ must be
-corrected by a covering factor $f_c$.  When the pixel is fully
-contained within the cell face, $f_c \equiv 1$.  Because the geometry
-of the pixel can be complex, i.e. curved edges, we approximate $f_c$
-by assuming the pixel is square.  The covering factor is thus related
-to the width of a pixel, $L_{\rm pix} = R_0 \, \theta_{\rm pix}$, and
-the distance from the ray segment midpoint to the closest cell
-boundary, which is depicted in Figure \ref{fig:covering}.  To estimate
-$f_c$, we first find the distance $d_{\rm center,i}$ from the midpoint
-of the ray segment to the cell center $x_{\rm 0,i}$ in orthogonal
-directions,
-%
-\begin{equation}
-  \label{eqn:midpoint}
-  D_{\rm c,i} = \left| R_{\rm 0,i} + \hat{n}_i\,\frac{dr}{2} - x_{\rm
-      0,i} \right|.
-\end{equation}
-The distance to the closest cell boundary is $D_{\rm edge} = dx/2 -
-\min_{i=1 \rightarrow 3} (D_{\rm c,i})$.  Thus the covering
-factor is related to the square of the ratio between the $L_{\rm pix}$
-and $d_{\rm mid}$ by
-%
-\begin{equation}
-  \label{eqn:fc}
-  f_c = \left( \frac{1}{2} + \frac{D_{\rm edge}}{L_{\rm pix}} \right)^2
-\end{equation}
-One half of the pixel is always contained within the cell, which
-results in the factor of 1/2.  Finally we multiply $k_{\rm ph}$ and
-$\Gamma_{\rm ph}$ by $f_c$ but leave the absorbed radiation $dP$
-untouched because this would underestimate the attenuation of the
-incoming radiation.  Using $f_c$ calculated like above, the method is
-no longer photon conserving.  In our implementation, we felt that the
-spherical symmetry obtained outweighed the loss of photon
-conservation.  We show the deviations from fully conservative in
-\S\ref{sec:test_fc}.  
-
-We briefly next describe how to retain photon conservation with a
-geometric correction.  Notice that we compute $f_c$ by only
-considering the distances in orthogonal directions.  A better estimate
-would consider the distance between the cell boundary and ray segment
-midpoint in the direction of $\mathbf{x}_{\rm mid} - \mathbf{x}_{\rm
-  center}$.  However we find that the method outlined here provides a
-sufficient correction factor to avoid any non-spherical artifacts.
-Furthermore in principle, the ray should also contribute to any
-neighboring cells that overlap with $\Omega_{\rm ray}$, which is the
-key to be photon conservative with such a geometric correction.
-
-\subsection{Optically Thin Approximation}
-
-When the medium is optically thin to the radiation, radiation is only
-attenuated by geometric dilution in the local approximation to
-Eq. (\ref{eqn:rteqn}), i.e. the inverse square law.  We can minimize
-the computational work of ray tracing in the optically thin regime by
-utilizing this fact.  Here we track the total column density $N_{\rm
-  abs}$ and the equivalent total optical depth $\tau$ traversed by the
-photon.  If $\tau < \tau_{\rm thin} \sim 0.1$ after the ray exits the
-cell, we calculate the photo-ionization and photo-heating rates
-directly from the incoming ray instead of the luminosity of the
-source.  This should only be evaluated once per cell per radiation
-source.
-\begin{equation}
-  \label{eqn:optthin}
-  k_{\rm ph} = \frac{\sigma_{\rm abs} \; P}{dt_P \; \theta_{\rm pix}}
-  \; \frac{r_{\rm cell}}{r_{\rm ray}}.
-\end{equation}
-Note that the photon number $P$ in the ray has already been
-geometrically diluted by ray splitting.  Here $r_{\rm cell}$ and
-$r_{\rm ray}$ are the radii from the radiation source to the cell
-center and where the ray exits the cell.  Thus the last factor
-corrects the flux to a value appropriate for the cell center.  The
-photo-heating ray is calculated in the same manner as the general
-case, $\Gamma_{\rm ph} = k_{\rm ph} (E_{\rm ph} - E_i)$.  No photons
-are removed from the ray.  With this method, we only require one ray
-travel through each cell where the gas is optically thin, thus
-reducing the computational expense.
-
-We must be careful not the overestimate the radiation when multiple
-rays enter a single cell.  In the case of a single radiation source,
-the solution is simple --- only assign the cell the photo-ionization
-and photo-heating rates when $k_{\rm ph} = 0$.  However in the case
-with multiple sources, this is no longer valid, and we must sum the
-flux from all optically thin sources.  Only one ray per source must
-contribute to a single cell in this framework.  We create a flagging
-field that marks whether a cell has already been touched by an
-optically thin photon from a particular radiation source.  Naively, we
-would be restricted to tracing rays from a single source at a time if
-we use a boolean flagging field.  However we can trace rays for 32
-sources at a time by using bitwise operations on a 32-bit integer
-field.  For example in \texttt{C}, we would check if an optically thin
-ray from the \texttt{n}-th source has propagated through cell
-\texttt{i} by evaluating \texttt{(MarkerField[i] $\gg$ n \& 1)}.  If
-false, then we can add the optically thin approximation
-(Eq. \ref{eqn:optthin}) to the cell and set \texttt{MarkerField[i] |=
-  (1 $\gg$ n);} to mark the cell.
+where $\rho$ is the gas density inside the cell.  This acceleration is
+then added to the other forces, e.g. gravity, in the calculation.
 
 \section{Numerical Implementation in Enzo}
 
-\enzo~is a parallel block-structured AMR \citep{BergerAMR} code that
-is publicly available \citep{BryanNorman1997, OShea2004}.  In this
-section, we describe our parallel implementation of the adaptive ray
-tracing method into \enzo.  First we explain the programming design of
-handling the ``photon packages'' that are traced along the adaptive
-rays.  We use the terms photon packages and rays interchangeably.  Next
-we focus on the details of the radiation hydrodynamics and then the
-importance of correct time-stepping.  Last we give our parallelization
-strategy of tracing rays through an AMR hierarchy.  This
-implementation is included in the \texttt{v2.0} public version of
-\enzo.
+In this section, we describe our parallel implementation of the
+adaptive ray tracing method into \enzo.  \enzo~is a parallel
+block-structured AMR \citep{BergerAMR} code that is publicly available
+\citep{BryanNorman1997, OShea2004}.  First we explain the programming
+design of handling the ``photon packages'' that are traced along the
+adaptive rays.  We use the terms photon packages and rays
+interchangeably.  Next we focus on the details of the radiation
+hydrodynamics and then the importance of correct time-stepping.  Last
+we give our parallelization strategy of tracing rays through an AMR
+hierarchy.  This implementation is included in the \texttt{v2.0}
+public version of \enzo.
 
 \subsection{Programming Design}
 \label{sec:design}
@@ -803,11 +818,11 @@ Store the destination grid number and level.  Continue to the next ray
 in the grid (step 3a).  We determine whether a subgrid exists by
 creating a temporary 3D field of pointers that either equals the
 pointer of the current grid if no subgrid exists under the current
-cell or the child pointer that exists under the current cell.  This
-provides a significant speedup when compared to a simple comparison
-of a photon package position and all of the child grid boundaries.
-Note that this is the same algorithm used in \enzo~when moving
-collisionless particles to child grids.
+cell or the child grid pointer that exists under the current cell.
+This provides a significant speedup when compared to a simple
+comparison of a photon package position and all of the child grid
+boundaries.  Note that this is the same algorithm used in \enzo~when
+moving collisionless particles to child grids.
 
 \step{3d} Compute the next cell crossing of the ray and the ray
 segment length across the cell (Equation \ref{eqn:trace}).
@@ -842,7 +857,7 @@ radiative transfer equation, halt the photon.  If not (i.e. infinite
 speed of light), delete the photon.
 
 \step{3k} Check if the ray has exited the current grid.  If false,
-continue to the next ray (step 3a).  If true, move the ray to the
+continue to the next cell (step 3b).  If true, move the ray to the
 linked list \texttt{PhotonMoveList}, similar to step 3c.  If the ray
 exits the simulation domain, delete it if the boundary conditions are
 isolated; otherwise, we change the source position of the ray by a
@@ -893,11 +908,12 @@ situation where most of the energy groups are completely absorbed but
 a few groups still have significant flux.
 
 In practice, we have found that one energy group per photon type is
-sufficient to match expected analytical tests.  For example when
-modeling Population III stellar radiation \citep[e.g.][for hydrogen
-  ionizing radiation only]{Abel07, Wise08_Gal}, we have 3 energy
-groups---\ion{H}{1}, \ion{He}{1}, \ion{He}{2}---each with an energy
-that equals the average photon energy above the ionization threshold.
+sufficient to match expected analytical tests (\S\ref{sec:nu_dep}).
+For example when modeling Population III stellar radiation
+\citep[e.g.][for hydrogen ionizing radiation only]{Abel07,
+  Wise08_Gal}, we have 3 energy groups---\ion{H}{1}, \ion{He}{1},
+\ion{He}{2}---each with an energy that equals the average photon
+energy above the ionization threshold.
 
 \subsection{Coupling with Hydrodynamics}
 \label{sec:coupling}
@@ -963,16 +979,16 @@ hydrodynamical timesteps.
 For example, a grid on level $L$ might have no radiation in its
 initial evaluation, but the ionization front exists just outside its
 boundary.  Then radiation permeates the grid in the time between
-$t_{\rm L=1} \rightarrow t_{\rm L=1}+dt_{\rm L=1}$, and the energy and
-chemical state of the cells must be updated again to advance the
-ionization front accurately.  If one does not update these cells, it
-will appear that the ionization front does not enter the grid until
-the next hydrodynamical timestep!  Visually this appears as
-discontinuities in the temperature and electron fraction on grid
-boundaries.  One may avert this problem by solving the chemistry and
-energy equations for every cell on every radiative transfer timestep,
-but this is very time consuming and unnecessary, especially if the
-radiation filling factor is small.
+$t_{\rm L} \rightarrow t_{\rm L}+dt_{\rm L}$, and the energy and
+chemical state of the cells must be updated with each radiation update
+to advance the ionization front accurately.  If one does not update
+these cells, it will appear that the ionization front does not enter
+the grid until the next hydrodynamical timestep!  Visually this
+appears as discontinuities in the temperature and electron fraction on
+grid boundaries.  One may avert this problem by solving the chemistry
+and energy equations for every cell on every radiative transfer
+timestep, but this is very time consuming and unnecessary, especially
+if the radiation filling factor is small.
 
 We choose to dynamically split the problem by cells with and without
 radiation.  In every radiation timestep, the chemo-thermal state of
@@ -1027,9 +1043,9 @@ path
 \end{equation}
 past the ionization front.  For example in our implementation, the
 chemo-thermal state of the system remains constant as the rays are
-traced through the cells.  Thus in the case of a single \ion{H}{2}
-region, the speed of the ionization front is limited to approximately
-the $\lambda_{\rm mfp} / dt_P$.
+traced through the cells.  In the case of a single \ion{H}{2} region,
+the speed of the ionization front is limited to approximately
+$\lambda_{\rm mfp} / dt_P$.
 
 \subsubsection{Minimizing neutral fraction change}
 \label{sec:dt_hi}
@@ -1047,8 +1063,8 @@ the $\lambda_{\rm mfp} / dt_P$.
     into the next neutral cell in the overdensity.}
 \end{figure}
 
-Another strategy is only allowing the neutral fraction of the ionized
-gas to change a small amount, i.e. for a single cell,
+Another strategy is restricting the neutral fraction to change a small
+amount, i.e. for a single cell,
 %
 \begin{equation}
   \label{eqn:dtelec}
@@ -1059,12 +1075,16 @@ where $\epsilon_{\rm ion}$ is the maximum fraction change in neutral
 fraction.  \citet{Shapiro04} found that this limited the speed of the
 ionization front.  We can investigate this further by evaluating the
 ionization front velocity in a growing Str\"{o}mgren sphere without
-recombinations, where $\dot{N}_\gamma = 4 \pi R^2 n_{\rm H} v_{\rm
-  IF}$.  Using $\kph \propto \dot{n}_{\rm H} / n_{\rm H}$ and $\kph =
-\dot{N}_\gamma \sigma / 4\pi R^2 A_{\rm cell}$, we can make
-substitutions on both sides of the equation to arrive at the
-ionization front velocity $v_{\rm IF} \propto n_{\rm H} /\dot{n}_{\rm
-  H}$.  
+recombinations, 
+\begin{equation}
+  \label{eqn:ndot}
+  \dot{N}_\gamma = 4 \pi R^2 n_{\rm H} v_{\rm IF}.
+\end{equation}
+Using $\kph = \dot{N}_\gamma \sigma / 4\pi R^2 A_{\rm cell}$ and $\kph
+\propto \dot{n}_{\rm H} / n_{\rm H}$, we can make substitutions
+respectively on both sides of Equation (\ref{eqn:ndot}) to arrive at
+the ionization front velocity $v_{\rm IF} \propto n_{\rm H}
+/\dot{n}_{\rm H}$.
 
 We have implemented this method but we only consider cells within the
 ionization front (by experiment we choose $\tau > 0.5$) because we are
@@ -1078,13 +1098,13 @@ determining the timestep without sacrificing accuracy.
 We search for the cell with the smallest $dt_P$ based on Equation
 \ref{eqn:dtelec}.  In principle, one could use this value without
 modifications as the timestep, but there is considerable noise both
-spatially and temporally.  In order to make this technique stable, we
+spatially and temporally.  In order to stabilize this technique, we
 first spatially smooth the values of $dt_{\rm P,cell}$ with a Gaussian
 filter over a $3^3$ cube.  Because we only consider the cells within
 the ionization front, we set $dt_{\rm P,cell}$ to the hydrodynamical
 timestep outside the front during the smoothing.  After we have
 smoothed $dt_{\rm P,cell}$, we select the minimum value as $dt_P$.
-Significant noise in $dt_P$ can exist between time discretizations.
+Significant noise in $dt_P$ can exist between time steps as well.
 Because the solution can become inaccurate if the timestep is allowed
 to be too large, we restrict the next timestep to be less than twice
 the previous timestep,
@@ -1093,11 +1113,9 @@ the previous timestep,
   \label{eqn:dtchange}
   dt_{\rm P,1} = \min(2 dt_{\rm P,0},\; dt_{\rm P,1}).
 \end{equation}
-Otherwise, we still restrict the change in timestep by setting the
-next timestep to be the average of the previous timestep $dt_{\rm
-  P,0}$ and $\min(dt_{\rm P,cell})$.  Figure \ref{fig:dtsmooth} shows
-the smooth evolution of $dt_{\rm P}$ in a growing Str\"{o}mgren sphere when
-compared to the values of $\min(dt_{\rm P,cell})$.
+Figure \ref{fig:dtsmooth} shows the smooth evolution of $dt_{\rm P}$
+in a growing Str\"{o}mgren sphere when compared to the values of
+$\min(dt_{\rm P,cell})$.
 
 \subsubsection{Time averaged quantities within a timestep}
 
@@ -1121,16 +1139,16 @@ We are currently implementing this method into Enzo+Moray.
 \subsubsection{Physically motivated}
 \label{sec:dt_const}
 
-In our implementation, a constant timestep is necessary when solving
-the time-dependent radiative transfer equation.  It should be small
-enough to evolve ionization fronts accurately, as discussed earlier.
-The timestep can be based on physical arguments, for example, the
+A constant timestep is necessary when solving the time-dependent
+radiative transfer equation in Enzo+Moray.  It should be small enough
+to evolve ionization fronts accurately, as discussed earlier.  The
+timestep can be based on physical arguments, for example, the
 sound-crossing time of an ionized region at $T > 10^4$ K.  To be
 conservative, one may choose the sound-crossing time of a cell
-\citep[e.g.][]{Abel07, Wise08_Gal}.  Alternatively, the diameter of the
-smallest relevant system (e.g., an accretion radius, transition radius
-to a D-type ionization front, etc.) in the simulation may be chosen to
-calculate the sound-crossing time.
+\citep[e.g.][]{Abel07, Wise08_Gal}.  Alternatively, the diameter of
+the smallest relevant system (e.g., an accretion radius, transition
+radius to a D-type ionization front, etc.) in the simulation may be
+chosen to calculate the sound-crossing time.
 
 If the timestep is too large, the ionization front will propagate too
 slowly, but it eventually approaches the correct radius at late times
@@ -1157,6 +1175,8 @@ scales for computational savings.
 
 \subsubsection{Change of incident radiation}
 \label{sec:dt_tau}
+
+\textbf{Reorganize to be more clear!}
 
 Ionization front velocities can approach significant fractions of the
 speed of light in steep density gradients and in the early expansion
@@ -1235,8 +1255,8 @@ The easiest case is when the destination grid exists on the same
 processor as the source grid, where we move the ray as in the serial
 case.  For all other rays, we organize the rays by destination
 processors and send them in groups.  We also send the destination grid
-level and ID number along with the ray information, which is listed at
-the beginning of \S\ref{sec:design}.  
+level and ID number along with the ray information that is listed at
+the beginning of \S\ref{sec:design}.
 
 For maximum overlap of communication and computation, which enables
 scaling to large numbers of processors, we must employ
@@ -1355,7 +1375,7 @@ $v_s$ of the ionization front has an exact solution of
 %
 \begin{equation}
   \label{eqn:rstr}
-  r_s(t) = R_s [ 1 - \exp(-t/t_{\rm rec}) ]^{1/3}
+  r_s(t) = R_s [ 1 - \exp(-t/t_{\rm rec}) ]^{1/3},
 \end{equation}
 \begin{equation}
   \label{eqn:vstr}
@@ -1369,7 +1389,7 @@ We adopt the problem parameters used in RT06.  The ionizing
 source emits $5 \times 10^{48}$ ph s$^{-1}$ of monochromatic radiation
 at 13.6 eV and is located at the origin in a simulation box of 6.6
 kpc.  The ambient medium is initially set at $T=10^4$ K, $n_H =
-10^{-3} \cubecm$, $x = 1.2 \times 10^{-3}$, resulting in $R_s = 5.4$
+10^{-3}\;\cubecm$, $x = 1.2 \times 10^{-3}$, resulting in $R_s = 5.4$
 kpc and $t_{\rm rec} = 122.4$ Myr.  The problem is run for 500 Myr.
 In the original tests, the temperature is fixed at $10^4$ K; however,
 our solver is inherently tied to the chemistry and energy solver.  To
@@ -1435,37 +1455,37 @@ spherical symmetry in our solution.
     temperature at 10 and 100 Myr.}
 \end{figure}
 
-This test is similar Test 1, but the temperature is allowed to evolve
-The radiation source now has a blackbody spectrum with a $T = 10^5$ K.
-The initial temperature is set at 100 K.  The higher energy photons
-have a longer mean free path than the photons at the ionization
-threshold in Test 1.  Thus the ionization front is thicker as the
-photons can penetrate deeper into the neutral medium.  Here we use 4
-energy groups with the following mean energies and relative
+This test is similar to Test 1, but the temperature is allowed to
+evolve.  The radiation source now has a blackbody spectrum with a $T =
+10^5$ K.  The initial temperature is set at 100 K.  The higher energy
+photons have a longer mean free path than the photons at the
+ionization threshold in Test 1.  Thus the ionization front is thicker
+as the photons can penetrate deeper into the neutral medium.  Here we
+use 4 energy groups with the following mean energies and relative
 luminosities: $E_i = (16.74, 24.65, 34.49, 52.06)$, $L_i/L = (0.277,
 0.335, 0.2, 0.188)$.
 
-In Figure \ref{fig:test2_1}, we show the neutral and ionized fraction
-as a function of radius at $t = $ 10, 30, 100, and 500 Myr, and the
-total neutral fraction of the domain.  Compared with Test 1, the
-ionization front is thicker, as expected with the harder spectrum.
-The total neutral fraction decreases to 0.67 over 4$t_{\rm rec} = 500$
-Myr, which is in agreement with the analytical expectation and other
-codes in RT06.  In Figure \ref{fig:test2_2}, we show the ratio of the
+In Figure \ref{fig:test2_1}, we show the radially averaged neutral and
+ionized fraction at $t = $ 10, 30, 100, and 500 Myr, and the total
+neutral fraction of the domain.  Compared with Test 1, the ionization
+front is thicker, as expected with the harder spectrum.  The total
+neutral fraction decreases to 0.67 over 4$t_{\rm rec} = 500$ Myr,
+which is in agreement with the analytical expectation and other codes
+in RT06.  In Figure \ref{fig:test2_2}, we show the ratio of the
 ionization front radius $r_{\rm IF}$ in our simulation and $R_s$.
 Before $1.5t_{\rm rec}$, $r_{\rm IF}$ lags behind $R_s$, initially by
 10\% and then increases to $R_s$; however afterwards, this ratio
 asymptotes to a solution that is 4\% greater than $R_s$.  This
-behavior puts our code is approximately the median result in RT06,
-where this ratio varies between 1 and 1.1, and the early evolution of
-$r_{\rm IF}$ is under-predicted by almost all of the codes.  If we use
-one energy group with the mean energy (29.6 eV) of a $T=10^5$ K
-blackbody, we find that $r_{\rm IF}/R_s$ = 1.08, which is
-representative of the codes in the upper range of RT06.  In Figure
-\ref{fig:test2_3}, we show slices of neutral fraction and temperature
-through the origin at $t = $ 10 and 100 Myr.  Here one sees the
-spherically symmetric \ion{H}{2} regions and a smooth temperature
-transition to the neutral ambient medium.
+behavior is approximately the median result in RT06, where this ratio
+varies between 1 and 1.1, and the early evolution of $r_{\rm IF}$ is
+under-predicted by almost all of the codes.  If we use one energy
+group with the mean energy (29.6 eV) of a $T=10^5$ K blackbody, we
+find that $r_{\rm IF}/R_s$ = 1.08, which is representative of the
+codes in the upper range of RT06.  In Figure \ref{fig:test2_3}, we
+show slices of neutral fraction and temperature through the origin at
+$t = $ 10 and 100 Myr.  Here one sees the spherically symmetric
+\ion{H}{2} regions and a smooth temperature transition to the neutral
+ambient medium.
 
 \subsection{Test 3. I-front trapping in a dense clump and the
   formation of a shadow}
@@ -1510,35 +1530,35 @@ neutral regions of the clump, which can visually assess the angular
 resolution of the method.
 
 The problem for this test is contained in a 6.6 kpc box with an
-ambient medium of $n_H = 2 \times 10^{-4} \cubecm$ and $T = 8000$ K.
-The clump is in pressure equilibrium with $n_H = 0.04 \cubecm$ and $T
-= 40$ K.  It has a radius of $r_c = 0.8$ kpc and is centered at
+ambient medium of $n_H = 2 \times 10^{-4}\;\cubecm$ and $T = 8000$ K.
+The clump is in pressure equilibrium with $n_H = 0.04\; \cubecm$ and
+$T = 40$ K.  It has a radius of $r_c = 0.8$ kpc and is centered at
 $(x,y,z) = (5, 3.3, 3.3)$ kpc.  In RT06, the test considered a plane
 parallel radiation field with a flux $F_0 = 10^6$ ph s$^{-1}$
 cm$^{-2}$ originating from the $y=0$ plane.  Our code can only
 consider point sources, so we use a single radiation source located in
 the center of the $y=0$ boundary.  The luminosity of $\dot{N}_\gamma =
-3 \times 10^{51}$ ph s$^{-1}$ corresponds to the same flux $F_0$.  The
-location where the ionization front trapping can be calculated
-analytically \citep{Shapiro04}, and with these parameters, it should
-halt at approximately the center of the clump.  We use the same four
-energy groups as in Test 2.
+3 \times 10^{51}$ ph s$^{-1}$ corresponds to the same flux $F_0$ at 5
+kpc.  The location where the ionization front trapping can be
+calculated analytically \citep{Shapiro04}, and with these parameters,
+it should halt at approximately the center of the clump.  We use the
+same four energy groups as in Test 2.
 
 In Figure \ref{fig:test3_1}, we show neutral fraction and temperature
 of a one-dimensional cut through the center of the dense clump at $z =
 0.5$ at $t = 1, 3, 5, 15$ Myr.  The ionization front is halted at a
 little more than halfway through the clump, which is consistent with
 the analytical expectation.  The hardness of the $T = 10^5$ K
-blackbody spectrum allows the gas outside of the ionization front.
-Where the gas is ionized, the temperature is between 10,000 and 20,000
-K, but decreases sharply with the ionized fraction.  Figure
-\ref{fig:test3_2} depicts the average ionized fraction and temperature
-inside the dense clump, which both gradually increase as the
-ionization front propagates through the overdensity.  Our results are
-consistent with RT06.  Finally we show slices of neutral fraction and
-temperature in the $z = 0.5$ plane in Figure \ref{fig:test3_3}.  The
-neutral fraction slices prominently show the sharp shadows created by
-the clump and demonstrates the non-diffusivity behavior of ray
+blackbody spectrum allows the gas outside of the ionization front to
+be photo-heated.  Where the gas is ionized, the temperature is between
+10,000 and 20,000 K, but decreases sharply with the ionized fraction.
+Figure \ref{fig:test3_2} depicts the average ionized fraction and
+temperature inside the dense clump, which both gradually increase as
+the ionization front propagates through the overdensity.  Our results
+are consistent with RT06.  Finally we show slices of neutral fraction
+and temperature in the $z = 0.5$ plane in Figure \ref{fig:test3_3}.
+The neutral fraction slices prominently show the sharp shadows created
+by the clump and demonstrates the non-diffusivity behavior of ray
 tracing.  The discretization of the sphere creates one neutral cell on
 the left side of the sphere.  This inherent artifact to the initial
 setup carries through the calculation.  We did not smooth the clump
@@ -1591,35 +1611,35 @@ Figure \ref{fig:test4_1}.  Initially $x_m$ is larger than $x_v$, and
 at $t \sim 170$ kyr, the $x_v$ becomes larger.  This is indicative of
 inside-out reionization \citep[e.g.][]{Gnedin00, Miralda00,
   Sokasian03}, where the dense regions around halos are ionized first,
-then the voids are ionized last.  At the end of the simulation, $x_v =
-0.65$, which is lower than all of the codes in RT06.  However by
-visual inspection in the slices of electron fraction
-(Fig. \ref{fig:test4_2}), there appears to be very good agreement with
-C$^2$-ray and FTTE.  By first glance, our result appears to be
-different than the RT06 because of the color-mapping.  Our results are
-also in good agreement with the multi-frequency version of TRAPHIC
-\citep[][see also for better representations of the electron fraction
-  slices]{Pawlik10}.  In the slices of electron fraction and
-temperature, Figure \ref{fig:test4_2}, the photo-heated regions are
-larger than the ionized regions by a factor of 2--3 because of the
-hardness of the $T = 10^5$ K blackbody spectrum.
+then the voids are ionized last.  At the end of the simulation, 65\%
+of the simulation is ionized.  However by visual inspection in the
+slices of electron fraction (Fig. \ref{fig:test4_2}), there appears to
+be very good agreement with C$^2$-ray and FTTE.  By first glance, our
+result appears to be different than the RT06 because of the
+color-mapping.  Our results are also in good agreement with the
+multi-frequency version of TRAPHIC \citep[][see also for better
+representations of the electron fraction slices]{Pawlik10}.  In the
+slices of electron fraction and temperature, Figure \ref{fig:test4_2},
+the photo-heated regions are larger than the ionized regions by a
+factor of 2--3 because of the hardness of the $T = 10^5$ K blackbody
+spectrum.
 
 \section{Radiation Hydrodynamics Tests}
 \label{sec:radhydro}
 
-In this section, we show results from radiation hydrodynamics test
-problems presented in \citet[][hereafter RT09]{Iliev09}.  They involve
-(1) the expansion of an \ion{H}{2} region in a uniform medium, similar
-to Test 2, (2) an \ion{H}{2} region in an isothermal sphere, and (3)
-the photo-evaporation of a dense, cold clump, similar to Test 3.  We
+We next show results from radiation hydrodynamics test problems
+presented in \citet[][hereafter RT09]{Iliev09}.  They involve (1) the
+expansion of an \ion{H}{2} region in a uniform medium, similar to Test
+2, (2) an \ion{H}{2} region in an isothermal sphere, and (3) the
+photo-evaporation of a dense, cold clump, similar to Test 3.  We
 expand on this test suite to include more complex situations, such as
 a Rayleigh-Taylor problem illuminated by a radiation source, champagne
-flows, collimated radiation, an irradiated blast wave, and an
-\ion{H}{2} region in a rotating sphere.  For the \citeauthor{Iliev09}
+flows, an irradiated blast wave, collimated radiation, and an
+\ion{H}{2} with a variable source.  For the \citeauthor{Iliev09}
 tests, we turn off self-gravity and AMR in accordance with them.  In
 the latter tests, we will indicate whether we use those capabilities
-of \enzo.  Lastly, we use the new MHD implementation in \enzo~v2.0 in
-the problem of a growing \ion{H}{2} region in a magnetic field.
+of \enzo.  Last we use the new MHD implementation in \enzo~v2.0 in the
+problem of a growing \ion{H}{2} region in a magnetic field.
 
 \subsection{Test 5. Classical \ion{H}{2} region expansion}
 \label{sec:test5}
@@ -1682,7 +1702,7 @@ domain size $L = 15$ kpc.  Here pressure equilibrium occurs at $r_f =
 interestingly, the transition from R-type to D-type is captured and
 occurs around $R_s = 5.4$ kpc.  The test is run for 500 Myr.
 
-The growth of the \ion{H}{2} region is shown in Figure
+The growth of the ionization front radius is shown in Figure
 \ref{fig:test5_1}, using both $T = 10^4$ K and $x_e = 0.5$ as
 ionization front definitions, compared to the analytical solution
 (Eq. \ref{eqn:test5_final}).  We define this alternative measure
@@ -1699,7 +1719,7 @@ RT09.
 Figure \ref{fig:test5_2} shows the progression of the ionization front
 at times $t$ = 10, 200, and 500 Myr in radial profiles of density,
 temperature, pressure, and ionized fraction.  The initial \ion{H}{2}
-region is over-pressurized and creates an outward shock wave.  The
+region is over-pressurized and creates an forward shock wave.  The
 high-energy photons can penetrate through the shock and partially
 ionizes and heats the exterior gas, clearly seen in the profiles.  As
 noted in RT09, this heated exterior gas creates an photo-evaporative
@@ -1849,19 +1869,23 @@ propagated through the left-most 500 pc of the clump.  This heated gas
 is now over-pressurized, as seen in the pressure plot in Figure
 \ref{fig:test7_1}, and then expands into the ambient medium.  This
 expansion creates a photo-evaporative flow, seen in many star forming
-regions \citep[e.g. M16][]{Hester96} as stars irradiate
-nearby cold, dense overdensities.  These flows become evident in the
-density at 10 Myr, seen both in the line cuts and slices (Figure
-\ref{fig:test7_2}).  These outflows have temperatures up to 50,000 K.
-At this time, the front has progressed about halfway through the
-clump, if one inspects the neutral fraction.  However the high energy
-photons have heated all but the rear surface of the clump.  At the end
-of the test ($t = 50$ Myr), only the core and its associated shadow is
-neutral, as seen in Figure \ref{fig:test7_3}.  The core has been
-compressed by the surrounding warm medium, thus causing the higher
-densities seen at $t = 50$ Myr.  The non-spherical artifacts on the
-inner boundary of the warm outermost shell are caused by the initial
-discretization of the sphere, as discussed in \S\ref{sec:test3}.
+regions \citep[e.g. M16;][]{Hester96} as stars irradiate nearby cold,
+dense overdensities.  These flows become evident in the density at 10
+Myr, seen both in the line cuts and slices (Figure \ref{fig:test7_2}).
+They have temperatures up to 50,000 K.  At this time, the front has
+progressed about halfway through the clump, if one inspects the
+neutral fraction.  However the high energy photons have heated all but
+the rear surface of the clump.  At the end of the test ($t = 50$ Myr),
+only the core and its associated shadow is neutral, seen in Figure
+\ref{fig:test7_3}.  The core has been compressed by the surrounding
+warm medium, thus causing the higher densities seen at $t = 50$ Myr.
+The non-spherical artifacts on the inner boundary of the warm
+outermost shell are caused by the initial discretization of the
+sphere, as discussed in \S\ref{sec:test3}.
+
+We have completed presenting results from the RT06 and RT09 test
+suites.  Next we test Enzo+Moray with five additional tests that
+further demonstrate its capabilities and accuracy.
 
 \subsection{Test 8. Champagne flow from a dense clump}
 
@@ -1876,12 +1900,13 @@ discretization of the sphere, as discussed in \S\ref{sec:test3}.
 \end{figure}
 
 Radiation-driven outflows from overdensities, known as champagne
-flows, is a long studied problem \citep[e.g.][\S3.3]{Yorke86}.  We set
-up a spherical tophat with an overdensity of 10 and radius of 1 pc in
-a simulation box of 8 pc.  The ambient medium is 290 \cubecm~and 100
-K.  The radiation source is offset from the overdensity center by 0.4
-pc.  It has a luminosity of \tento{49} ph s$^{-1}$ and a $T=10^5$ K
-blackbody spectrum.  The resulting Str\"{o}mgren radius is 0.33 pc,
+flows, is a long studied problem \citep[e.g.][\S3.3]{Yorke86}.  To
+study this, we use the same setup as \citet{Bisbas09} --- a spherical
+tophat with an overdensity of 10 and radius of 1 pc in a simulation
+box of 8 pc.  The ambient medium has $\rho = 290$ \cubecm~and $T =
+100$ K.  The radiation source is offset from the overdensity center by
+0.4 pc.  It has a luminosity of \tento{49} ph s$^{-1}$ and a $T=10^5$
+K blackbody spectrum.  The resulting Str\"{o}mgren radius is 0.33 pc,
 just inside of the overdense clump.  These parameters are the same
 used in \citet{Bisbas09}.  The entire domain initially has an ionized
 fraction of \tento{-6}.  We do not consider self-gravity.  The
@@ -1891,12 +1916,12 @@ where $l$ is the AMR level.  The simulation is run for 150 kyr.
 
 We show slices in the x-y and x-z planes of density in Figure
 \ref{fig:test8_1} at $t = 10, 40, 100, 150$ kyr.  In the direction of
-the clump center, the ionization front transitions from spherical to
-parabolic after it escapes from the clump in the opposite direction.
-At $t = 10$ kyr, the surface of the \ion{H}{2} region is just
-contained within the overdensity.  In the x-z plane, there are density
-perturbations only above a latitude of 45 degrees.  We believe that
-these are caused by the mismatch between HEALPix pixels and the
+the clump center, the ionization front shape transitions from
+spherical to parabolic after it escapes from the clump in the opposite
+direction.  At $t = 10$ kyr, the surface of the \ion{H}{2} region is
+just contained within the overdensity.  In the x-z plane, there are
+density perturbations only above a latitude of 45 degrees.  We believe
+that these are caused by the mismatch between HEALPix pixels and the
 Cartesian grid, even with our geometric correction.  After the
 ionization front escapes from the clump in the negative x-direction,
 these perturbations grow from Rayleigh-Taylor instabilities as the gas
@@ -1941,10 +1966,10 @@ occurs when a dense fluid is being supported by a lighter fluid,
 initially in hydrostatic equilibrium, in the presence of a constant
 acceleration field.  This classic test alone evaluates how subsonic
 perturbations evolve.  We consider the case of a single-mode
-perturbation.  We let the system evolve without any radiation until
-the perturbation grows considerably and then turn on the radiation
-source.  These tests demonstrate that Enzo+Moray can follow a highly
-dynamic system and resolve fine density structures.
+perturbation.  The system evolves without any radiation until the
+perturbation grows considerably and then turn on the radiation source.
+These tests demonstrate that Enzo+Moray can follow a highly dynamic
+system and resolve fine density structures.
 
 We run two cases --- an optically-thick and optically-thin case.  In
 the former, we take the parameter choices from past literature
@@ -1959,61 +1984,62 @@ by
 
 We set the acceleration field $g_z = 0.1$ and the adiabatic index
 $\gamma = 1.4$.  We use a domain size of $(L_x, L_y, L_z) = (0.5, 0.5,
-1.5)$ with a resolution of (64, 64, 192).  For hydrostatic equilibrium,
-we set $P = P_0 - g \rho(z) z$ with $P_0 = 2.5$.  In order to consider
-a radiation source with a ionizing photon luminosity of $10^{42}$ ph
-s$^{-1}$, we scale the domain to a physical size of (0.5, 0.5, 1.5)
-pc; time is in units of Myr; density is in units of $m_h$, resulting
-in an initial temperature of $(T_0, T_1) = (363, 726)$ K.  The
-radiation source starts to shine at $t = 10$ Myr.
+1.5)$ with a resolution of (64, 64, 192).  For hydrostatic
+equilibrium, we set $P = P_0 - g \rho(z) z$ with $P_0 = 2.5$.  In
+order to consider a radiation source with a ionizing photon luminosity
+of $10^{42}$ ph s$^{-1}$, we scale the domain to a physical size of
+(0.5, 0.5, 1.5) pc; time is in units of Myr; density is in units of
+$m_h$, resulting in an initial temperature of $(T_0, T_1) = (363,
+726)$ K.  The radiation source is placed at the center of lower
+$z$-boundary face and starts to shine at $t = 10$ Myr.
 
 The optically-thin case is set up similarly but with three
 changes---(1) a density contrast of 10, (2) a luminosity of $10^{43}$
 ph s$^{-1}$, and (3) the source is born at 6.5 Myr.  The time units
 are decreased to 200 kyr so that $(T_0, T_1) = (1.8 \times 10^3, 1.8
 \times 10^4)$ K.  Note that in code units, pressure is unchanged.  We
-adjust the physical unit scaling, so the light fluid has $T > 10^4$ K,
-$x_e \sim 1$, and thus optically-thin.  Furthermore, the ionization
-front remains R-type before interacting with the instability.  A
-possible physical analogue could be a radiation source heating and
-rarefying the medium below.
+adjust the physical unit scaling because we desire an optically thin
+bottom medium with $T > 10^4$ K and $x_e \sim 1$.  Furthermore, the
+ionization front remains R-type before interacting with the
+instability.  A possible physical analogue could be a radiation source
+heating and rarefying the medium below.
 
 The $x$ and $y$-boundaries are periodic, and the $z$-boundaries are
-reflecting.  The radiation source is placed at the center of lower
-$z$-boundary face.  The periodic boundaries will cause features that
-are non-physical, considering a more realistic plane-parallel case.
-Nevertheless, these tests provide a good check on a radiation
-hydrodynamics solver.  We show the evolution of the density,
-temperature, and ionized fraction of the optically thick and optically
-thin cases in Figures \ref{fig:test9_thick} and \ref{fig:test9_thin}.
-The initial state of the Rayleigh-Taylor instability is shown in the
-left panels.
+reflecting.  These will cause features that are non-physical, in
+particular the top reflecting boundary; nevertheless, these tests
+provide a good check on a radiation hydrodynamics solver.  We show the
+evolution of the density, temperature, and ionized fraction of the
+optically thick and optically thin cases in Figures
+\ref{fig:test9_thick} and \ref{fig:test9_thin}.  The initial state of
+the Rayleigh-Taylor instability is shown in the left panels.
 
 In the optically thick case, a D-type front is created, which is
 clearly illustrated by the spherical density enhancement at 0.02 Myr.
 The shock then passes through the instability at $\sim$0.25 Myr and
 reflects off the upper $z$-boundary.  This and complex shock
-reflections create a Richtmeyer-Meshkov instability, driving a chaotic
-jet-like structure downwards.  The radiation source photo-evaporates
-the outer parts of this structure.  The interaction between the dense
-cool ``jet'' and the hot medium further drives instabilities along the
-surface, which can be seen when comparing $t = 0.59$ Myr and $t =
-0.91$ Myr slices.  At the latter time, the jet cannot reach the bottom
-of the domain before being photo-evaporated.  Eventually this
-structure is completely destroyed, leaving behind a turbulent medium
-between the hot and cold regions.
+reflections create a Richtmyer-Meshkov instability \citep[see][for a
+review]{RMI}, driving a chaotic jet-like structure downwards.  The
+radiation source photo-evaporates the outer parts of this structure.
+The interaction between the dense cool ``jet'' and the hot medium
+further drives instabilities along the surface, which can be seen when
+comparing $t = 0.59$ Myr and $t = 0.91$ Myr slices.  At the latter
+time, the jet cannot reach the bottom of the domain before being
+photo-evaporated.  Eventually this structure is completely destroyed,
+leaving behind a turbulent medium between the hot and cold regions.
 
 The optically thin problem is less violent than the optically thick
 case because the R-type front does not interact with the initial
 instability as strongly.  The radiation source provides further
 buoyancy in the already $T=10^4$ K gas.  The gas first to be ionized
-and photo-evaporates is the outer regions of the instability.  The
+and photo-evaporated are the outer regions of the instability.  The
 enhanced heating also drives the upper regions of the instability,
 making the top interface turbulent.  It then reflects off the upper
 $z$-boundary and creates a warm $T = 5 \times 10^3$ K, partially
 ionized ($x_e \sim 10^{-2}$), turbulent medium, seen in the slices $t
 \ge 0.67$ Myr.  The slices of electron fraction also show that the
 dense gas is optically thick.
+
+\li Perhaps add more description?
 
 \subsection{Test 10. Photo-evaporation of a blastwave}
 
@@ -2050,22 +2076,22 @@ simulation is run for 7.5 Myr.
 Figure \ref{fig:test10} shows the ionization front overtaking and
 disrupting the blastwave.  We show the blastwave before the source is
 born at 2.5 Myr.  The interior is rarefied ($\rho \sim
-10^{-3}~\cubecm$).  It is heated to $T \sim 5 \times 10^5$ K by the
+10^{-3}~\cubecm$) and is heated to $T \sim 5 \times 10^5$ K by the
 reverse shock.  At $t = 3$ Myr, the ionization front is still R-type,
-and it ionizes the blastwave's dense shell.  Because the interior is
-ionized and diffuse, the ionization front rapidly propagates through
-it until it reaches the opposite shell surface.  Shortly afterward,
-the ionization front transitions from R-type to D-type at a radius of
-0.5 kpc, seen in the formation of a shock in the 5 Myr density panel.
-This transition occurs by the construction of the problem not by the
-interaction with the blastwave.  The surfaces of the blastwave that
-are perpendicular to the ionization front have the highest column
-density and thus are last to be fully ionized.  The pressure forces
-from warm ambient medium and blastwave interior compress these
-surfaces, photo-evaporating them in the process, similar to Test 7.
-They survive until the final time $t = 7.5$ Myr.  As the R-type
-ionization front interacts with the blastwave interior, the density
-perturbations create ionization front instabilities
+and it ionizes the rear side of the dense shell.  Because the interior
+is ionized and diffuse, the ionization front rapidly propagates
+through it until it reaches the opposite shell surface.  Shortly
+afterward, the ionization front transitions from R-type to D-type at a
+radius of 0.5 kpc, seen in the formation of a shock in the 5 Myr
+density panel.  This transition occurs by the construction of the
+problem not by the interaction with the blastwave.  The surfaces of
+the blastwave that are perpendicular to the ionization front have the
+highest column density and thus are last to be fully ionized.  The
+pressure forces from warm ambient medium and blastwave interior
+compress these surfaces, photo-evaporating them in the process,
+similar to Test 7.  They survive until the final time $t = 7.5$ Myr.
+As the R-type ionization front interacts with the blastwave interior,
+the density perturbations create ionization front instabilities
 \citep{Whalen08_Instab} that are seen on the \ion{H}{2} region surface
 at the coordinate $z=0.5$.  Behind the ionization front, the dense
 shell of the blastwave is photo-evaporated, and a smooth overdensity
@@ -2099,12 +2125,12 @@ We use a domain that is 2 kpc wide and has an ambient medium with
 $\rho_0 = 10^{-3}$ \cubecm, $T = 10^4$ K, $x_e = 0.99$.  We place a
 dense clump with $\rho/\rho_0 = 100$, $T = 100$ K, $x_e = 10^{-3}$,
 and $r = 250$ pc, at the center of the box.  Radiation is emitted in
-two polar cones with $\theta_c = \pi/6$ with a total luminosity of
-$10^{49}$ erg s$^{-1}$ and a 17.6 eV mono-chromatic spectrum.  This
-results in $t_{\rm rec} = 1.22$ Myr and $R_s = 315$ pc, just outside
-of the sphere.  The base grid has a resolution of 64$^3$, and it is
-refined with the same overdensity criterion as Test 8.  We run this
-test for 25 Myr.
+two polar cones with $\theta_c = \pi/6$ with 768 (HEALPix level 3)
+initial rays, a total luminosity of $10^{49}$ erg s$^{-1}$, and a 17.6
+eV mono-chromatic spectrum.  This results in $t_{\rm rec} = 1.22$ Myr
+and $R_s = 315$ pc, just outside of the sphere.  The base grid has a
+resolution of 64$^3$, and it is refined with the same overdensity
+criterion as Test 8.  We run this test for 25 Myr.
 
 We illustrate the expansion of the \ion{H}{2} region created by the
 beamed radiation in Figure \ref{fig:test11}.  Before $t = 3$ Myr, the
@@ -2113,7 +2139,7 @@ depicted in the $t = 0.1$ Myr snapshot of the system.  At this time,
 the ionization front is transitioning from R-type to D-type in the
 transverse direction of the cone.  This can be seen in the minute
 overdensities on the \ion{H}{2} transverse surface.  When it breaks
-out of the overdensity, it creates a champagne flow, where the
+out of the overdensity, a champagne flow develops, where the
 ionization front transitions back to a weak R-type front.  The cloud
 surface is a constant-pressure contact discontinuity (CD) with a
 density jump of 100.  After the front heats the gas at the CD, there
@@ -2121,9 +2147,9 @@ exists a pressure difference of $\sim 100$.  In response, the high
 density gas accelerates into the ambient medium and heats it to $3
 \times 10^4$ K.  Additionally a rarefaction wave travels towards the
 clump center.  At later times, the transverse D-type front continues
-through the clump, eventually creating a disk-like structure at the
-final time.  The polar champagne flows proceed to flow outwards,
-creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
+through the clump, eventually forming a disk-like structure at the
+final time.  The polar champagne flows proceed to flow outwards and
+produces a dense shell with a diffuse ($10^{-28}$ \cubecm) and warm
 (5000 K) medium in its wake.
 
 % \subsection{Test 12. \ion{H}{2} region in a rotating medium}
@@ -2194,30 +2220,30 @@ creating a density shell with a diffuse ($10^{-28}$ \cubecm) and warm
 Our implementation retains the time derivative of the radiative
 transfer equation (Eq. \ref{eqn:rteqn}) if we choose a constant ray
 tracing timestep, which saves the photon packages between timesteps if
-the $c\;dt_{\rm P} < L_{\rm box}$.  This effect only becomes apparent
-when the variation timescale of the point source is smaller than the
-light crossing time of the simulation.  Furthermore, the timestep
-should resolve the variation timescale by a few times.  This property
-might be important in large box simulations with variable sources,
-e.g. AGN radiative feedback.  To test this, we can use an
-exponentially varying source with some duty cycle.  In a functional
-form, this can be described as
+$c\;dt_{\rm P} < L_{\rm box}$.  This effect only becomes apparent when
+the variation timescale of the point source is smaller than the light
+crossing time of the simulation.  Furthermore, the timestep should
+resolve the variation timescale by at least a few times.  This
+property might be important in large box simulations with variable
+sources, e.g. AGN radiative feedback.  To test this, we can use an
+exponentially varying source with some duty cycle $t_0$.  In a
+functional form, this can be described as
 %
 \begin{equation}
   \label{eqn:test12}
   L(t) = L_{\rm max} \times \exp[A(t_f/t_0 - 1)]
 \end{equation}
 %
-where $t_f = 2 \times |t - t_0 \times \mathrm{round}(t/t_0)|$, $t_0$
-is the duty cycle, and $A=4$ controls the width of the radiation
-pulse.  To illustrate the effects of source variability, we remove any
-dependence on the medium by considering an optically-thin uniform
-density $\rho 10^{-4}~\cubecm$.  We take $L_{\rm box} = 1$ Mpc, which
-has a light crossing time of 3.3 Myr.  A source is placed at the
-origin with $L_{\rm max} = 10^{55}$ ph s$^{-1}$ and $t_0 = 0.5$ Myr.
-We use a radiative transfer timestep of 50 kyr to resolve the duty
-cycle by 10 timesteps.  The simulation is run for 6 Myr, so the
-radiation propagates throughout the box.
+where $t_f = 2 \times |t - t_0 \times \mathrm{round}(t/t_0)|$, and
+$A=4$ controls the width of the radiation pulse.  To illustrate the
+effects of source variability, we remove any dependence on the medium
+by considering an optically-thin uniform density $\rho =
+10^{-4}~\cubecm$.  We take $L_{\rm box} = 1$ Mpc, which has a light
+crossing time of 3.3 Myr.  A source is placed at the origin with
+$L_{\rm max} = 10^{55}$ ph s$^{-1}$ and $t_0 = 0.5$ Myr.  We use a
+radiative transfer timestep of 50 kyr to resolve the duty cycle by 10
+timesteps.  The simulation is run for 6 Myr, so the radiation
+propagates throughout the box.
 
 The variability of the source is clearly illustrated in the
 photo-ionization rates, shown in Figure \ref{fig:test12_kph}.  The
@@ -2245,6 +2271,8 @@ variable source creates density perturbations with an average size of
 They do not create any instabilities and are smoothed out over its
 sound crossing time of $\sim 50$ Myr.
 
+\li Add more description of the problem.
+
 \subsection{Test 14. \ion{H}{2} region with MHD}
 
 \begin{figure}[t]
@@ -2265,7 +2293,7 @@ sound crossing time of $\sim 50$ Myr.
 Another prevalent physical component in astrophysics is a magnetic
 field.  We utilize the new magnetohydrodynamics (MHD) framework
 \citep{Wang09} in \enzo~v2.0 that uses an unsplit conservative
-hydrodynamics solver and a hyperbolic $\nabla \cdot \mathbf{B} = 0$
+hydrodynamics solver and the hyperbolic $\nabla \cdot \mathbf{B} = 0$
 cleaning method of \citet{Dedner02}.  This marriage of radiation
 transport and MHD has already been demonstrated in \citet{Wang10}, but
 for illustrative purposes, we show a test problem with an expanding
@@ -2282,15 +2310,16 @@ run for 1.58 Myr.  The hydrodynamics solver uses an HLL Riemann solver
 \citep{HLL} and piecewise linear method (PLM) reconstruction
 \citep{PLM} for the left and right states in this problem.
 
-As the \ion{H}{2} region grows the magnetized medium, shown in Figures
-\ref{fig:test14_1} and \ref{fig:test14_2}, it transforms from
+As the \ion{H}{2} region grows in the magnetized medium, shown in
+Figures \ref{fig:test14_1} and \ref{fig:test14_2}, it transforms from
 spherical to oblate as it is magnetically confined in directions
 perpendicular to the magnetic field.  This occurs at $t > 0.5$ Myr
 because the magnetic pressure exceeds the thermal pressure, and the
 gas can only flow along field lines.  \citeauthor{Krumholz07_ART}
 observed some carbuncle artifacts along the ionization front; whereas
-we see smooth density gradients, which is most likely caused by our
-more diffusive choice of the HLL Riemann solver when compared to Roe's
+we see smooth density gradients, which is most likely caused by both
+the geometric correction to the ray tracing (\S\ref{sec:meth_fc}) and
+the diffusivity of the HLL Riemann solver when compared to Roe's
 Riemann solver used in \citet{Krumholz07_ART}, who also use PLM as a
 reconstruction method.  The evolution of the magnetic field lines
 evolve in a similar manner as their results.
@@ -2305,6 +2334,7 @@ behaves when varying spatial, angular, frequency, and temporal
 resolutions.
 
 \subsection{Spatial resolution}
+\label{sec:dx_dep}
 
 \begin{figure}[t]
   \epsscale{0.75}
@@ -2327,7 +2357,10 @@ in the $64^3$ and $128^3$ runs evolve almost identically.  Compared to
 these resolutions, the lower $16^3$ and $32^3$ resolution runs only
 lag behind by 1\% until 300 Myr, and afterwards it is larger by 0.5\%
 than the higher resolution cases.  This shows that our method gives
-accurate results, even in marginally resolved cases.
+accurate results, even in marginally resolved cases, which is expected
+with a photon conserving method.  Furthermore this demonstrates that
+the geometric correction does not significantly affect photon
+conservation.
 
 \subsection{Angular resolution}
 \label{sec:ang_dep}
@@ -2362,9 +2395,8 @@ an optically thin, uniform medium.  The radiation field should follow
 a $1/r^2$ profile.  As the grid is less sampled by rays, the deviation
 from $1/r^2$ should increase.  This test is similar to Test 1, but the
 medium has $\rho = 10^{-3}~\cubecm$, $T = 10^4$ K, and $1 - x_e =
-10^{-4}$.  The radiation source is located in the center of a 6.6 kpc
-domain.  The simulation is only run for one timestep because the
-radiation field should be static in this optically-thin test.  
+10^{-4}$.  The simulation is only run for one timestep because the
+radiation field should be static in this optically-thin test.
 
 We consider minimum ray-to-cell ratios $\Phi_c = (1.1, 2.1, 3.1, 5.1,
 10.1, 25.1)$.  Slices of the photo-ionization rates through the origin
@@ -2411,16 +2443,16 @@ deviation from an inverse square law decreases as $\sigma \propto
 
 The ionization front radius is within 5--10\% of analytical solutions
 in Tests 1, 2, and 5 with only one energy group; however a
-multi-frequency spectrum can create differences in the reactive
-flows.  We use Test 5 (\S\ref{sec:test5}; an expanding \ion{H}{2}
-region with hydrodynamics) to probe any differences in the solution
-when varying the resolution of the spectrum.  In RT09, ZEUS-MP was
-used to demonstrate the effect of a multi-frequency spectrum on the
-dynamics of the ionization front in this test.  Instead of a single
-shock seen in the mono-chromatic spectrum, a the shock obtained a
-double-peaked structure in density and radial velocity.  We rerun Test
-5 with a $T=10^5$ K blackbody spectrum sampled by $n_\nu = 1$, 2, 4,
-8, and 16 frequency bins.  We use the following energies:
+multi-frequency spectrum can create differences in the reactive flows.
+We use Test 5 (\S\ref{sec:test5}; an expanding \ion{H}{2} region with
+hydrodynamics) to probe any differences in the solution when varying
+the resolution of the spectrum.  In RT09, ZEUS-MP was used to
+demonstrate the effect of a multi-frequency spectrum on the dynamics
+of the ionization front in this test.  Instead of a single shock seen
+in the mono-chromatic spectrum, the shock obtains a double-peaked
+structure in density and radial velocity.  We rerun Test 5 with a
+$T=10^5$ K blackbody spectrum sampled by $n_\nu = 1$, 2, 4, 8, and 16
+frequency bins.  We use the following energies:
 %
 \begin{itemize}
 \item $n_\nu = 1$: Mean energy of 29.6 eV
@@ -2481,21 +2513,22 @@ the details of small-scale processes, e.g. photo-evaporation.
 
 The previous three dependencies did not affect the propagation of the
 ionization front greatly.  However in our and others' past experience
-\citep[e.g.]{Shapiro04, Mellema06, Petkova09}, the timestep,
+\citep[e.g.][]{Shapiro04, Mellema06, Petkova09}, the timestep,
 especially too small of one, can drastically underestimate the
 ionization front velocity.  Here we use Test 1 but with $64^3$
 resolution to compare different time-stepping methods --- restricted
 changes in \ion{H}{2} ($dn_{\rm H}/dt$ based; \S\ref{sec:dt_hi}),
-constant timesteps (\S\ref{sec:dt_const}), and based on incident
-radiation ($dI/dt$ based; \S\ref{sec:dt_tau}).  The growth of the
-ionization front radius is shown in Figure \ref{fig:dt_dep1}.  Both
-the \ion{H}{2} restricted and incident radiation variable time-stepping
-methods agree within a few percent throughout the entire simulation,
-as does the run with constant $dt = 0.1$ Myr timesteps.  With the
-larger constant timesteps, the numerical solution lags behind the
-analytical one, but they converge to an accurate \ion{H}{2} radii at
-late times.  Even $dt = 5$ Myr timestep, which underestimated it by
-35\% at 50 Myr, is within a percent of the analytical solution.
+constant timesteps of 0.1, 0.5, 1, and 5 Myr (\S\ref{sec:dt_const}),
+and based on incident radiation ($dI/dt$ based; \S\ref{sec:dt_tau}).
+The growth of the ionization front radius is shown in Figure
+\ref{fig:dt_dep1}.  Both the \ion{H}{2} restricted and incident
+radiation variable time-stepping methods agree within a few percent
+throughout the entire simulation, as does the run with constant $dt_P
+= 0.1$ Myr timesteps.  With the larger constant timesteps, the
+numerical solution lags behind the analytical one, but they converge
+to an accurate \ion{H}{2} radii at late times.  Even $dt_P = 5$ Myr
+timestep, which underestimated it by 35\% at 50 Myr, is within a
+percent of the analytical solution.
 
 The larger constant timesteps deviate from these more accurate
 solutions at early times because the photon energy gradient is large,
@@ -2548,13 +2581,13 @@ created by a mismatch between the HEALPix pixelization and the
 Cartesian grid.  This is especially apparent in optically-thin
 regions, where the area of the pixel is greater than the
 $(1-e^{-\tau})$ absorption factor.  In this section, we repeat the
-angular resolution tests in \S\ref{sec:ang_dep}.  Slices of the
-photo-ionization rates through the origin are shown in Figure
-\ref{fig:fc_slices}, depicting the improvements in spherical symmetry
-and a closer agreement to a smooth $1/r^2$ profile.  Previous attempts
-to reduce these artifacts either introduced a random rotation of the
-HEALPix pixelization \citep[e.g.][]{Abel02_RT, Trac07, Krumholz07_ART}
-or by increasing the ray-to-cell sampling.
+angular resolution tests in \S\ref{sec:ang_dep} with $\Phi_c = 5.1$.
+Slices of the photo-ionization rates through the origin are shown in
+Figure \ref{fig:fc_slices}, depicting the improvements in spherical
+symmetry and a closer agreement to a smooth $1/r^2$ profile.  Previous
+attempts to reduce these artifacts either introduced a random rotation
+of the HEALPix pixelization \citep[e.g.][]{Abel02_RT, Trac07,
+  Krumholz07_ART} or by increasing the ray-to-cell sampling.
 
 In the x-y plane without the correction, there exists shell artifacts
 where the photo-ionization rates abruptly drops when the rays are
@@ -2583,34 +2616,34 @@ correction smooths this artifact but does not completely remove it.
   \epsscale{1}
 \end{figure}
 
-In practice, we have found it difficult to transition from this
+In practice, we have found it difficult to transition from the
 optically-thin approximation to the optically-thick regime without
 producing artifacts in the photo-ionization rate \kph.  We use the
 optically thin problem used in the angular resolution test
 (\S\ref{sec:ang_dep}) with $\Phi_c = 5.1$ to show these artifacts in
 \kph~in Figure \ref{fig:rayopt}.  The radiation field strictly follows
 a $1/r^2$ profile until it reaches $\tau_{\rm thin} \equiv 0.1$, which
-is denoted by the white quarter circle in the figure.  At this radius,
-the rays are then split until a sampling of $\Phi_c$ is satisfied.
-Angular spike artifacts beyond this radius arise because of the
-interface between the optically-thin approximation and full ray
-tracing treatment.  They originate in cells that intersect the
-$\tau_{\rm thin}$ surface, which are split into the optically thin and
-thick definitions.  Unfortunately we have not determined a good
-technique to avoid such artifacts.  They occur because of the
-following reason.  When the first ray with $\tau < 0.1$ exits such a
-cell, it applies the optically-thin approximation and marks the cell
-so no other ray from the same source contributes to its \kph~and
-$\Gamma$ field.  However other rays may exit the cell with $\tau >
-0.1$ because the maximum distance between the far cell faces and the
-source is not always $\tau < 0.1$.  Then these rays will split in this
-cell and add to \kph~and become attenuated, reducing its photon
-fluxes.  When the rays continue to the next cell after this
-transition, the photon fluxes are not necessarily equal to each other,
-creating the angular artifacts seen in Figure \ref{fig:rayopt}.  We
-are continuing to formulate a scheme that avoids these artifacts
-because this approximation will be very advantageous in simulations
-with large ionized filling factors.
+is denoted by the white quarter circle in the figure.  Within this
+radius, only $\Phi_c = 1$ is required.  Then at this radius, the rays
+are then split until a sampling of $\Phi_c$ is satisfied.  Angular
+spike artifacts beyond this radius arise because of the interface
+between the optically-thin approximation and full ray tracing
+treatment.  They originate in cells that intersect the $\tau_{\rm
+  thin}$ surface, which are split into the optically thin and thick
+definitions.  Unfortunately we have not determined a good technique to
+avoid such artifacts.  They occur because of the following reason.
+When the first ray with $\tau < 0.1$ exits such a cell, it applies the
+optically-thin approximation and marks the cell so no other ray from
+the same source contributes to its \kph~and $\Gamma$ field.  However
+other rays may exit the cell with $\tau > 0.1$ because the maximum
+distance between the far cell faces and the source is not always $\tau
+< 0.1$.  Then these rays will split in this cell and add to \kph~and
+become attenuated, reducing its photon fluxes.  When the rays continue
+to the next cell after this transition, the photon fluxes are not
+necessarily equal to each other, creating the angular artifacts seen
+in Figure \ref{fig:rayopt}.  We are continuing to formulate a scheme
+that avoids these artifacts because this approximation will be very
+advantageous in simulations with large ionized filling factors.
 
 \subsection{X-Ray secondary ionizations and reduced photo-heating}
 
@@ -2679,7 +2712,7 @@ when the ionization front is in its initial R-type phase, where the
 gas has not reacted to the thermal pressure yet.  Thus we construct a
 test that focuses on a small scales, compared to the Str\"{o}mgren
 radius.  The domain has a size of 8 pc with a uniform density $\rho =
-2900 \cubecm$ and initial temperature $T = 10^3$ K.  The source is
+2900\;\cubecm$ and initial temperature $T = 10^3$ K.  The source is
 located at the origin with a luminosity $L = 10^{50}$ ph s$^{-1}$ and
 a $T=10^5$ K blackbody spectrum.  We use one energy group $E_{\rm ph}
 = 29.6$ eV.  The grid is adaptively refined on overdensity with the
@@ -2691,20 +2724,21 @@ Radial profiles of density, temperature, neutral fraction, and radial
 velocity are shown in Figure \ref{fig:rp_profiles} for both
 simulations at several times.  Without radiation pressure, the
 evolution of the \ion{H}{2} is matches the analytical expectations
-described in \S\ref{sec:test5}.  At $t=140$ kyr, the ionization front
-radius is increased by $\sim5\% = 0.16$ pc.  However radiation
-pressure impacts the system the greatest inside the ionization front.
-At $t = 40$ kyr, the central density is smaller by a factor of 20 with
-radiation pressure, but the temperatures are almost equal.  A
-rarefaction wave thus propagates toward the center, depicted by the
-negative radial velocities at $t = 60$ kyr.  This raises the central
-density to $10^{-21}$ g \cubecm~at $t = 80$ kyr.  Afterwards, the
-radiation continues to force gas outwards.  From $t = 100$ kyr to $t =
-140$ kyr, the maximum radial velocity of the ionized gas increases
-from 10 \kms~to 50 \kms.  This leaves behind an even more diffuse
-medium, lowering the gas density by a factor of 10 at $t = 140$ kyr.
-Thus the recombination rates are lower, resulting in increased
-ionization fractions and temperatures in the \ion{H}{2} region.
+described in \S\ref{sec:test5}.  At $t=140$ kyr with radiation
+pressure, the ionization front radius is increased by $\sim5\% = 0.16$
+pc.  However radiation pressure impacts the system the greatest inside
+the ionization front.  At $t = 40$ kyr, the central density is smaller
+by a factor of 20 with radiation pressure, but the temperatures are
+almost equal.  A rarefaction wave thus propagates toward the center,
+depicted by the negative radial velocities at $t = 60$ kyr.  This
+raises the central density to $10^{-21}$ g \cubecm~at $t = 80$ kyr.
+Afterwards, the radiation continues to force gas outwards.  From $t =
+100$ kyr to $t = 140$ kyr, the maximum radial velocity of the ionized
+gas increases from 10 \kms~to 50 \kms.  This leaves behind an even
+more diffuse medium, lowering the gas density by a factor of 10 at $t
+= 140$ kyr.  Thus the recombination rates are lower, resulting in
+increased ionization fractions and temperatures in the \ion{H}{2}
+region.
 
 \subsection{Consolidated \ion{H}{2} region with two sources}
 
@@ -2763,34 +2797,36 @@ processors.
 Weak scaling tests demonstrates how the code scales with the number of
 processors with a constant amount of work per processor.  Here we
 construct a test problem with a $64^3$ block per core.  The grid is
-not adaptively refined.  The physical setup of the problem is the same
-as Test 5 with a uniform density $\rho = 10^{-3} \cubecm$ and initial
-temperature $T = 100$ K.  Each block has the same size of 15 kpc as
-Test 5.  At the center of each grid, there exists a radiation source
-with a luminosity $L = 5 \times 10^{48}$ ph s$^{-1}$ and a 17 eV
-mono-chromatic spectrum.  The problem is run for 250 Myr.  We run this
-test with $N_p = 2^n$ cores with $n = [0,1 \dots 10,11]$.  The domain
-has $(N_x, N_y, N_z)$ blocks that is determined with the MPI routine
-\texttt{MPI\_Dims\_create}.  For example with $n = 7$, the problem is
-decomposed into $(N_x, N_y, N_z) = (4,4,8)$ blocks, producing a $256
-\times 256 \times 512$ grid.  We have run these on the original
-(Harpertown CPUs) nodes of the NASA NAS machine, Pleiades, with 8
-cores per node.  Figure \ref{fig:weak} shows the performance timings
-of various parts of the code.  From one to two cores, the total time
-only increases by $\sim$1\% due to the overhead associated with the
-inter-processor message passing.  From two to eight cores, the
-performance decreases in the hydrodynamics solver, chemistry and
-energy solver, and obtaining the hydrodynamic boundary conditions
-because of cache locality problems of the data being passed to the
-CPU.  This occurs because of the CPU architecture, specifically the L1
-cache and core connectivity.  We see less of a penalty in newer
-processors, e.g. Intel Nehalam and Westmere CPUs.  Unfortunately there
-exists a $N_p^{1.5}$ dependence in the ray communication routines.  It
-becomes the dominant process above 512 processes.  We are actively
-pursing a solution to this scaling problem.  The other parts of the
-code exhibit excellent weak scaling.  Overall it scales well to 512
-processes, and we plan to enhance the weak scalability of Enzo+Moray
-in the near future to larger processor counts.
+not adaptively refined.  The physical setup of the problem is nearly
+the same as Test 5 with a uniform density $\rho = 10^{-3} \;\cubecm$
+and initial temperature $T = 100$ K.  Each block has the same size of
+15 kpc as Test 5.  At the center of each grid, there exists a
+radiation source with a luminosity $L = 5 \times 10^{48}$ ph s$^{-1}$
+and a 17 eV mono-chromatic spectrum.  The problem is run for 250 Myr.
+We run this test with $N_p = 2^n$ cores with $n = [0,1 \dots 10,11]$.
+The domain has $(N_x, N_y, N_z)$ blocks that is determined with the
+MPI routine \texttt{MPI\_Dims\_create}.  For example with $n = 7$, the
+problem is decomposed into $(N_x, N_y, N_z) = (4,4,8)$ blocks,
+producing a $256 \times 256 \times 512$ grid.  We have run these on
+the original (Harpertown CPUs) nodes of the NASA NAS machine,
+Pleiades, with 8 cores per node.  Figure \ref{fig:weak} shows the
+performance timings of various parts of the code.  From one to two
+cores, the total time only increases by $\sim$1\% due to the overhead
+associated with the inter-processor message passing.  From two to
+eight cores, the performance decreases in the hydrodynamics solver,
+chemistry and energy solver, and obtaining the hydrodynamic boundary
+conditions because of cache locality problems of the data being passed
+to the CPU.  This occurs because of the CPU architecture, specifically
+the L1 cache and core connectivity.  We see less of a penalty in newer
+processors, e.g. Intel Nehalam and Westmere CPUs.  Above eight
+processes, these routines exhibit near perfect weak scaling to 2048
+cores.  Unfortunately there exists a $N_p^{1.5}$ dependence in the ray
+communication routines.  It becomes the dominant process above 512
+processes.  We are actively pursing a solution to this scaling
+problem.  The other parts of the code exhibit excellent weak scaling.
+Overall it scales well to 512 processes, and we plan to enhance the
+weak scalability of Enzo+Moray in the near future to larger processor
+counts.
 
 \subsection{Strong Scaling}
 \label{sec:strong_sc}
@@ -2855,14 +2891,14 @@ scheme to increase the feasbility of running larger problems.
 
 \section{Summary}
 
-In this paper, we have presented our implementation of adaptive ray
-tracing \citep{Abel02_RT} and its coupling to the hydrodynamics in the
-cosmology AMR code \enzo, making it a fully functional radiation
-hydrodynamics code.  As this method is photon conserving, accurate
-solutions are possible with coarse spatial resolution.  A new
-geometric correction factor to ray tracing on a Cartesian grid was
-described, and it is general to any implementation.  We have
-exhaustively tested the code to problems with known analytical
+In this paper, we have presented our implementation, Enzo+Moray, of
+adaptive ray tracing \citep{Abel02_RT} and its coupling to the
+hydrodynamics in the cosmology AMR code \enzo, making it a fully
+functional radiation hydrodynamics code.  As this method is photon
+conserving, accurate solutions are possible with coarse spatial
+resolution.  A new geometric correction factor to ray tracing on a
+Cartesian grid was described, and it is general to any implementation.
+We have exhaustively tested the code to problems with known analytical
 solutions and the problems presented in the RT06 and RT09 radiative
 transfer comparison papers.  Additionally we have tested our code with
 more dynamical problems---champagne flows, Rayleigh-Taylor
@@ -2888,18 +2924,18 @@ well to O($10^3$) processors for problems with $\sim10^9$
 computational cells and $\sim10^4$ sources, such as reionization
 calculations.  We have also shown that the code shows good strong
 scaling in AMR calculations, given a large enough problem.  The
-combination of the AMR and adaptive ray tracing allows for
-high-resolution and high-dynamical range problems, e.g. molecular
-cloud resolving galaxy formation simulations and \ion{H}{2} regions of
-Population III stars.  Furthermore, we have included Lyman-Werner
-absorption, secondary ionizations from X-ray radiation, Compton
-heating from photon scattering, and radiation pressure, into the code,
-which extends the reach of Enzo+Moray to study AGN feedback, stellar
-winds, and local star formation.  Coupling the radiative transfer with
-MHD further broadens the applicability of our code.  The full
-implementation is included in the latest public version of
-\enzo\footnote{http://lca.ucsd.edu/enzo}, providing the community with
-a full-featured radiation hydrodynamics AMR code.
+combination of AMR and adaptive ray tracing allows for high-resolution
+and high-dynamical range problems, e.g. present-day star formation,
+molecular cloud resolving cosmological galaxy formation, and
+\ion{H}{2} regions of Population III stars.  Furthermore, we have
+included Lyman-Werner absorption, secondary ionizations from X-ray
+radiation, Compton heating from photon scattering, and radiation
+pressure into the code, which extends the reach of Enzo+Moray to study
+AGN feedback, stellar winds, and local star formation.  Coupling the
+radiative transfer with MHD further broadens the applicability of our
+code.  The full implementation is included in the latest public
+version of \enzo\footnote{http://lca.ucsd.edu/enzo}, providing the
+community with a full-featured radiation hydrodynamics AMR code.
 
 \acknowledgments
 
