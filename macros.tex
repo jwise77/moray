@@ -38,4 +38,39 @@
 \newcommand{\zsun}{{\rm\,Z_\odot}}
 \newcommand{\etal}{et al.\ }
 \newcommand\tento[1]{$10^{#1}$}
-\newcommand\step[1]{\textit{Step #1}.---}
+\newcommand\step[1]{\textit{Step #1}.--}
+\newcommand{\hi}{H {\sc i}~}
+\newcommand{\hii}{H {\sc ii}~}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Additions from AASTeX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\ion[2]{#1$\;${\small\rmfamily\@Roman{#2}}\relax}
+\def\eps@scaling{1.0}% 
+\newcommand\epsscale[1]{\gdef\eps@scaling{#1}}% 
+\newcommand\plotone[1]{% 
+ \centering 
+ \leavevmode 
+ \includegraphics[width={\eps@scaling\columnwidth}]{#1}% 
+}% 
+\newcommand\plottwo[2]{% 
+ \centering 
+ \leavevmode 
+ \columnwidth=.5\columnwidth 
+ \includegraphics[width={\eps@scaling\columnwidth}]{#1}% 
+ \hfil 
+ \includegraphics[width={\eps@scaling\columnwidth}]{#2}% 
+}% 
+
+\newcommand{\nat}{Nature}
+\newcommand{\aj}{AJ}
+\newcommand{\apj}{ApJ}
+\newcommand{\apjl}{ApJL}
+\newcommand{\apjs}{ApJS}
+\newcommand{\mnras}{MNRAS}
+\newcommand{\aap}{A\&A}
+\newcommand{\pasj}{PASJ}
+\newcommand{\araa}{ARA\&A}
+\newcommand{\bain}{Bull.~Astron.~Inst.~Netherlands}
+\newcommand{\memsai}{Mem.~Soc.~Astron.~Italiana}
