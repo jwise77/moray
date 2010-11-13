@@ -1444,24 +1444,24 @@ spherical symmetry in our solution.
     average neutral fraction.}
 \end{figure*}
 
+\begin{figure*}
+  \epsscale{2}
+  \plotone{fig/test2_slices}
+  \epsscale{1}
+  \caption{\label{fig:test2_2} Test 2. (\hii region expansion
+    with a $T=10^5$ K blackbody spectrum).  Top: Slices through the
+    origin of neutral fraction at 10 and 100 Myr.  Bottom: Slices of
+    temperature at 10 and 100 Myr.}
+\end{figure*}
+
 \begin{figure}
   \plotone{fig/test2_ifront.eps}
-  \caption{\label{fig:test2_2} Test 2. (\hii region expansion
+  \caption{\label{fig:test2_3} Test 2. (\hii region expansion
     with a $T=10^5$ K blackbody spectrum).  Top: Evolution of the
     radius of the simulated ionization front (dashed) and analytical
     (solid) Str\"{o}mgren radius.  Bottom: The ratio of the calculated
     and analytical Str\"{o}mgren radius.}
 \end{figure}
-
-\begin{figure*}
-  \epsscale{2}
-  \plotone{fig/test2_slices}
-  \epsscale{1}
-  \caption{\label{fig:test2_3} Test 2. (\hii region expansion
-    with a $T=10^5$ K blackbody spectrum).  Top: Slices through the
-    origin of neutral fraction at 10 and 100 Myr.  Bottom: Slices of
-    temperature at 10 and 100 Myr.}
-\end{figure*}
 
 This test is similar to Test 1, but the temperature is allowed to
 evolve.  The radiation source now has a blackbody spectrum with a $T =
@@ -1479,21 +1479,20 @@ neutral fraction of the domain.  Compared with Test 1, the ionization
 front is thicker, as expected with the harder spectrum.  The total
 neutral fraction decreases to 0.67 over 4$t_{\rm rec} = 500$ Myr,
 which is in agreement with the analytical expectation and other codes
-in RT06.  In Figure \ref{fig:test2_2}, we show the ratio of the
-ionization front radius $r_{\rm IF}$ in our simulation and $R_s$.
-Before $1.5t_{\rm rec}$, $r_{\rm IF}$ lags behind $R_s$, initially by
-10\% and then increases to $R_s$; however afterwards, this ratio
-asymptotes to a solution that is 4\% greater than $R_s$.  This
-behavior is approximately the median result in RT06, where this ratio
-varies between 1 and 1.1, and the early evolution of $r_{\rm IF}$ is
-under-predicted by almost all of the codes.  If we use one energy
-group with the mean energy (29.6 eV) of a $T=10^5$ K blackbody, we
-find that $r_{\rm IF}/R_s$ = 1.08, which is representative of the
-codes in the upper range of RT06.  In Figure \ref{fig:test2_3}, we
-show slices of neutral fraction and temperature through the origin at
-$t = $ 10 and 100 Myr.  Here one sees the spherically symmetric
-\hii regions and a smooth temperature transition to the neutral
-ambient medium.
+in RT06.  In Figure \ref{fig:test2_2}, we show slices of neutral
+fraction and temperature through the origin at $t = $ 10 and 100 Myr.
+Here one sees the spherically symmetric \hii regions and a smooth
+temperature transition to the neutral ambient medium.  In Figure
+\ref{fig:test2_3}, we show the ratio of the ionization front radius
+$r_{\rm IF}$ in our simulation and $R_s$.  Before $1.5t_{\rm rec}$,
+$r_{\rm IF}$ lags behind $R_s$, initially by 10\% and then increases
+to $R_s$; however afterwards, this ratio asymptotes to a solution that
+is 4\% greater than $R_s$.  This behavior is approximately the median
+result in RT06, where this ratio varies between 1 and 1.1, and the
+early evolution of $r_{\rm IF}$ is under-predicted by almost all of
+the codes.  If we use one energy group with the mean energy (29.6 eV)
+of a $T=10^5$ K blackbody, we find that $r_{\rm IF}/R_s$ = 1.08, which
+is representative of the codes in the upper range of RT06.
 
 \subsection{Test 3. I-front trapping in a dense clump and the
   formation of a shadow}
