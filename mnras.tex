@@ -33,10 +33,10 @@ Stanford University, Menlo Park, CA 94025, USA}
 
 \begin{abstract}
 
-  We describe a photon-conserving numerical method that solves the
-  radiative transfer equation, using a spatially-adaptive ray tracing
-  scheme, and its parallel implementation into the adaptive mesh
-  refinement (AMR) code, Enzo.  By coupling the solver with the energy
+  We describe a photon-conserving radiative transfer algorithm, using
+  a spatially-adaptive ray tracing scheme, and its parallel
+  implementation into the adaptive mesh refinement (AMR) cosmological
+  hydrodynamics code, Enzo.  By coupling the solver with the energy
   equation and non-equilibrium chemistry network, our radiation
   hydrodynamics framework can be utilized to study a broad range of
   astrophysical problems, such as stellar and black hole (BH)
@@ -49,12 +49,10 @@ Stanford University, Menlo Park, CA 94025, USA}
   dynamical situations, for example, the propagation of an ionization
   front through a Rayleigh-Taylor instability, time-varying
   luminosities, and collimated radiation.  The test suite also
-  includes an expanding \hii region in a magnetized medium,
-  utilizing the newly implemented magnetohydrodynamics module in
-  \enzo.  This method linearly scales with the number of point sources
-  and number of grid cells.  To combat this, we use a novel method of
-  merging rays at large radius, using a tree method, which we briefly
-  describe.  Our implementation is scalable to 512 processors on
+  includes an expanding \hii region in a magnetized medium, utilizing
+  the newly implemented magnetohydrodynamics module in \enzo.  This
+  method linearly scales with the number of point sources and number
+  of grid cells.  Our implementation is scalable to 512 processors on
   distributed memory machines and can include radiation pressure and
   secondary ionizations from X-ray radiation.  It is included in the
   newest public release of Enzo.
@@ -68,23 +66,22 @@ Stanford University, Menlo Park, CA 94025, USA}
 
 \section{Introduction}
 
-Radiative transfer is ubiquitous in many astrophysical problems,
-encompassing topics such as stellar atmospheres, the interstellar
-medium (ISM), star formation, galaxy formation, supernovae (SNe) and
-cosmology.  Thus it is a well-studied problem
-\citep[e.g.][]{Mathews65, Rybicki, Mihalas84, Yorke86}; however, its
-treatment in multi-dimensional calculations is difficult because of
-the dependence on seven variables -- three spatial, two angular,
-frequency, and time.  The non-local nature of the thermal and
+Radiation from stars and black holes strongly affects their
+surroundings and plays a crucical role in topics such as stellar
+atmospheres, the interstellar medium (ISM), star formation, galaxy
+formation, supernovae (SNe) and cosmology.  It is a well-studied
+problem \citep[e.g.][]{Mathews65, Rybicki, Mihalas84, Yorke86};
+however, its treatment in multi-dimensional calculations is difficult
+because of the dependence on seven variables -- three spatial, two
+angular, frequency, and time.  The non-local nature of the thermal and
 hydrodynamical response to radiation sources further adds to the
-difficulty.  In the general case, one must consider all radiation
-sources at every point in calculation.  
+difficulty.  Depending on the problem of interest some simplifying
+assumptions may be made.
 
-Fortunately problems can be simplified by exploiting symmetries and
-special cases.  The first case was considered by \citet{Stroemgren39}
-for a radiation source ionizing a static uniform neutral medium, where
-recombinations balance photo-ionizations.  He derived a radius of an
-\hii region,
+An important case was considered by \citet{Stroemgren39} for an
+ultraviolet (UV) radiation source photoionizing a static uniform
+neutral medium.  When recombinations balance photo-ionizations, the
+radius of a so-called \hii region,
 %
 \begin{equation}
   \label{eqn:Rstr}
@@ -100,10 +97,10 @@ showed that the ionizing radiation heated the medium to $T \sim 10^4$
 K.  If the density is equal on both sides of the ionization front,
 then this over-pressurized region would expand and drive a shock
 outwards \citep[e.g.][]{Oort54, Schatzman55}.  These early works
-provided the basis for the modern topic of radiation hydrodynamics.  A
-decade later, the first radiation hydrodynamical numerical models of
-\hii regions in spherical symmetry and plane-parallel ionization
-fronts were developed \citep[e.g.][]{Mathews65, Lasker66,
+provided the basis for the modern topic of radiation hydrodynamics of
+the ISM.  A decade later, the first radiation hydrodynamical numerical
+models of \hii regions in spherical symmetry and plane-parallel
+ionization fronts were developed \citep[e.g.][]{Mathews65, Lasker66,
   Hjellming66}.  They described the expansion of the ionization front
 and the evolution of its associated shock wave that carries most of
 the gas away from the source.  At the same time, theoretical models of
@@ -112,13 +109,12 @@ ionization fronts matured and were classified by \citet{Kahn54} and
 fronts, the ionized gas density is higher than the neutral gas
 density, and in D-type fronts, the opposite is true.  R-type fronts
 travel supersonically with respect to the neutral gas, whereas D-type
-fronts are subsonic.  Furthermore ``weak'' and ``strong'' R-type fronts
-move supersonically and subsonically with respect to the ionized gas,
-respectively.  The same terminology conversely applies to D-type
-fronts.  ``Critical'' fronts are defined as moving exactly at the
-sound speed.  These works established the evolutionary track of an
-expanding \hii illuminated by a massive star in a uniform
-medium:
+fronts are subsonic.  Furthermore ``weak'' and ``strong'' R-type
+fronts move supersonically and subsonically with respect to the
+ionized gas, respectively.  The same terminology conversely applies to
+D-type fronts.  ``Critical'' fronts are defined as moving exactly at
+the sound speed.  These works established the evolutionary track of an
+expanding \hii illuminated by a massive star in a uniform medium:
 %
 \begin{enumerate}
 \item Weak R-type:  When the star (gradually) starts to shine, the
@@ -164,7 +160,7 @@ requirements of three-dimensional calculations.  There are two popular
 methods to solve the radiative transfer equation in three-dimensions:
 %
 \begin{itemize}
-\item Moment methods:  The angular moments of the radiation field can
+\item Moment methods: The angular moments of the radiation field can
   describe its angular structure, which are related to the energy
   energy, flux, and radiation pressure \citep{Auer70, Norman98}.
   These have been implemented in conjunction with short
@@ -172,9 +168,9 @@ methods to solve the radiative transfer equation in three-dimensions:
   \citep{Finlator09}, with a variable Eddington tensor in the
   optically thin limit \citep[OTVET;][]{Gnedin01_OTVET, Petkova09},
   and with an M1 closure relation \citep{Gonzalez07, Aubert08}.
-  Moment methods have the advantage of being fast, being independent
-  of the number of radiation point sources.  However, they are
-  diffusive and result in incorrect shadows in some situations.
+  Moment methods have the advantage of being fast and independent of
+  the number of radiation sources.  However, they are diffusive and
+  result in incorrect shadows in some situations.
 \item Ray tracing:  Radiation can be propagated along rays that extend
   through the computational grid \citep[e.g.][]{Razoumov99, Abel99_RT,
     Ciardi01, Sokasian01, Whalen06, Rijkhorst06, Mellema06, Alvarez06,
@@ -207,17 +203,17 @@ adaptive mesh refinement (AMR) code, \enzo~\citep{BryanNorman1997,
   OShea2004}.  The radiation field is coupled to the hydrodynamics
 solver at small timescales, enabling it to study radiation
 hydrodynamical problems.  We have used this code to investigate the
-growth of an \hii region from a 100\Ms~Population III (Pop III)
-star \citep{Abel07}, the early stages of reionization from Pop III
-stars \citep{Wise08_Reion}, radiative feedback on the formation of
-high redshift dwarf galaxies \citep{Wise08_Gal}, ultraviolet radiation
+growth of an \hii region from a 100\Ms~Population III (Pop III) star
+\citep{Abel07}, the early stages of reionization from Pop III stars
+\citep{Wise08_Reion}, radiative feedback on the formation of high
+redshift dwarf galaxies \citep{Wise08_Gal}, ultraviolet radiation
 escape fractions from dwarf galaxies before reionization
 \citep{Wise09}, negative radiative feedback from accreting Pop III
 seed black holes \citep{Alvarez09}, and radiative feedback in
 accreting supermassive black holes \citep[][in prep.]{Kim11}.  We have
 included Enzo+Moray in the latest public release of
-\enzo\footnote{http://lca.ucsd.edu/enzo}, and it is also coupled with
-the newly added MHD solver in \enzo~\citep{Wang09}.
+\enzo\footnote{http://enzo.googlecode.com}, and it is also coupled
+with the newly added MHD solver in \enzo~\citep{Wang09}.
 
 We have structured this paper as follows.  In Section 2, we describe
 the mathematical connections between adaptive ray tracing and the
@@ -282,9 +278,9 @@ This is $HL/c$, where $L$ is the simulation box length.  If this ratio
 is $\ll 1$, we can ignore the third term.  For example at $z=5$, this
 ratio is 0.1 when $L = c/H(z=5)$ = 53 proper Mpc.  In large boxes
 where the light crossing time is comparable to the Hubble time, then
-it could be important to consider cosmological redshifting and
-dilution of the radiation.  Thus equation (\ref{eqn:rteqn}) reduces to
-the non-cosmological form in this local approximation,
+it becomes important to consider cosmological redshifting and dilution
+of the radiation.  Thus equation (\ref{eqn:rteqn}) reduces to the
+non-cosmological form in this local approximation,
 %
 \begin{equation}
   \frac{1}{c} \frac{\partial I_\nu}{\partial t} + 
@@ -388,26 +384,26 @@ where it will be considered in the solution of $I_\nu$ at the next
 timestep.  In the next timestep, the photon will encounter a different
 hydrodynamical and ionization state, hence $\kappa$, in its path.
 Furthermore any time variations of the luminosities will be retained
-in the radiation field.  In this sense, our method retains the time
+in the radiation field.  This is how this method retains the time
 derivative of the radiative transfer equation.
 
-\subsection{Ray Merging}
+% \subsection{Ray Merging}
 
-Unfortunately the computational work of ray tracing scales with the
-number of sources.  To resolve this barrier, rays can be merged in
-cases with either nearly parallel rays from clustered sources of
-radiation, whether it be diffuse radiation or point sources, or where
-rays exit a region with high resolution into a coarsely resolved
-region.  In each case, the factor $\Phi_c$ can be much higher than the
-desired value, and it would be efficient to merge these rays.  We have
-devised a new scheme that merges rays from clustered sources based on
-a hierarchical binary tree, which is analogous to the gravity tree
-solvers.  In principle, this should increase the efficiency of the
-solver, but currently in most problems the overhead is greater than
-the compuational savings.  Nevertheless the biggest advantage of this
-method is the memory savings in simulations with clustered sources.
-We leave its full details for a later paper and now describe our
-photon-conserving transport method.
+% Unfortunately the computational work of ray tracing scales with the
+% number of sources.  To resolve this barrier, rays can be merged in
+% cases with either nearly parallel rays from clustered sources of
+% radiation, whether it be diffuse radiation or point sources, or where
+% rays exit a region with high resolution into a coarsely resolved
+% region.  In each case, the factor $\Phi_c$ can be much higher than the
+% desired value, and it would be efficient to merge these rays.  We have
+% devised a new scheme that merges rays from clustered sources based on
+% a hierarchical binary tree, which is analogous to the gravity tree
+% solvers.  In principle, this should increase the efficiency of the
+% solver, but currently in most problems the overhead is greater than
+% the compuational savings.  Nevertheless the biggest advantage of this
+% method is the memory savings in simulations with clustered sources.
+% We leave its full details for a later paper and now describe our
+% photon-conserving transport method.
 
 \subsection{Radiation Field}
 
@@ -424,11 +420,10 @@ and for a ray segment,
 \end{equation}
 Here $\sigma_{\rm abs}$ and $n_{\rm abs}$ are the cross section and
 number density of the absorbing medium, respectively.  We use the
-cell-centered density in our calculations but have experimented with
-trilinearly interpolated densities \citep[see][]{Mellema06} but could
-not devise a method that did not produce considerable artifacts.
-Equation (\ref{eqn:rtray}) has a simple exponential analytic solution,
-and the photon flux of a ray is reduced by
+cell-centered density in our calculations.  Using trilinearly
+interpolated densities \citep[see][]{Mellema06} did not produce
+improved results.  Equation (\ref{eqn:rtray}) has a simple exponential
+analytic solution, and the photon flux of a ray is reduced by
 %
 \begin{equation}
   \label{eqn:flux}
@@ -465,10 +460,10 @@ where $\alpha_B = 2.59 \times 10^{-13} \mathrm{cm}^3 \;
 \mathrm{s}^{-1}$ is the recombination coefficient at 10$^4$ K in the
 Case B on-the-spot approximation in which all recombinations are
 locally reabsorbed, \citep{Spitzer78}, and $C_{\rm H}$ is the
-collisional ionization rate.  However for more accurate solutions in
+collisional ionization rate.  However, for more accurate solutions in
 calculations that consider several chemical species, the
-photo-ionization rates are better utilized in solvers that consider
-chemical networks \citep[e.g.][]{Abel97}.
+photo-ionization rates are terms in the relevant chemical networks
+\citep[e.g.][]{Abel97}.
 
 \subsection{Geometric Corrections}
 \label{sec:meth_fc}
@@ -487,9 +482,10 @@ chemical networks \citep[e.g.][]{Abel97}.
 
 For a ray tracing method to accurately, i.e. without non-spherical
 artifacts, compute the radiation field, the computational grid must be
-well-sampled by the rays.  The main source of these artifacts is the
-geometrical difference between the cell and the HEALPix pixel.  In
-this section, we devise a correction scheme to account for these
+well-sampled by the rays.  The main source of potential artifacts is
+the geometrical difference between the cell and the HEALPix pixel
+relevant in the angular integration of the intensity over the cell.
+In this section, we devise a correction scheme to account for these
 differences.  Consider the solid angle $\Omega_{\rm ray}$ and photon
 flux $P$ associated with a single ray, and assume the flux is constant
 across $\Omega_{\rm ray}$.  There exists a discrepancy between the
@@ -615,12 +611,13 @@ these physics next.
 \subsubsection{Absorption of Lyman-Werner Radiation}
 
 Molecular hydrogen can absorb photons in the Lyman-Werner bands
-through the two-step Solomon process that are composed of 76
-absorption lines ranging from 11.1 to 13.6 eV \citep{Stecher67,
-  Dalgarno70}.  Each of these spectral lines can be modelled with a
-typical exponential attenuation equation \citep{Ricotti01}, but
-\citet{Draine96} showed that this self-shielding is well modeled with
-the following relation to total \hh~column density
+through the two-step Solomon process, which for the lowest
+ro-vibrational states already consists of 76 absorption lines ranging
+from 11.1 to 13.6 eV \citep{Stecher67, Dalgarno70, Haiman00}.  Each of
+these spectral lines can be modelled with a typical exponential
+attenuation equation \citep{Ricotti01}, but \citet{Draine96} showed
+that this self-shielding is well modeled with the following relation
+to total \hh~column density
 %
 \begin{equation}
   \label{eqn:lwband}
@@ -697,8 +694,9 @@ which is the equivalent of the photon energy decreasing.  Here $\tau_e
 and $\sigma_{\rm KN}$ is the non-relativistic Klein-Nishina cross
 section \citep{Rybicki}.  The Compton heating rate is thus
 \begin{equation}
-  \Gamma_{\rm ph,C} = \frac{dP_C}{n_e \; V_{\rm cell} \; dt_P}.
+  \Gamma_{\rm ph,C} = \frac{dP_C}{n_e \; V_{\rm cell} \; dt_P},
 \end{equation}
+which has been used in \citet{Kim11}.
 
 \subsubsection{Radiation Pressure}
 
@@ -710,14 +708,14 @@ This is easily computed by considering the momentum
 \end{equation}
 of the absorbed radiation from the incoming ray, where $\hat{r}$ is
 the normal direction of the ray.  We do not include radiation pressure
-on dust, and thus our treatment underestimates its effects in
-applicable environments.  The resulting acceleration of the gas due to
+on dust currently.  The resulting acceleration of the gas because of
 radiation pressure is
 \begin{equation}
   d\mathbf{a} = \frac{d\mathbf{p}_\gamma} {dt_P\; \rho \; V_{\rm cell}},
 \end{equation}
 where $\rho$ is the gas density inside the cell.  This acceleration is
-then added to the other forces, e.g. gravity, in the calculation.
+then added to the other forces, e.g. gravity, in the calculation in an
+operator split fashion.
 
 \section{Numerical Implementation in Enzo}
 
@@ -739,12 +737,12 @@ public version of \enzo.
 Each photon package is stored in the AMR grid with the finest
 resolution that contains its current position.  The photon packages
 keep track of their (1) photon flux, (2) photon type, (3) photon
-energy, (4) the length of its emission, (5) emission time, (6) current
-time, (7) radius, (8) total column density, (9) HEALPix pixel number,
-(10) HEALPix level, and (11) position of the originating source,
-totaling 60 (88) bytes for single (double) precision.  When \enzo~uses
-double precision for grid and particle positions and time, items 4-7
-and 11 are double precision.
+energy, (4) the time interval of its emission, (5) emission time, (6)
+current time, (7) radius, (8) total column density, (9) HEALPix pixel
+number, (10) HEALPix level, and (11) position of the originating
+source, totaling 60 (88) bytes for single (double) precision.  When
+\enzo~uses double precision for grid and particle positions and time,
+items 4-7 and 11 are double precision.
 
 We only treat point sources of radiation in our implementation;
 therefore all base level photon packages originate from them.  As they
@@ -1018,20 +1016,17 @@ not introduce any inaccuracies in both test problems (see
 \subsection{Temporal evolution}
 \label{sec:timestepping}
 
-There have been several methods of choosing a timestep to solve
-radiation transfer equation because an accurate yet large timestep is
-not trivial to compute.  We describe several methods to calculate the
-radiative transfer timestep in this section.  With a small enough
-timestep, the solution is guaranteed to avoid any inaccuracies
-(ignoring any systematic ones) due to time-stepping, but the solver
-must be called many times.  These frequent calls may be unnecessary
-because the same solution may be accomplished with a longer timestep.
-Furthermore with ray tracing, the photon packages only advance a short
-distance, and they will exist in every $dx/dt_P$ cells with radiation
-and are stored between timesteps, excessively consuming memory.  On
-the shortest timescale, one can safely set the timestep to the
-light-crossing time of a cell \citep{Abel99_RT, Trac07} but encounters
-the problems stated above.
+There have been several methods of choosing a maximal timestep to
+solve radiation transfer equation while retaining stability and
+accuracy.  We describe several methods to calculate the radiative
+transfer timestep in this section.  With a small enough timestep, the
+solution is accurate (ignoring any systematic ones), but the solver is
+slow.  Furthermore for very small timesteps, the photon packages only
+advance a short distance, and they will exist in every $dx/dt_P$ cells
+with radiation and are stored between timesteps, excessively consuming
+memory.  On the shortest timescale, one can safely set the timestep to
+the light-crossing time of a cell \citep{Abel99_RT, Trac07} but
+encounters the problems stated above.
 
 If the timestep is too large, the solution will become inaccurate;
 specifically, ionization fronts will advance too slowly, as radiation
@@ -1429,7 +1424,7 @@ results are in excellent agreement with this more accurate analytical
 solution.  In Figure \ref{fig:test1_HI}, we show a slice of the
 neutral fraction through the origin.  Other than the ray splitting
 artifacts that generate the plateaus at 1.5 and 3 kpc, one sees
-spherical symmetry in our solution.
+spherical symmetry without any noise in our solution.
 
 \subsection{Test 2. \hii region expansion: temperature evolution}
 
@@ -1839,9 +1834,9 @@ directions.  In the diagonal direction, the neutral column density
 through the shock is slightly smaller, allowing the high-energy
 photons to photoionize and photoheat the gas to $x_e = 5 \times
 10^{-3}$ and $T = 2000$ K out to $\sim50$ pc from the shock.  The
-reflecting boundaries in Enzo might be responsible for this artifact
-because this is not seen when the problem is centered in the domain,
-removing any boundary effects.
+reflecting boundaries are responsible for this artifact because this
+is not seen when the problem is centered in the domain, removing any
+boundary effects.
 
 \subsection{Test 7. Photo-evaporation of a dense clump}
 
@@ -2029,10 +2024,10 @@ instability.  A possible physical analogue could be a radiation source
 heating and rarefying the medium below.
 
 The $x$ and $y$-boundaries are periodic, and the $z$-boundaries are
-reflecting.  These will cause features that are non-physical, in
-particular the top reflecting boundary; nevertheless, these tests
-provide a good check on a radiation hydrodynamics solver.  We show the
-evolution of the density, temperature, and ionized fraction of the
+reflecting.  These will cause artifical features, in particular,
+because of the top reflecting boundary; nevertheless, these tests
+provide a stress test on a radiation hydrodynamics solver.  We show
+the evolution of the density, temperature, and ionized fraction of the
 optically thick and optically thin cases in Figures
 \ref{fig:test9_thick} and \ref{fig:test9_thin}.  The initial state of
 the Rayleigh-Taylor instability is shown in the left panels.
@@ -2327,11 +2322,9 @@ Another prevalent physical component in astrophysics is a magnetic
 field.  We utilize the new magnetohydrodynamics (MHD) framework
 \citep{Wang09} in \enzo~v2.0 that uses an unsplit conservative
 hydrodynamics solver and the hyperbolic $\nabla \cdot \mathbf{B} = 0$
-cleaning method of \citet{Dedner02}.  This marriage of radiation
-transport and MHD has already been demonstrated in \citet{Wang10}, but
-for illustrative purposes, we show a test problem with an expanding
-\hii region in an initially uniform density field and constant
-magnetic field.  We use the same problem setup as
+cleaning method of \citet{Dedner02}.  We show a test problem with an
+expanding \hii region in an initially uniform density field and
+constant magnetic field.  We use the same problem setup as
 \citet{Krumholz07_ART} -- $\rho = 100~\cubecm$, $T = 11$ K, $L_{\rm
   box} = 20$ pc with a resolution of 256$^3$.  This ambient medium is
 threaded by a magnetic field $\mathbf{B} = 14.2 \hat{\mathbf{x}} \;
@@ -2551,7 +2544,7 @@ the details of small-scale processes, e.g. photo-evaporation.
 The previous three dependencies did not affect the propagation of the
 ionization front greatly.  However in our and others' past experience
 \citep[e.g.][]{Shapiro04, Mellema06, Petkova09}, the timestep,
-especially too small of one, can drastically underestimate the
+especially too small a one, can drastically underestimate the
 ionization front velocity.  Here we use Test 1 but with $64^3$
 resolution to compare different time-stepping methods -- restricted
 changes in \hii ($dn_{\rm H}/dt$ based; \S\ref{sec:dt_hi}),
@@ -2863,9 +2856,8 @@ cores.  Unfortunately there exists a $N_p^{1.5}$ dependence in the ray
 communication routines.  It becomes the dominant process above 512
 processes.  We are actively pursing a solution to this scaling
 problem.  The other parts of the code exhibit excellent weak scaling.
-Overall it scales well to 512 processes, and we plan to enhance the
-weak scalability of Enzo+Moray in the near future to larger processor
-counts.
+Overall it scales already well to 512 processes, and there is room to
+enhance the weak scalability of Enzo+Moray in the near future.
 
 \subsection{Strong Scaling}
 \label{sec:strong_sc}
@@ -2874,13 +2866,14 @@ counts.
   %\epsscale{0.8}
   \plotone{fig/strong_v1.eps}
   \caption{\label{fig:strong} Strong scaling test with a $256^3$ AMR
-    calculation of cosmological reionization.  The error bars
-    represent the minimum and maximum time spent on a single core and
-    measures load balancing.  Each point has been slightly offset to
-    make the error bars distinguishable.  The hydrodynamics and
-    non-equilibrium chemistry solvers scale well.  Unfortunately the
-    communication of rays does not scale in this problem, where as the
-    ray tracing scales relatively well.}
+    calculation of cosmological reionization with $\sim329^3$ zones.
+    The error bars represent the minimum and maximum time spent on a
+    single core and measures load balancing.  Each point has been
+    slightly offset to make the error bars distinguishable.  The
+    hydrodynamics and non-equilibrium chemistry solvers scale well.
+    The communication of rays does not scale well in this problem and
+    limits the performance, where as the ray tracing scales relatively
+    well.}
   %\epsscale{1}
 \end{figure}
 
@@ -2893,7 +2886,7 @@ sufficient work to compute, compared to the communication involved.
 In our experience, non-AMR calculations exhibit much better strong
 scaling than AMR ones because of reduced inter-processor
 communication.  We use an AMR simulation to demonstrate the scability
-of Enzo+Moray in a demanding, real-world calculation.  Here we use a
+of Enzo+Moray in a demanding, research application.  Here we use a
 small-box reionization calculation with $L_{\rm box} = 3$ Mpc/h, a
 resolution of $256^3$, and six levels of refinement.  We measure the
 time spent on the hydrodynamics, non-equilibrium chemistry, ray
@@ -2958,22 +2951,21 @@ method to calculate the radiation field in the optically-thin limit
 with ray tracing.
 
 Being a ray tracing code, it scales with the number of radiation
-sources, albeit lessened with ray merging; nevertheless, it scales
-well to O($10^3$) processors for problems with $\sim10^9$
-computational cells and $\sim10^4$ sources, such as reionization
-calculations.  We have also shown that the code shows good strong
-scaling in AMR calculations, given a large enough problem.  The
-combination of AMR and adaptive ray tracing allows for high-resolution
-and high-dynamical range problems, e.g. present-day star formation,
-molecular cloud resolving cosmological galaxy formation, and
-\hii regions of Population III stars.  Furthermore, we have
-included Lyman-Werner absorption, secondary ionizations from X-ray
-radiation, Compton heating from photon scattering, and radiation
+sources; nevertheless, it scales well to O($10^3$) processors for
+problems with $\sim10^9$ computational cells and $\sim10^4$ sources,
+such as reionization calculations.  We have also shown that the code
+shows good strong scaling in AMR calculations, given a large enough
+problem.  The combination of AMR and adaptive ray tracing allows for
+high-resolution and high-dynamical range problems, e.g. present-day
+star formation, molecular cloud resolving cosmological galaxy
+formation, and \hii regions of Population III stars.  Furthermore, we
+have included Lyman-Werner absorption, secondary ionizations from
+X-ray radiation, Compton heating from photon scattering, and radiation
 pressure into the code, which extends the reach of Enzo+Moray to study
 AGN feedback, stellar winds, and local star formation.  Coupling the
 radiative transfer with MHD further broadens the applicability of our
 code.  The full implementation is included in the latest public
-version of \enzo\footnote{http://lca.ucsd.edu/enzo}, providing the
+version of \enzo\footnote{http://enzo.googlecode.com}, providing the
 community with a full-featured radiation hydrodynamics AMR code.
 
 \section*{Acknowledgments}
@@ -2981,11 +2973,10 @@ community with a full-featured radiation hydrodynamics AMR code.
 Support for this work was provided by NASA through Hubble Fellowship
 grant \#120-6370 awarded by the Space Telescope Science Institute,
 which is operated by the Association of Universities for Research in
-Astronomy, Inc., for NASA, under contract NAS 5-26555.  J.K. was
-supported by the William R. and Sara Hart Kimball Stanford Graduate
-Fellowship.  Computational resources were provided by NASA/NCCS award
-SMD-09-1439.  The majority of the analysis and plots were done with
-\texttt{yt} \citep{yt}.
+Astronomy, Inc., for NASA, under contract NAS 5-26555.  Computational
+resources were provided by NASA/NCCS award SMD-09-1439.  The majority
+of the analysis and plots were done with \texttt{yt}
+\citep{yt_full_paper}.
 
 \bibliography{ms}
 

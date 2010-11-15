@@ -116,6 +116,10 @@
 {G{\'o}rski} K.~M.,  {Hivon} E.,  {Banday} A.~J.,  {Wandelt} B.~D.,  {Hansen}
   F.~K.,  {Reinecke} M.,    {Bartelmann} M.,  2005, \apj, 622, 759
 
+\bibitem[\protect\citeauthoryear{{Haiman}, {Abel} \& {Rees}}{{Haiman}
+  et~al.}{2000}]{Haiman00}
+{Haiman} Z.,  {Abel} T.,    {Rees} M.~J.,  2000, \apj, 534, 11
+
 \bibitem[\protect\citeauthoryear{Harten, Lax \& van Leer}{Harten
   et~al.}{1983}]{HLL}
 Harten A.,  Lax P.~D.,    van Leer B.,  1983, SIAM Review, 25, 35
@@ -322,12 +326,10 @@ emgren39}
   {Cen}}{2007}]{Trac07}
 {Trac} H.,  {Cen} R.,  2007, \apj, 671, 1
 
-\bibitem[\protect\citeauthoryear{{Turk}}{{Turk}}{2008}]{yt}
-{Turk} M.~J.,  2008, in Varoquaux G.,  Vaught T.,   Millman J.,  eds,
-  Proceedings of the 7th Python in Science Conference Analysis and
-  visualization of multi-scale astrophysical simulations using python and
-  numpy.
-Pasadena, CA USA, pp 46 -- 50
+\bibitem[\protect\citeauthoryear{{Turk}, {Smith}, {Oishi}, {Skory}, {Skillman},
+  {Abel} \& {Norman}}{{Turk} et~al.}{2010}]{yt_full_paper}
+{Turk} M.~J.,  {Smith} B.~D.~S.,  {Oishi} J.~S.,  {Skory} S.,  {Skillman}
+  S.~W.,  {Abel} T.,    {Norman} M.~L.,  2010, \apjs
 
 \bibitem[\protect\citeauthoryear{{van Leer}}{{van Leer}}{1977}]{PLM}
 {van Leer} B.,  1977, Journal of Computational Physics, 23, 276
@@ -335,10 +337,6 @@ Pasadena, CA USA, pp 46 -- 50
 \bibitem[\protect\citeauthoryear{{Wang} \& {Abel}}{{Wang} \&
   {Abel}}{2009}]{Wang09}
 {Wang} P.,  {Abel} T.,  2009, \apj, 696, 96
-
-\bibitem[\protect\citeauthoryear{{Wang}, {Li}, {Abel} \& {Nakamura}}{{Wang}
-  et~al.}{2010}]{Wang10}
-{Wang} P.,  {Li} Z.,  {Abel} T.,    {Nakamura} F.,  2010, \apj, 709, 27
 
 \bibitem[\protect\citeauthoryear{{Whalen} \& {Norman}}{{Whalen} \&
   {Norman}}{2006}]{Whalen06}

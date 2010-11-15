@@ -8,7 +8,7 @@ digraph coupling {
   //node [shape=box];
 
   Shine [shape=box, label="Create base photons\nfrom pt. sources"];
-  Initialize [shape=box, label="Initialize radiation fields"];
+  Initialize [shape=box, label="Initialize photo-ionization fields"];
 //  Trace [shape=box, label="Trace Rays"];
 //  MoveList [shape=box, label="Collect rays to transfer\nto other grids"];
   Trace [shape=box, color=white, style=filled, label="Trace Rays"];
