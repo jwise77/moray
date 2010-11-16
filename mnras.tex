@@ -1,15 +1,16 @@
-\documentclass[useAMS,usenatbib]{mn2e}
+\documentclass[useAMS,usenatbib,a4paper]{mn2e}
 
 \usepackage{graphicx}
 \usepackage{epsfig}
 \usepackage{natbib}
-%\usepackage[section] {placeins}
+\usepackage[section] {placeins}
 \bibliographystyle{mn2e}
 \citestyle{mn2e}
 
 %%%%%%%% Begin custom definitions %%%%%%%%%%%%%
 
 \input macros.tex
+\voffset=-2cm
 
 %%%%%%%% End custom definitions %%%%%%%%%%
 
@@ -206,8 +207,8 @@ hydrodynamical problems.  We have used this code to investigate the
 growth of an \hii region from a 100\Ms~Population III (Pop III) star
 \citep{Abel07}, the early stages of reionization from Pop III stars
 \citep{Wise08_Reion}, radiative feedback on the formation of high
-redshift dwarf galaxies \citep{Wise08_Gal}, ultraviolet radiation
-escape fractions from dwarf galaxies before reionization
+redshift dwarf galaxies \citep{Wise08_Gal, Wise10_Gal}, ultraviolet
+radiation escape fractions from dwarf galaxies before reionization
 \citep{Wise09}, negative radiative feedback from accreting Pop III
 seed black holes \citep{Alvarez09}, and radiative feedback in
 accreting supermassive black holes \citep[][in prep.]{Kim11}.  We have
@@ -469,15 +470,16 @@ photo-ionization rates are terms in the relevant chemical networks
 \label{sec:meth_fc}
 
 \begin{figure}
-  \plottwo{fig/covering.eps}{fig/calc_fc.eps}
+  \plotone{fig/geo_corr.eps}
   \caption{\label{fig:covering} (a) A two-dimensional illustration of
     the overlap between the beam associated with a ray $\gamma$ and a
     computational cell.  The ray has a segment length of $dr$ passing
     through the cell.  The covering area is denoted by dark grey,
     where the full area $(dr \times L_{\rm pix})$ is colored by the
     dark and light grey.  The photo-ionization and photo-heating rates
-    should be corrected by this overlap fraction $f_c$.  (b)
-    Annotation of quantities used in this geometric correction.}
+    should be corrected by the ratio of these areas, i.e. the overlap
+    fraction $f_c$.  (b) Annotation of quantities used in this
+    geometric correction.}
 \end{figure}
 
 For a ray tracing method to accurately, i.e. without non-spherical
@@ -518,7 +520,7 @@ segment to the cell center $x_{\rm 0,i}$ in orthogonal directions,
 \end{equation}
 where $R_{\rm 0,i}$ is the distance travelled by the ray in each
 orthogonal direction.  The distance to the closest cell boundary is
-$D_{\rm edge} = dx/2 - \min_{i=1 \rightarrow 3} (D_{\rm c,i})$.  Thus
+$D_{\rm edge} = dx/2 - \max_{i=1 \rightarrow 3} (D_{\rm c,i})$.  Thus
 the covering factor is related to the square of the ratio between the
 $L_{\rm pix}$ and $D_{\rm edge}$ by
 %
@@ -1045,20 +1047,18 @@ $\lambda_{\rm mfp} / dt_P$.
 \subsubsection{Minimizing neutral fraction change}
 \label{sec:dt_hi}
 
-\begin{figure*}
-  \epsscale{2}
+\begin{figure}
   \plottwo{fig/dtp_test3noavg.eps}{fig/dtp_test3.eps}
-  \epsscale{1}
   \caption{\label{fig:dtsmooth} Radiative transfer adaptive timestep
     in shadowing test (Test 3; \S\ref{sec:test3}) while restricting
     the neutral fraction change to 5\% in the ionization front.  The
-    unmodified timestep (left) is slightly more noisy and the minima
+    unmodified timestep (top) is slightly more noisy and the minima
     are more prominent than the timestep computed with a running
-    average of the last two timesteps (right).  The points show every
+    average of the last two timesteps (bottom).  The points show every
     tenth timestep taken into account for the running average.  The
     sawtooth behavior is created by the ionization front advancing
     into the next neutral cell in the overdensity.}
-\end{figure*}
+\end{figure}
 
 Another strategy is restricting the neutral fraction to change a small
 amount, i.e. for a single cell,
@@ -1173,8 +1173,6 @@ scales for computational savings.
 \subsubsection{Change of incident radiation}
 \label{sec:dt_tau}
 
-\textbf{Reorganize to be more clear!}
-
 Ionization front velocities can approach significant fractions of the
 speed of light in steep density gradients and in the early expansion
 of the \hii region.  If the ionization front position is
@@ -1187,25 +1185,23 @@ derived from an estimate of the ionization front velocity
   {n_{\rm abs}(\mathbf{r})},
 \end{equation}
 %
-based on the incident radiation field at a particular position.  The
-timestep is then chosen so that the ionization front only crosses one
-cell per timestep $dt_{\rm P, cell} = dx / v_{\rm IF}$, and the global
-timestep is $dt_{\rm P} = \min(dt_{\rm P, cell})$.  
-
-To make this approach computationally straightforward, we consider a
-spherically symmetric case without recombinations.  Thus all photons
-emitted from the source result in an ionization (also see
-\S\ref{sec:dt_hi}).  Ultimately in any approach, we are focused on
-accurately following the time evolution of the radiation field.  In
-this method, we base the timestep directly on the change in radiation
-field, the specific intensity, $I/\dot{I}$.  We consider the field
-after propagating through the cell, so $I = I_0 \exp(-\tau)$, where
-$\tau = n_{\rm H} \sigma dl$ is the optical depth through the cell.
-The change in specific intensity is
+based on the incident radiation field at a particular position.
+Alternatively, the propagation of the ionization front can be
+restricted by limiting the change in specific intensity $I$ to a
+safety factor $C_{\rm RT,cfl}$, resulting in a timestep of
+%
+\begin{equation}
+  \label{eqn:vifront1}
+  dt_P = C_{\rm RT,cfl} \frac{I}{|dI/dt|}.
+\end{equation}
+%
+We consider the specific intensity after the ray travels through the
+cell, so $I = I_0 \exp(-\tau)$, where $\tau = n_{\rm H} \sigma dl$ is
+the optical depth through the cell.  The time derivative of $I$ is
 %
 \begin{equation}
   \label{eqn:vifront2}
-    \frac{dI}{dt} = I_0 \exp(-\tau) (-\dot{n}_{\rm H} \sigma dl),
+  \frac{dI}{dt} = I_0 \exp(-\tau) (-\dot{n}_{\rm H} \sigma dl),
 \end{equation}
 %
 which can be expressed in terms of local optical depth and neutral
@@ -1215,19 +1211,19 @@ fraction,
     \frac{dI}{dt} = -I \frac{\tau \dot{n}_{\rm H}}{n_{\rm H}}.
 \end{equation}
 %
-This results in a local timestep
+$\dot{n}_{\rm H}$ is computed with the same formula as
+Eq. \ref{eqn:dtelec}. Substituting in Eq. \ref{eqn:vifront1} gives
 %
 \begin{equation}
   \label{eqn:vifront4}
-  dt_P = \frac{I}{|dI/dt|} = C_{\rm RT,cfl} \frac{n_{\rm H}}{\tau \dot{n}_{\rm H}},
+  dt_P = C_{\rm RT,cfl} \frac{n_{\rm H}}{\tau \dot{n}_{\rm H}}.
 \end{equation}
 %
-where $C_{\rm RT,cfl}$ is a safety factor that restricts the change in
-intensity to its inverse.  In practice, we have found that a ceiling
-of 3 can be placed on the optical depth, so optically thick cells do
-not create a very small timestep.  We still find excellent agreement
-with analytical solutions with this approximation.  We show the
-accuracy using this timestep method in \S\ref{sec:dt_dep}.
+In practice, we have found that a ceiling of 3 can be placed on the
+optical depth, so optically thick cells do not create a very small
+timestep.  We still find excellent agreement with analytical solutions
+with this approximation.  We show the accuracy using this timestep
+method in \S\ref{sec:dt_dep}.
 
 \subsection{Parallelization Strategy}
 \label{sec:parallel}
@@ -1342,17 +1338,15 @@ require a sampling of at least $\Phi_c = 5.1$ rays per cell.
   expansion}
 \label{sec:test1}
 
-\begin{figure*}
-  \epsscale{2}
+\begin{figure}
   \plottwo{fig/test1_ionfrac.eps}{fig/test1_ifront.eps}
-  \epsscale{1}
   \caption{\label{fig:test1_ifront} Test 1 (\hii region
-    expansion with a monochromatic spectrum of 13.6 eV).  Left:
+    expansion with a monochromatic spectrum of 13.6 eV).  Top:
     Radially averaged profile of neutral (solid) and ionized (dashed)
-    fraction at 10, 30, 100, and 500 Myr.  Right: Evolution of the
+    fraction at 10, 30, 100, and 500 Myr.  Bottom: Evolution of the
     calculated (top, dashed) and analytical (top, solid) Str\"{o}mgren
     radius.  The ratio of these radii are plotted in the bottom panel.}
-\end{figure*}
+\end{figure}
 
 \begin{figure}
   %\epsscale{0.8}
@@ -1428,16 +1422,20 @@ spherical symmetry without any noise in our solution.
 
 \subsection{Test 2. \hii region expansion: temperature evolution}
 
-\begin{figure*}
-  \epsscale{2}
-  \plottwo{fig/test2_ionfrac.eps}{fig/test2_neutral.eps}
-  \epsscale{1}
-  \caption{\label{fig:test2_1} Test 2. (\hii region
-    expansion with a $T=10^5$ K blackbody spectrum).  Left:
-    Radially averaged profile of neutral (solid) and ionized (dashed)
-    fraction at 10, 30, 100, and 500 Myr.  Right: Evolution of the
-    average neutral fraction.}
-\end{figure*}
+\begin{figure}
+  \plotone{fig/test2_ionfrac.eps}
+  \caption{\label{fig:test2_1a} Test 2. (\hii region expansion with a
+    $T=10^5$ K blackbody spectrum).  Radially averaged profile of
+    neutral (solid) and ionized (dashed) fraction at 10, 30, 100, and
+    500 Myr.}
+\end{figure}
+
+\begin{figure}
+  \plotone{fig/test2_neutral.eps}
+  \caption{\label{fig:test2_1b} Test 2. (\hii region expansion with a
+    $T=10^5$ K blackbody spectrum).  Evolution of the average neutral
+    fraction.}
+\end{figure}
 
 \begin{figure*}
   \epsscale{2}
@@ -1468,41 +1466,40 @@ use 4 energy groups with the following mean energies and relative
 luminosities: $E_i = (16.74, 24.65, 34.49, 52.06)$, $L_i/L = (0.277,
 0.335, 0.2, 0.188)$.
 
-In Figure \ref{fig:test2_1}, we show the radially averaged neutral and
-ionized fraction at $t = $ 10, 30, 100, and 500 Myr, and the total
-neutral fraction of the domain.  Compared with Test 1, the ionization
-front is thicker, as expected with the harder spectrum.  The total
-neutral fraction decreases to 0.67 over 4$t_{\rm rec} = 500$ Myr,
-which is in agreement with the analytical expectation and other codes
-in RT06.  In Figure \ref{fig:test2_2}, we show slices of neutral
-fraction and temperature through the origin at $t = $ 10 and 100 Myr.
-Here one sees the spherically symmetric \hii regions and a smooth
-temperature transition to the neutral ambient medium.  In Figure
-\ref{fig:test2_3}, we show the ratio of the ionization front radius
-$r_{\rm IF}$ in our simulation and $R_s$.  Before $1.5t_{\rm rec}$,
-$r_{\rm IF}$ lags behind $R_s$, initially by 10\% and then increases
-to $R_s$; however afterwards, this ratio asymptotes to a solution that
-is 4\% greater than $R_s$.  This behavior is approximately the median
-result in RT06, where this ratio varies between 1 and 1.1, and the
-early evolution of $r_{\rm IF}$ is under-predicted by almost all of
-the codes.  If we use one energy group with the mean energy (29.6 eV)
-of a $T=10^5$ K blackbody, we find that $r_{\rm IF}/R_s$ = 1.08, which
-is representative of the codes in the upper range of RT06.
+In Figure \ref{fig:test2_1a}, we show the radially averaged neutral
+and ionized fraction at $t = $ 10, 30, 100, and 500 Myr, and the total
+neutral fraction of the domain in Figure \ref{fig:test2_1b}.  Compared
+with Test 1, the ionization front is thicker, as expected with the
+harder spectrum.  The total neutral fraction decreases to 0.67 over
+4$t_{\rm rec} = 500$ Myr, which is in agreement with the analytical
+expectation and other codes in RT06.  In Figure \ref{fig:test2_2}, we
+show slices of neutral fraction and temperature through the origin at
+$t = $ 10 and 100 Myr.  Here one sees the spherically symmetric \hii
+regions and a smooth temperature transition to the neutral ambient
+medium.  In Figure \ref{fig:test2_3}, we show the ratio of the
+ionization front radius $r_{\rm IF}$ in our simulation and $R_s$.
+Before $1.5t_{\rm rec}$, $r_{\rm IF}$ lags behind $R_s$, initially by
+10\% and then increases to $R_s$; however afterwards, this ratio
+asymptotes to a solution that is 4\% greater than $R_s$.  This
+behavior is approximately the median result in RT06, where this ratio
+varies between 1 and 1.1, and the early evolution of $r_{\rm IF}$ is
+under-predicted by almost all of the codes.  If we use one energy
+group with the mean energy (29.6 eV) of a $T=10^5$ K blackbody, we
+find that $r_{\rm IF}/R_s$ = 1.08, which is representative of the
+codes in the upper range of RT06.
 
 \subsection{Test 3. I-front trapping in a dense clump and the
   formation of a shadow}
 \label{sec:test3}
 
-\begin{figure*}
-  \epsscale{2}
+\begin{figure}
   \plottwo{fig/test3_HI.eps}{fig/test3_temp.eps}
-  \epsscale{1}
   \caption{\label{fig:test3_1} Test 3. (I-front trapping in a dense
-    clump and shadowing).  Left panel: Line cut from the point source
-    through the middle of the dense clump at $t = 1, 3, 5, 15$ Myr.
-    of the average neutral fraction (left) and temperature
-    (right) of the clump.}
-\end{figure*}
+    clump and shadowing).  Line cut from the point source through the
+    middle of the dense clump at $t = 1, 3, 5, 15$ Myr.  of the
+    average neutral fraction (top) and temperature (bottom) of the
+    clump.}
+\end{figure}
 
 \begin{figure}
   %\epsscale{0.85}
@@ -2058,8 +2055,6 @@ ionized ($x_e \sim 10^{-2}$), turbulent medium, seen in the slices $t
 \ge 0.67$ Myr.  The slices of electron fraction also show that the
 dense gas is optically thick.
 
-\li Perhaps add more description?
-
 \subsection{Test 10. Photo-evaporation of a blastwave}
 
 \begin{figure*}
@@ -2211,21 +2206,19 @@ produces a dense shell with a diffuse ($10^{-28}$ \cubecm) and warm
 
 \subsection{Test 12. Time variations of the source luminosity}
 
-\begin{figure*}
+\begin{figure}
   %\epsscale{1.15}
-  \epsscale{2}
   \plottwo{fig/test12_kph}{fig/test12_radial}
-  \epsscale{1}
   \caption{\label{fig:test12_kph} Test 12 (Time variations of the
-    source luminosity).  Left: Slice of the photo-ionization rate
+    source luminosity).  Top: Slice of the photo-ionization rate
     \kph~through the origin.  The source has a duty cycle of 0.5 Myr,
     and the box has a light crossing time of 3.3 Myr.  The shells of
     high \kph~originate from radiation that was emitted when the
     source was at its peak luminosity, illustrating the
-    time-dependence of the radiative transfer equation.  Right: Radial
-    profile \kph~with the inverse square law overplotted.}
+    time-dependence of the radiative transfer equation.  Bottom:
+    Radial profile \kph~with the inverse square law overplotted.}
   %\epsscale{1}
-\end{figure*}
+\end{figure}
 
 \begin{figure}
   %\epsscale{0.8}
@@ -2240,6 +2233,25 @@ produces a dense shell with a diffuse ($10^{-28}$ \cubecm) and warm
     source that are later smoothed out over a sound crossing time.}
   %\epsscale{1}
 \end{figure}
+
+\begin{figure*}
+  \epsscale{2}
+  \plotone{fig/test14_slices_xy}
+  \epsscale{1}
+  \caption{\label{fig:test14_1} Test 14. (\hii region with MHD).
+    Left to right: slices of density at $t = 0.18, 0.53, 1.58$ Myr in
+    the x-y plane.  The streamlines show the magnetic field.}
+\end{figure*}
+
+\begin{figure*}
+  \epsscale{2}
+  \plotone{fig/test14_slices_yz}
+  \epsscale{1}
+  \caption{\label{fig:test14_2} Test 14. (\hii region with
+    MHD). Slices of density (top) and the x-component of the magnetic
+    field (bottom) in the y-z plane at $t = 0.18, 0.53, 1.58$ Myr
+    (left to right).}
+\end{figure*}
 
 Our implementation retains the time derivative of the radiative
 transfer equation (Eq. \ref{eqn:rteqn}) if we choose a constant ray
@@ -2295,28 +2307,7 @@ variable source creates density perturbations with an average size of
 They do not create any instabilities and are smoothed out over its
 sound crossing time of $\sim 50$ Myr.
 
-\li Add more description of the problem.
-
 \subsection{Test 14. \hii region with MHD}
-
-\begin{figure*}
-  \epsscale{2}
-  \plotone{fig/test14_slices_xy}
-  \epsscale{1}
-  \caption{\label{fig:test14_1} Test 14. (\hii region with MHD).
-    Left to right: slices of density at $t = 0.18, 0.53, 1.58$ Myr in
-    the x-y plane.  The streamlines show the magnetic field.}
-\end{figure*}
-
-\begin{figure*}
-  \epsscale{2}
-  \plotone{fig/test14_slices_yz}
-  \epsscale{1}
-  \caption{\label{fig:test14_2} Test 14. (\hii region with
-    MHD). Slices of density (top) and the x-component of the magnetic
-    field (bottom) in the y-z plane at $t = 0.18, 0.53, 1.58$ Myr
-    (left to right).}
-\end{figure*}
 
 Another prevalent physical component in astrophysics is a magnetic
 field.  We utilize the new magnetohydrodynamics (MHD) framework
@@ -2391,9 +2382,9 @@ conservation.
 \subsection{Angular resolution}
 \label{sec:ang_dep}
 
-\begin{figure*}
+\begin{figure}
   %\epsscale{1}
-  \epsscale{2}
+  %\epsscale{2}
   \plotone{fig/phic_slices}
   \epsscale{1}
   \caption{\label{fig:ang_dep1} Variations in the photo-ionization
@@ -2402,7 +2393,7 @@ conservation.
     the photo-ionization rate actually spans 4 orders of magnitude in
     this test.}
   %\epsscale{1}
-\end{figure*}
+\end{figure}
 
 \begin{figure}
   %\epsscale{0.75}
@@ -2455,21 +2446,19 @@ deviation from an inverse square law decreases as $\sigma \propto
 \subsection{Frequency resolution}
 \label{sec:nu_dep}
 
-\begin{figure*}
+\begin{figure}
   %\epsscale{1.05}
-  \epsscale{2}
   \plottwo{fig/nures040}{fig/nures100}
-  \epsscale{1}
   \caption{\label{fig:nu_dep} Radial profiles of (clockwise from the
     upper left) density, temperature, radial velocity, and ionized
     fraction for Test 5 with $n_\nu = 1$, 2, 4, 8, and 16 frequency
     bins sampling the $T=10^5$ K blackbody spectrum.  The data are
-    shown at $t = 200$ Myr (left) and $t = 500$ Myr (right).  The
+    shown at $t = 200$ Myr (top) and $t = 500$ Myr (bottom).  The
     double-peaked structure in the shock only appears with a
     multi-frequency spectrum.  The solution converges at $n_\nu \ge
-    4$.}  
+    4$.}
   %\epsscale{1}
-\end{figure*}
+\end{figure}
 
 The ionization front radius is within 5--10\% of analytical solutions
 in Tests 1, 2, and 5 with only one energy group; however a
@@ -2718,11 +2707,9 @@ lowering the temperature by a factor 2--3.
 
 \subsection{Radiation pressure}
 
-\begin{figure*}
+\begin{figure}
   %\epsscale{1.075}
-  \epsscale{2}
   \plottwo{fig/noRP_profiles.eps}{fig/RP_profiles.eps}
-  \epsscale{1}
   \caption{\label{fig:rp_profiles} (a) No radiation pressure.
     Radial profiles of (clockwise from top left) density, temperature,
     radial velocity, and neutral fraction.  Time units in the legend
@@ -2734,7 +2721,7 @@ lowering the temperature by a factor 2--3.
     continues to force the gas outwards, increasing gas velocities up
     to 50 km/s.}
   %\epsscale{1}
-\end{figure*}
+\end{figure}
 
 Radiation pressure affects gas dynamics in an \hii region when
 its force is comparable to the acceleration created by gas pressure of
