@@ -135,14 +135,12 @@ Harten A.,  Lax P.~D.,    van Leer B.,  1983, SIAM Review, 25, 35
 \bibitem[\protect\citeauthoryear{{Hjellming}}{{Hjellming}}{1966}]{Hjellming66}
 {Hjellming} R.~M.,  1966, \apj, 143, 420
 
-\bibitem[\protect\citeauthoryear{{Iliev}, {Ciardi}, {Alvarez}, {Maselli},
-  {Ferrara}, {Gnedin}, {Mellema}, {Nakamoto}, {Norman}, {Razoumov},
-  {Rijkhorst}, {Ritzerveld}, {Shapiro}, {Susa}, {Umemura} \& {Whalen}}{{Iliev}
-  et~al.}{2006}]{RT06}
-{Iliev} I.~T.,  {Ciardi} B.,  {Alvarez} M.~A.,  {Maselli} A.,  {Ferrara} A.,
-  {Gnedin} N.~Y.,  {Mellema} G.,  {Nakamoto} T.,  {Norman} M.~L.,  {Razoumov}
-  A.~O.,  {Rijkhorst} E.,  {Ritzerveld} J.,  {Shapiro} P.~R.,  {Susa} H.,
-  {Umemura} M.,    {Whalen} D.~J.,  2006, \mnras, 371, 1057
+\bibitem[\protect\citeauthoryear{{Iliev} et~al.,}{{Iliev}  et~al.}{2006}]{RT06}
+{Iliev} I.~T.,  et~al., 2006, \mnras, 371, 1057
+
+\bibitem[\protect\citeauthoryear{{Iliev} et~al.,}{{Iliev}
+  et~al.}{2009}]{Iliev09}
+{Iliev} I.~T.,  et~al., 2009, \mnras, pp 1313--+
 
 \bibitem[\protect\citeauthoryear{{Iliev}, {Mellema}, {Pen}, {Merz}, {Shapiro}
   \& {Alvarez}}{{Iliev} et~al.}{2006}]{Iliev06}
@@ -153,15 +151,6 @@ Harten A.,  Lax P.~D.,    van Leer B.,  1983, SIAM Review, 25, 35
   {Pen}}{{Iliev} et~al.}{2007}]{Iliev07}
 {Iliev} I.~T.,  {Mellema} G.,  {Shapiro} P.~R.,    {Pen} U.,  2007, \mnras,
   376, 534
-
-\bibitem[\protect\citeauthoryear{{Iliev}, {Whalen}, {Mellema}, {Ahn}, {Baek},
-  {Gnedin}, {Kravtsov}, {Norman}, {Raicevic}, {Reynolds}, {Sato}, {Shapiro},
-  {Semelin}, {Smidt}, {Susa}, {Theuns} \& {Umemura}}{{Iliev}
-  et~al.}{2009}]{Iliev09}
-{Iliev} I.~T.,  {Whalen} D.,  {Mellema} G.,  {Ahn} K.,  {Baek} S.,  {Gnedin}
-  N.~Y.,  {Kravtsov} A.~V.,  {Norman} M.,  {Raicevic} M.,  {Reynolds} D.~R.,
-  {Sato} D.,  {Shapiro} P.~R.,  {Semelin} B.,  {Smidt} J.,  {Susa} H.,
-  {Theuns} T.,    {Umemura} M.,  2009, \mnras, pp 1313--+
 
 \bibitem[\protect\citeauthoryear{{Johnson}, {Greif} \& {Bromm}}{{Johnson}
   et~al.}{2007}]{Johnson07}
