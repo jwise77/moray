@@ -13,7 +13,7 @@ digraph algorithm {
   ChildGrid [shape=diamond, margin="0,0", label="Does a child grid\nexist under this cell?"]
   Split [shape=box, style=filled, label="Split ray. Delete parent ray\nEXIT"]
   CheckSplit [shape=diamond, label="Does the ray need\nsplitting at r+dr?"]
-  Compute [shape=box, label="Calculate\n1. Geometric correction\n2. Optical depth\n3. Photo-ionization and photo-heating rates\n4. Add to column density"]
+  Compute [shape=box, label="Calculate\n1. Geometric correction\n2. Optical depth\n3. Photo-ionisation and photo-heating rates\n4. Add to column density"]
   RadPress [shape=box, label="Optional: add radiation pressure"]
   Update [shape=box label="Update photon time, flux, and radius"]
 

@@ -8,7 +8,7 @@ digraph coupling {
   //node [shape=box];
 
   Shine [shape=box, label="Create base photons\nfrom pt. sources"];
-  Initialize [shape=box, label="Initialize photo-ionization fields"];
+  Initialise [shape=box, label="Initialise photo-ionisation fields"];
 //  Trace [shape=box, label="Trace Rays"];
 //  MoveList [shape=box, label="Collect rays to transfer\nto other grids"];
   Trace [shape=box, color=white, style=filled, label="Trace Rays"];
@@ -32,9 +32,9 @@ digraph coupling {
     Trace -> MoveList;
   }
 
-//  Shine -> Initialize;
-//  Initialize -> Trace;
-  Shine -> Initialize -> Trace;
+//  Shine -> Initialise;
+//  Initialise -> Trace;
+  Shine -> Initialise -> Trace;
   MoveList -> MoveRays -> FinishedRays;
   FinishedRays -> ChemEnergy [label="YES"];
   ChemEnergy -> Finished;
@@ -45,7 +45,7 @@ digraph coupling {
   { rank=min; Shine }
   { rank=same; FinishedRays; MoveRays; }
   { rank=same; ChemEnergy; Trace; }
-  { rank=same; Finished; Initialize; Exit; }
+  { rank=same; Finished; Initialise; Exit; }
 //  { rank=same; MoveRays; Finished }
 //  { rank=same; MoveRays; FinishedRays; }
 
