@@ -37,7 +37,7 @@ Stanford University, Menlo Park, CA 94025, USA}
   We describe a photon-conserving radiative transfer algorithm, using
   a spatially-adaptive ray tracing scheme, and its parallel
   implementation into the adaptive mesh refinement (AMR) cosmological
-  hydrodynamics code, Enzo.  By coupling the solver with the energy
+  hydrodynamics code, \enzo.  By coupling the solver with the energy
   equation and non-equilibrium chemistry network, our radiation
   hydrodynamics framework can be utilised to study a broad range of
   astrophysical problems, such as stellar and black hole (BH)
@@ -56,7 +56,7 @@ Stanford University, Menlo Park, CA 94025, USA}
   of grid cells.  Our implementation is scalable to 512 processors on
   distributed memory machines and can include radiation pressure and
   secondary ionisations from X-ray radiation.  It is included in the
-  newest public release of Enzo.
+  newest public release of \enzo.
   
 \end{abstract}
 
@@ -200,23 +200,23 @@ that couple it with magneto-hydrodynamics
 \citep[e.g.][]{Krumholz07_ART}.  The tests in RT06 and RT09 were kept
 relatively simple to ease the comparison.
 
-In this paper, we present our implementation, Enzo+Moray, of adaptive
-ray tracing \citep{Abel02_RT} in the cosmological hydrodynamics
-adaptive mesh refinement (AMR) code, \enzo~\citep{BryanNorman1997,
-  OShea2004}.  The radiation field is coupled to the hydrodynamics
-solver at small time-scales, enabling it to study radiation
-hydrodynamical problems.  We have used this code to investigate the
-growth of an \hii region from a 100\Ms~Population III (Pop III) star
-\citep{Abel07}, the early stages of reionisation from Pop III stars
-\citep{Wise08_Reion}, radiative feedback on the formation of high
-redshift dwarf galaxies \citep{Wise08_Gal, Wise10_Gal}, ultraviolet
-radiation escape fractions from dwarf galaxies before reionisation
-\citep{Wise09}, negative radiative feedback from accreting Pop III
-seed black holes \citep{Alvarez09}, and radiative feedback in
-accreting supermassive black holes \citep[][in prep.]{Kim11}.  We have
-included Enzo+Moray in the latest public release of
-\enzo\footnote{http://enzo.googlecode.com}, and it is also coupled
-with the newly added MHD solver in \enzo~\citep{Wang09}.
+In this paper, we present our implementation, \moray, of adaptive ray
+tracing \citep{Abel02_RT} in the cosmological hydrodynamics adaptive
+mesh refinement (AMR) code, \enzo~\citep{BryanNorman1997, OShea2004}.
+The radiation field is coupled to the hydrodynamics solver at small
+time-scales, enabling it to study radiation hydrodynamical problems.
+We have used this code to investigate the growth of an \hii region
+from a 100\Ms~Population III (Pop III) star \citep{Abel07}, the early
+stages of reionisation from Pop III stars \citep{Wise08_Reion},
+radiative feedback on the formation of high redshift dwarf galaxies
+\citep{Wise08_Gal, Wise10_Gal}, ultraviolet radiation escape fractions
+from dwarf galaxies before reionisation \citep{Wise09}, negative
+radiative feedback from accreting Pop III seed black holes
+\citep{Alvarez09}, and radiative feedback in accreting supermassive
+black holes \citep[][in prep.]{Kim11}.  We have included \moray in the
+latest public release of \enzo\footnote{http://enzo.googlecode.com},
+and it is also coupled with the newly added MHD solver in
+\enzo~\citep{Wang09}.
 
 We have structured this paper as follows.  In Section 2, we describe
 the mathematical connections between adaptive ray tracing and the
@@ -234,13 +234,13 @@ results from the RT06 radiative transfer tests in Section 4.
 Afterwards in Section 5, we show the results from the RT09 radiation
 hydrodynamics tests.  We expand on these tests to include more
 dynamical and complex setups to demonstrate the flexibility and high
-fidelity of Enzo+Moray.  Section 6 gives the results from spatial,
+fidelity of \moray.  Section 6 gives the results from spatial,
 angular, frequency, and temporal resolution tests.  In Section 7, we
 illustrate the improvements from the geometric correction factor and
 our optically-thin approximation.  We also show the effects of X-ray
 radiation and radiation pressure in this section.  Finally in Section
-8, we demonstrate the parallel scalability of Enzo+Moray.  Last
-Section 9 summarises our method and results.
+8, we demonstrate the parallel scalability of \moray.  Last Section 9
+summarises our method and results.
 
 \section{Treatment of Radiative Transfer}
 \label{sec:rt}
@@ -270,10 +270,11 @@ $\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$, and the second term
 $j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ is the emission coefficient
 that includes any point sources of radiation or diffuse radiation.  We
 neglect any $(v/c)$ terms in equation (\ref{eqn:rteqn}) that become
-important in the dynamic diffusion limit ($l \kappa (v/c) \gg 1$).
-This occurs in relativistic flows or very optically thick systems,
-such as stellar interiors or radiation-dominated shocks
-\citep[see][for a rigorous derivation that includes $(v/c)$ terms to
+important in the dynamic diffusion limit ($l \kappa (v/c) \gg 1$),
+where $l$ is the characteristic size of the system.  This occurs in
+relativistic flows or very optically thick systems, such as stellar
+interiors or radiation-dominated shocks \citep[see][for a rigorous
+derivation that includes $(v/c)$ terms to
 second-order]{Krumholz07_FLD}.
 
 Solving this equation is difficult because of its high dimensionality;
@@ -1145,13 +1146,13 @@ than a method without time-averaging.  Another advantage of this
 method is the use of pre-calculated tables for the photo-ionisation
 rates as a function of optical depth, based on a given spectrum.  This
 minimizes the energy groups needed to accurately sample a spectrum.
-We are currently implementing this method into Enzo+Moray.
+We are currently implementing this method into \moray.
 
 \subsubsection{Physically motivated}
 \label{sec:dt_const}
 
 A constant timestep is necessary when solving the time-dependent
-radiative transfer equation in Enzo+Moray.  It should be small enough
+radiative transfer equation in \moray.  It should be small enough
 to evolve ionisation fronts accurately, as discussed earlier.  The
 timestep can be based on physical arguments, for example, the
 sound-crossing time of an ionised region at $T > 10^4$ K.  To be
@@ -1912,8 +1913,8 @@ outermost shell are caused by the initial discretisation of the
 sphere, as discussed in \S\ref{sec:test3}.
 
 We have completed presenting results from the RT06 and RT09 test
-suites.  Next we test Enzo+Moray with five additional tests that
-further demonstrate its capabilities and accuracy.
+suites.  Next we test \moray with five additional tests that further
+demonstrate its capabilities and accuracy.
 
 \subsection{Test 8. Champagne flow from a dense clump}
 
@@ -1998,7 +1999,7 @@ acceleration field.  This classic test alone evaluates how subsonic
 perturbations evolve.  We consider the case of a single-mode
 perturbation.  The system evolves without any radiation until the
 perturbation grows considerably and then turn on the radiation source.
-These tests demonstrate that Enzo+Moray can follow a highly dynamic
+These tests demonstrate that \moray can follow a highly dynamic
 system and resolve fine density structures.
 
 We run two cases, an optically-thick and optically-thin case.  In
@@ -2588,8 +2589,8 @@ analytical value.
 
 \section{Methodology Tests}
 
-Here we show tests that evaluate new features in Enzo+Moray, such as
-the improvements from the geometric correction factor, optically-thin
+Here we show tests that evaluate new features in \moray, such as the
+improvements from the geometric correction factor, optically-thin
 approximations, treatment of X-ray radiation, and radiation pressure.
 Lastly we test for any non-spherical artifacts in the case of two
 sources.
@@ -2805,7 +2806,7 @@ multiple sources.
 
 \section{Parallel Performance}
 
-Last we demonstrate the parallel performance of Enzo+Moray in weak and
+Last we demonstrate the parallel performance of \moray in weak and
 strong scaling tests.  For large simulations to consider radiative
 transfer, it is imperative that the code scales to large number of
 processors.
@@ -2859,7 +2860,7 @@ communication routines.  It becomes the dominant process above 512
 processes.  We are actively pursing a solution to this scaling
 problem.  The other parts of the code exhibit excellent weak scaling.
 Overall it scales already well to 512 processes, and there is room to
-enhance the weak scalability of Enzo+Moray in the near future.
+enhance the weak scalability of \moray in the near future.
 
 \subsection{Strong Scaling}
 \label{sec:strong_sc}
@@ -2888,7 +2889,7 @@ sufficient work to compute, compared to the communication involved.
 In our experience, non-AMR calculations exhibit much better strong
 scaling than AMR ones because of reduced inter-processor
 communication.  We use an AMR simulation to demonstrate the scability
-of Enzo+Moray in a demanding, research application.  Here we use a
+of \moray in a demanding, research application.  Here we use a
 small-box reionisation calculation with $L_{\rm box} = 3$ Mpc/h, a
 resolution of $256^3$, and six levels of refinement.  We measure the
 time spent on the hydrodynamics, non-equilibrium chemistry, ray
@@ -2918,14 +2919,14 @@ despite our efforts (see \S\ref{sec:parallel}) to minimize idle time.
 For this reason, the communication of rays does not scale in this
 problem.  One solution is to split the AMR grids into smaller blocks
 based on the ray tracing work.  This could impact the performance of
-the rest of Enzo by increasing the number of boundaries and thus
+the rest of \enzo by increasing the number of boundaries and thus
 communication.  Nevertheless in simulations that are dominated by
 radiation transport, it will be advantageous to construct such a
 scheme to increase the feasbility of running larger problems.
 
 \section{Summary}
 
-In this paper, we have presented our implementation, Enzo+Moray, of
+In this paper, we have presented our implementation, \moray, of
 adaptive ray tracing \citep{Abel02_RT} and its coupling to the
 hydrodynamics in the cosmology AMR code \enzo, making it a fully
 functional radiation hydrodynamics code.  As this method is photon
@@ -2938,7 +2939,7 @@ transfer comparison papers.  Additionally we have tested our code with
 more dynamical problems -- champagne flows, Rayleigh-Taylor
 instabilities, photo-evaporation of a blastwave, beamed radiation, a
 time-varying source, and an \hii region with MHD -- to
-demonstrate the flexibility and fidelity of Enzo+Moray.  Because
+demonstrate the flexibility and fidelity of \moray.  Because
 production simulations may not have the resolution afforded in these
 test problems, we have tested the dependence on spatial, angular,
 frequency, and temporal resolution.  It provides accurate solutions
@@ -2963,7 +2964,7 @@ star formation, molecular cloud resolving cosmological galaxy
 formation, and \hii regions of Population III stars.  Furthermore, we
 have included Lyman-Werner absorption, secondary ionisations from
 X-ray radiation, Compton heating from photon scattering, and radiation
-pressure into the code, which extends the reach of Enzo+Moray to study
+pressure into the code, which extends the reach of \moray to study
 AGN feedback, stellar winds, and local star formation.  Coupling the
 radiative transfer with MHD further broadens the applicability of our
 code.  The full implementation is included in the latest public
