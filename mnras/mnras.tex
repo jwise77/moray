@@ -68,7 +68,7 @@ Stanford University, Menlo Park, CA 94025, USA}
 \section{Introduction}
 
 Radiation from stars and black holes strongly affects their
-surroundings and plays a crucical role in topics such as stellar
+surroundings and plays a crucial role in topics such as stellar
 atmospheres, the interstellar medium (ISM), star formation, galaxy
 formation, supernovae (SNe) and cosmology.  It is a well-studied
 problem \citep[e.g.][]{Mathews65, Rybicki, Mihalas84, Yorke86};
@@ -569,7 +569,7 @@ In an optically thin medium, radiation is only attenuated by geometric
 dilution in the local approximation to Equation (\ref{eqn:rteqn}),
 i.e. the inverse square law.  With such a simple solution, the tracing
 of rays is wasteful, however these rays must be propagated because the
-the medium farther awap can be optically thick.  Here we describe a
+the medium farther away can be optically thick.  Here we describe a
 method that minimizes the computational work of ray tracing in the
 optically thin regime by exploiting this fact.  Each ray tracks the
 total column density $N_{\rm abs}$ and the equivalent total optical
@@ -2540,7 +2540,7 @@ the details of small-scale processes, e.g. photo-evaporation.
   \plotone{f39}
   \caption{\label{fig:dt_dep2} Variable time-stepping for the methods
     that limit change in neutral fraction (solid) and specific
-    intensity (dotted).  The horisontal lines show the constant
+    intensity (dotted).  The horizontal lines show the constant
     timesteps that were used in the tests.  The crossing time of a
     mean free path by the ionisation front is plotted for reference.}
   %\epsscale{1}
@@ -2888,7 +2888,7 @@ One key property of strong scaling is that each processor must have
 sufficient work to compute, compared to the communication involved.
 In our experience, non-AMR calculations exhibit much better strong
 scaling than AMR ones because of reduced inter-processor
-communication.  We use an AMR simulation to demonstrate the scability
+communication.  We use an AMR simulation to demonstrate the scalability
 of \moray in a demanding, research application.  Here we use a
 small-box reionisation calculation with $L_{\rm box} = 3$ Mpc/h, a
 resolution of $256^3$, and six levels of refinement.  We measure the
@@ -2903,7 +2903,7 @@ are performed on the Nehalam nodes on Pleiades on 2$^n$ cores, where
 $n = [2,...,9]$.
 
 Fig. \ref{fig:strong} shows the strong scaling results of this
-calculation.  The hydrodynamics and non-equilbrium chemistry routines
+calculation.  The hydrodynamics and non-equilibrium chemistry routines
 scale very well in this range because they depend on local phenomena.
 Note that the dominant process is the radiation transport instead of
 the hydrodynamics when compared to the weak scaling tests.  The error
@@ -2922,7 +2922,7 @@ based on the ray tracing work.  This could impact the performance of
 the rest of \enzo by increasing the number of boundaries and thus
 communication.  Nevertheless in simulations that are dominated by
 radiation transport, it will be advantageous to construct such a
-scheme to increase the feasbility of running larger problems.
+scheme to increase the feasibility of running larger problems.
 
 \section{Summary}
 
