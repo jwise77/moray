@@ -193,11 +193,12 @@ radiation field was thus ignored.  Several radiative transfer codes
 were compared in four purely radiative transfer tests in
 \citet[hereafter RT06]{RT06}.  Only recently has the radiative
 transfer equation been coupled to the hydrodynamics in
-three-dimensions.  In the second comparison paper \citep[hereafter
-  RT09]{Iliev09}, results from these radiation hydrodynamics codes
-were compared.  Even more rare are ones that couple it with
-magneto-hydrodynamics \citep[e.g.][]{Krumholz07_ART}.  The tests in
-RT06 and RT09 were kept relatively simple to ease the comparison.
+three-dimensions \citep[e.g.][]{Krumholz07_FLD}.  In the second
+comparison paper \citep[hereafter RT09]{Iliev09}, results from these
+radiation hydrodynamics codes were compared.  Even more rare are ones
+that couple it with magneto-hydrodynamics
+\citep[e.g.][]{Krumholz07_ART}.  The tests in RT06 and RT09 were kept
+relatively simple to ease the comparison.
 
 In this paper, we present our implementation, Enzo+Moray, of adaptive
 ray tracing \citep{Abel02_RT} in the cosmological hydrodynamics
@@ -267,7 +268,13 @@ both the cosmological redshift and dilution of radiation.  On the
 right hand side, the first term considers the absorption coefficient
 $\kappa_\nu \equiv \kappa_\nu(\mathbf{x},\nu,t)$, and the second term
 $j_\nu \equiv j_\nu(\mathbf{x},\nu,t)$ is the emission coefficient
-that includes any point sources of radiation or diffuse radiation.
+that includes any point sources of radiation or diffuse radiation.  We
+neglect any $(v/c)$ terms in equation (\ref{eqn:rteqn}) that become
+important in the dynamic diffusion limit ($l \kappa (v/c) \gg 1$).
+This occurs in relativistic flows or very optically thick systems,
+such as stellar interiors or radiation-dominated shocks
+\citep[see][for a rigorous derivation that includes $(v/c)$ terms to
+second-order]{Krumholz07_FLD}.
 
 Solving this equation is difficult because of its high dimensionality;
 however, we can make some appropriate approximations to reduce its
@@ -425,8 +432,9 @@ Here $\sigma_{\rm abs}$ and $n_{\rm abs}$ are the cross section and
 number density of the absorbing medium, respectively.  We use the
 cell-centred density in our calculations.  Using trilinearly
 interpolated densities \citep[see][]{Mellema06} did not produce
-improved results.  Equation (\ref{eqn:rtray}) has a simple exponential
-analytic solution, and the photon flux of a ray is reduced by
+improved results.  In the static case, equation (\ref{eqn:rtray}) has
+a simple exponential analytic solution, and the photon flux of a ray
+is reduced by
 %
 \begin{equation}
   \label{eqn:flux}
@@ -498,7 +506,7 @@ geometry cell face and HEALPix pixel when the pixel does not cover the
 entire cell face, which is illustrated in Fig. \ref{fig:covering}.
 This mismatch causes non-spherical artifacts and is most apparent in
 the optically thin case, where the area of the pixel is dominant over
-$(1 - e^\tau)$ when calculating $k_{\rm ph}$.  One can avoid these
+$(1 - e^{-\tau})$ when calculating $k_{\rm ph}$.  One can avoid these
 artifacts by increasing the sampling $\Phi_c$ to high values ($>10$)
 but we have formulated a simple geometric correction to the
 calculation of the radiation field.  This correction is not unique to
@@ -2964,6 +2972,7 @@ community with a full-featured radiation hydrodynamics AMR code.
 
 \section*{Acknowledgments}
 
+We thank Richard Klein for helpful comments on the manuscript.
 J.~H.~W. is supported by NASA through Hubble Fellowship grant
 \#120-6370 awarded by the Space Telescope Science Institute, which is
 operated by the Association of Universities for Research in Astronomy,
