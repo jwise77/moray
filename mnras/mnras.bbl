@@ -214,8 +214,7 @@ Harten A.,  Lax P.~D.,    van Leer B.,  1983, SIAM Review, 25, 35
 {O'Shea} B.~W.,  {Bryan} G.,  {Bordner} J.,  {Norman} M.~L.,  {Abel} T.,
   {Harkness} R.,    {Kritsuk} A.,  2004, ArXiv Astrophysics e-prints
 
-\bibitem[\protect\citeauthoryear{{Osterbrock}}{{Osterbrock}}{1989}]{Osterbrock%
-89}
+\bibitem[\protect\citeauthoryear{{Osterbrock}}{{Osterbrock}}{1989}]{Osterbrock89}
 {Osterbrock} D.~E.,  1989, {Astrophysics of gaseous nebulae and active galactic
   nuclei}
 
@@ -263,6 +262,11 @@ Harten A.,  Lax P.~D.,    van Leer B.,  1983, SIAM Review, 25, 35
   of IAU Symposium, {On the Motion of H I and H II Regions}.
 pp 163--+
 
+\bibitem[\protect\citeauthoryear{{Shapiro}, {Iliev}, {Alvarez} \&
+  {Scannapieco}}{{Shapiro} et~al.}{2006}]{Shapiro06}
+{Shapiro} P.~R.,  {Iliev} I.~T.,  {Alvarez} M.~A.,    {Scannapieco} E.,  2006,
+  \apj, 648, 922
+
 \bibitem[\protect\citeauthoryear{{Shapiro}, {Iliev} \& {Raga}}{{Shapiro}
   et~al.}{2004}]{Shapiro04}
 {Shapiro} P.~R.,  {Iliev} I.~T.,    {Raga} A.~C.,  2004, \mnras, 348, 753
@@ -309,8 +313,7 @@ pp 163--+
   et~al.}{1992}]{Stone92_RHD}
 {Stone} J.~M.,  {Mihalas} D.,    {Norman} M.~L.,  1992, \apjs, 80, 819
 
-\bibitem[\protect\citeauthoryear{{Str{\"o}mgren}}{{Str{\"o}mgren}}{1939}]{Stro%
-emgren39}
+\bibitem[\protect\citeauthoryear{{Str{\"o}mgren}}{{Str{\"o}mgren}}{1939}]{Stroemgren39}
 {Str{\"o}mgren} B.,  1939, \apj, 89, 526
 
 \bibitem[\protect\citeauthoryear{{Susa}}{{Susa}}{2006}]{Susa06}

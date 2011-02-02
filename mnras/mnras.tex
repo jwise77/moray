@@ -213,7 +213,7 @@ radiative feedback on the formation of high redshift dwarf galaxies
 from dwarf galaxies before reionisation \citep{Wise09}, negative
 radiative feedback from accreting Pop III seed black holes
 \citep{Alvarez09}, and radiative feedback in accreting supermassive
-black holes \citep[][in prep.]{Kim11}.  We have included \moray in the
+black holes \citep[][in prep.]{Kim11}.  We have included \moray~in the
 latest public release of \enzo\footnote{http://enzo.googlecode.com},
 and it is also coupled with the newly added MHD solver in
 \enzo~\citep{Wang09}.
@@ -232,15 +232,15 @@ solver, (3) several methods to calculate the radiative transfer
 timestep, and (4) our parallelisation strategy.  We present our
 results from the RT06 radiative transfer tests in Section 4.
 Afterwards in Section 5, we show the results from the RT09 radiation
-hydrodynamics tests.  We expand on these tests to include more
-dynamical and complex setups to demonstrate the flexibility and high
-fidelity of \moray.  Section 6 gives the results from spatial,
-angular, frequency, and temporal resolution tests.  In Section 7, we
-illustrate the improvements from the geometric correction factor and
-our optically-thin approximation.  We also show the effects of X-ray
-radiation and radiation pressure in this section.  Finally in Section
-8, we demonstrate the parallel scalability of \moray.  Last Section 9
-summarises our method and results.
+hydrodynamics tests.  In Section 6, we expand on these tests to
+include more dynamical and complex setups to demonstrate the
+flexibility and high fidelity of \moray.  Section 7 gives the results
+from spatial, angular, frequency, and temporal resolution tests.  In
+Section 8, we illustrate the improvements from the geometric
+correction factor and our optically-thin approximation.  We also show
+the effects of X-ray radiation and radiation pressure in this section.
+Finally in Section 9, we demonstrate the parallel scalability of
+\moray.  Last Section 10 summarises our method and results.
 
 \section{Treatment of Radiative Transfer}
 \label{sec:rt}
@@ -396,7 +396,11 @@ timestep.  In the next timestep, the photon will encounter a different
 hydrodynamical and ionisation state, hence $\kappa$, in its path.
 Furthermore any time variations of the luminosities will be retained
 in the radiation field.  This is how this method retains the time
-derivative of the radiative transfer equation.
+derivative of the radiative transfer equation.  The last restriction
+prevents our method from considering sources external to the
+computational domain, but a uniform radiation background can be used
+in conjunction with ray tracing in \moray~that adds the local
+radiation field to the background intensity.
 
 % \subsection{Ray Merging}
 
@@ -1190,9 +1194,9 @@ scales for computational savings.
 
 Ionisation front velocities can approach significant fractions of the
 speed of light in steep density gradients and in the early expansion
-of the \hii region.  If the ionisation front position is
-critical to the calculation, the radiation transport timestep can be
-derived from an estimate of the ionisation front velocity
+of the \hii region.  If the ionisation front position is critical to
+the calculation, the radiation transport timestep can be derived from
+a non-relativistic estimate of the ionisation front velocity
 %
 \begin{equation}
   \label{eqn:dt_incident}
@@ -1200,10 +1204,14 @@ derived from an estimate of the ionisation front velocity
   {n_{\rm abs}(\mathbf{r})},
 \end{equation}
 %
-based on the incident radiation field at a particular position.
-Alternatively, the propagation of the ionisation front can be
-restricted by limiting the change in specific intensity $I$ to a
-safety factor $C_{\rm RT,cfl}$, resulting in a timestep of
+based on the incident radiation field at a particular
+position\footnote{See \citet{Shapiro06} for the exact calculation of a
+  relativistic ionisation front.  Neglecting relativistic terms do not
+  affect the solution because the front velocity is only considered in
+  the timestep calculation.}.  Alternatively, the propagation of the
+ionisation front can be restricted by limiting the change in specific
+intensity $I$ to a safety factor $C_{\rm RT,cfl}$, resulting in a
+timestep of
 %
 \begin{equation}
   \label{eqn:vifront1}
@@ -1419,7 +1427,7 @@ photon package splitting at these radii.  However these do not affect
 the overall solution.  One difference between our results and the
 codes presented in RT06 is the increasing neutral fraction outside of
 the \hii.  This occurs because the initial ionised fraction and
-temperature is set to $1.3 \times 10^{-3}$ and 8000 K, which are not
+temperature is set to $1.2 \times 10^{-3}$ and $10^4$ K, which are not
 the equilibrium values.  Over the 500 Myr in the calculation, the
 neutral fraction increases to 0.2, which is close to its equilibrium
 value.  In the right panel of Fig. \ref{fig:test1_ifront}, the
@@ -1912,17 +1920,20 @@ The non-spherical artifacts on the inner boundary of the warm
 outermost shell are caused by the initial discretisation of the
 sphere, as discussed in \S\ref{sec:test3}.
 
+\section{Radiation Hydrodynamics Applications}
+\label{sec:apps}
+
 We have completed presenting results from the RT06 and RT09 test
-suites.  Next we test \moray with five additional tests that further
+suites.  Next we test \moray~with six applications that further
 demonstrate its capabilities and accuracy.
 
-\subsection{Test 8. Champagne flow from a dense clump}
+\subsection{Application 1. Champagne flow from a dense clump}
 
 \begin{figure*}
   \epsscale{2}
   \plotone{f25}
   \epsscale{1}
-  \caption{\label{fig:test8_1} Test 8. (Champagne flow from a dense
+  \caption{\label{fig:test8_1} Application 1. (Champagne flow from a dense
     clump).  Slices of density through the initial clump centre in the
     x-y plane (top) and x-z plane (bottom) at $t = 10, 40, 100, 150$
     kyr.  Notice the instabilities that grow from perturbations
@@ -1967,29 +1978,7 @@ stable against such fragmentation.  To investigate this scenario
 further, our next tests involve radiation driven Rayleigh-Taylor
 instabilities.
 
-\subsection{Test 9. Irradiated Rayleigh-Taylor instability}
-
-\begin{figure}
-  %\epsscale{0.75}
-  \plotone{f26a}
-  \plotone{f26b}
-  \plotone{f26c}
-  \caption{\label{fig:test9_thick} Test 9. (Irradiated Rayleigh-Taylor
-    instability; optically thick case).  Slices at $y=0$ of density
-    (top), temperature (middle), and electron fraction (bottom).  The
-    source turns on at $t=0$.}
-  %\epsscale{1}
-\end{figure}
-
-\begin{figure}
-  %\epsscale{0.75}
-  \plotone{f27a}
-  \plotone{f27b}
-  \plotone{f27c}
-  \caption{\label{fig:test9_thin} Same as Fig. \ref{fig:test9_thick}
-    but for the optically thin case.}
-  %\epsscale{1}
-\end{figure}
+\subsection{Application 2. Irradiated Rayleigh-Taylor instability}
 
 Here we combine the classic case of a Rayleigh-Taylor instability and
 an expanding \hii region.  The Rayleigh-Taylor instability
@@ -1999,7 +1988,7 @@ acceleration field.  This classic test alone evaluates how subsonic
 perturbations evolve.  We consider the case of a single-mode
 perturbation.  The system evolves without any radiation until the
 perturbation grows considerably and then turn on the radiation source.
-These tests demonstrate that \moray can follow a highly dynamic
+These tests demonstrate that \moray~can follow a highly dynamic
 system and resolve fine density structures.
 
 We run two cases, an optically-thick and optically-thin case.  In
@@ -2071,13 +2060,35 @@ ionised ($x_e \sim 10^{-2}$), turbulent medium, seen in the slices $t
 \ge 0.67$ Myr.  The slices of electron fraction also show that the
 dense gas is optically thick.
 
-\subsection{Test 10. Photo-evaporation of a blastwave}
+\begin{figure}
+  %\epsscale{0.75}
+  \plotone{f26a}
+  \plotone{f26b}
+  \plotone{f26c}
+  \caption{\label{fig:test9_thick} Application 2. (Irradiated Rayleigh-Taylor
+    instability; optically thick case).  Slices at $y=0$ of density
+    (top), temperature (middle), and electron fraction (bottom).  The
+    source turns on at $t=0$.}
+  %\epsscale{1}
+\end{figure}
+
+\begin{figure}
+  %\epsscale{0.75}
+  \plotone{f27a}
+  \plotone{f27b}
+  \plotone{f27c}
+  \caption{\label{fig:test9_thin} Same as Fig. \ref{fig:test9_thick}
+    but for the optically thin case.}
+  %\epsscale{1}
+\end{figure}
+
+\subsection{Application 3. Photo-evaporation of a blastwave}
 
 \begin{figure*}
   \epsscale{2}
   \plotone{f28}
   \epsscale{1}
-  \caption{\label{fig:test10} Test 10 (Photo-evaporation of a
+  \caption{\label{fig:test10} Application 3 (Photo-evaporation of a
     blastwave).  Slices of density (top) and temperature (bottom) at
     $t = 2.5, 3, 5, 7.5$ Myr in the $x-z$ plane.  As the R-type
     ionisation front propagates through the blastwave centre,
@@ -2128,14 +2139,14 @@ at the coordinate $z=0.5$.  Behind the ionisation front, the dense
 shell of the blastwave is photo-evaporated, and a smooth overdensity
 is left in the initial blastwave centre.
 
-\subsection{Test 11. Collimated radiation from a dense clump}
+\subsection{Application 4. Collimated radiation from a dense clump}
 
 \begin{figure*}
   %\epsscale{1}
   \epsscale{2}
   \plotone{f29}
   \epsscale{1}
-  \caption{\label{fig:test11} Test 11 (Collimated radiation from a
+  \caption{\label{fig:test11} Application 4 (Collimated radiation from a
     dense clump).  Slices of density (top) and temperature (bottom) at
     $t = 0.1, 3.25, 10.75, 23.25$ Myr.  The conical \hii region
     drives shocks transversely into the overdense sphere and creates
@@ -2163,7 +2174,36 @@ initial rays, a total luminosity of $10^{49}$ erg s$^{-1}$, and a 17.6
 eV mono-chromatic spectrum.  This results in $t_{\rm rec} = 1.22$ Myr
 and $R_s = 315$ pc, just outside of the sphere.  The base grid has a
 resolution of 64$^3$, and it is refined with the same overdensity
-criterion as Test 8.  We run this test for 25 Myr.
+criterion as Application 1.  We run this test for 25 Myr.
+
+\begin{figure}
+  %\epsscale{1.15}
+  \plottwo{f30a}{f30b}
+  \caption{\label{fig:test12_kph} Application 4 (Time variations of the
+    source luminosity).  Top: Slice of the photo-ionisation rate
+    \kph~through the origin.  The source has a duty cycle of 0.5 Myr,
+    and the box has a light crossing time of 3.3 Myr.  The shells of
+    high \kph~originate from radiation that was emitted when the
+    source was at its peak luminosity, illustrating the
+    time-dependence of the radiative transfer equation.  Bottom:
+    Radial profile \kph~with the inverse square law overplotted.}
+  %\epsscale{1}
+\end{figure}
+
+\begin{figure}
+  %\epsscale{0.8}
+  \plotone{f31}
+  \caption{\label{fig:test12_profiles} Application 4 (Time variations of the
+    source luminosity).  Radial profiles of (clockwise from upper
+    left) density, temperature, pressure, and ionised fraction at $t =
+    50, 100, 150, 200, 250$ Myr.  In this problem, the time variations
+    in the source have little effect on the overall \hii region
+    expansion.  Inside the ionisation front at $t = 50$ Myr, there are
+    small density perturbations that are created by the variable
+    source that are later smoothed out over a sound crossing time.}
+  %\epsscale{1}
+\end{figure}
+
 
 We illustrate the expansion of the \hii region created by the
 beamed radiation in Fig. \ref{fig:test11}.  Before $t = 3$ Myr, the
@@ -2220,41 +2260,13 @@ produces a dense shell with a diffuse ($10^{-28}$ \cubecm) and warm
 % same effect on any pertubations as the constant gravitational force in
 % Rayleigh-Taylor instability test.
 
-\subsection{Test 12. Time variations of the source luminosity}
-
-\begin{figure}
-  %\epsscale{1.15}
-  \plottwo{f30a}{f30b}
-  \caption{\label{fig:test12_kph} Test 12 (Time variations of the
-    source luminosity).  Top: Slice of the photo-ionisation rate
-    \kph~through the origin.  The source has a duty cycle of 0.5 Myr,
-    and the box has a light crossing time of 3.3 Myr.  The shells of
-    high \kph~originate from radiation that was emitted when the
-    source was at its peak luminosity, illustrating the
-    time-dependence of the radiative transfer equation.  Bottom:
-    Radial profile \kph~with the inverse square law overplotted.}
-  %\epsscale{1}
-\end{figure}
-
-\begin{figure}
-  %\epsscale{0.8}
-  \plotone{f31}
-  \caption{\label{fig:test12_profiles} Test 12 (Time variations of the
-    source luminosity).  Radial profiles of (clockwise from upper
-    left) density, temperature, pressure, and ionised fraction at $t =
-    50, 100, 150, 200, 250$ Myr.  In this problem, the time variations
-    in the source have little effect on the overall \hii region
-    expansion.  Inside the ionisation front at $t = 50$ Myr, there are
-    small density perturbations that are created by the variable
-    source that are later smoothed out over a sound crossing time.}
-  %\epsscale{1}
-\end{figure}
+\subsection{Application 5. Time variations of the source luminosity}
 
 \begin{figure*}
   \epsscale{2}
   \plotone{f32}
   \epsscale{1}
-  \caption{\label{fig:test14_1} Test 14. (\hii region with MHD).
+  \caption{\label{fig:test14_1} Application 5. (\hii region with MHD).
     Left to right: slices of density at $t = 0.18, 0.53, 1.58$ Myr in
     the x-y plane.  The streamlines show the magnetic field.}
 \end{figure*}
@@ -2263,7 +2275,7 @@ produces a dense shell with a diffuse ($10^{-28}$ \cubecm) and warm
   \epsscale{2}
   \plotone{f33}
   \epsscale{1}
-  \caption{\label{fig:test14_2} Test 14. (\hii region with
+  \caption{\label{fig:test14_2} Application 5. (\hii region with
     MHD). Slices of density (top) and the x-component of the magnetic
     field (bottom) in the y-z plane at $t = 0.18, 0.53, 1.58$ Myr
     (left to right).}
@@ -2323,7 +2335,7 @@ variable source creates density perturbations with an average size of
 They do not create any instabilities and are smoothed out over its
 sound crossing time of $\sim 50$ Myr.
 
-\subsection{Test 14. \hii region with MHD}
+\subsection{Application 6. \hii region with MHD}
 
 Another prevalent physical component in astrophysics is a magnetic
 field.  We utilise the new magnetohydrodynamics (MHD) framework
@@ -2806,7 +2818,7 @@ multiple sources.
 
 \section{Parallel Performance}
 
-Last we demonstrate the parallel performance of \moray in weak and
+Last we demonstrate the parallel performance of \moray~in weak and
 strong scaling tests.  For large simulations to consider radiative
 transfer, it is imperative that the code scales to large number of
 processors.
@@ -2860,7 +2872,7 @@ communication routines.  It becomes the dominant process above 512
 processes.  We are actively pursing a solution to this scaling
 problem.  The other parts of the code exhibit excellent weak scaling.
 Overall it scales already well to 512 processes, and there is room to
-enhance the weak scalability of \moray in the near future.
+enhance the weak scalability of \moray~in the near future.
 
 \subsection{Strong Scaling}
 \label{sec:strong_sc}
@@ -2889,7 +2901,7 @@ sufficient work to compute, compared to the communication involved.
 In our experience, non-AMR calculations exhibit much better strong
 scaling than AMR ones because of reduced inter-processor
 communication.  We use an AMR simulation to demonstrate the scalability
-of \moray in a demanding, research application.  Here we use a
+of \moray~in a demanding, research application.  Here we use a
 small-box reionisation calculation with $L_{\rm box} = 3$ Mpc/h, a
 resolution of $256^3$, and six levels of refinement.  We measure the
 time spent on the hydrodynamics, non-equilibrium chemistry, ray
@@ -2919,7 +2931,7 @@ despite our efforts (see \S\ref{sec:parallel}) to minimize idle time.
 For this reason, the communication of rays does not scale in this
 problem.  One solution is to split the AMR grids into smaller blocks
 based on the ray tracing work.  This could impact the performance of
-the rest of \enzo by increasing the number of boundaries and thus
+the rest of \enzo~by increasing the number of boundaries and thus
 communication.  Nevertheless in simulations that are dominated by
 radiation transport, it will be advantageous to construct such a
 scheme to increase the feasibility of running larger problems.
@@ -2964,7 +2976,7 @@ star formation, molecular cloud resolving cosmological galaxy
 formation, and \hii regions of Population III stars.  Furthermore, we
 have included Lyman-Werner absorption, secondary ionisations from
 X-ray radiation, Compton heating from photon scattering, and radiation
-pressure into the code, which extends the reach of \moray to study
+pressure into the code, which extends the reach of \moray~to study
 AGN feedback, stellar winds, and local star formation.  Coupling the
 radiative transfer with MHD further broadens the applicability of our
 code.  The full implementation is included in the latest public
