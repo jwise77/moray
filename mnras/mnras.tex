@@ -1517,7 +1517,7 @@ codes in the upper range of RT06.
 \label{sec:test3}
 
 \begin{figure}
-  \plottwo{f11a}{f11b}
+  \plotone{f11}
   \caption{\label{fig:test3_1} Test 3. (I-front trapping in a dense
     clump and shadowing).  Line cut from the point source through the
     middle of the dense clump at $t = 1, 3, 5, 15$ Myr.  of the
@@ -1560,16 +1560,17 @@ The problem for this test is contained in a 6.6 kpc box with an
 ambient medium of $n_H = 2 \times 10^{-4}\;\cubecm$ and $T = 8000$ K.
 The clump is in pressure equilibrium with $n_H = 0.04\; \cubecm$ and
 $T = 40$ K.  It has a radius of $r_c = 0.8$ kpc and is centred at
-$(x,y,z) = (5, 3.3, 3.3)$ kpc.  In RT06, the test considered a plane
-parallel radiation field with a flux $F_0 = 10^6$ ph s$^{-1}$
-cm$^{-2}$ originating from the $y=0$ plane.  Our code can only
-consider point sources, so we use a single radiation source located in
-the centre of the $y=0$ boundary.  The luminosity of $\dot{N}_\gamma =
-3 \times 10^{51}$ ph s$^{-1}$ corresponds to the same flux $F_0$ at 5
-kpc.  The location where the ionisation front trapping can be
-calculated analytically \citep{Shapiro04}, and with these parameters,
-it should halt at approximately the centre of the clump.  We use the
-same four energy groups as in Test 2.
+$(x,y,z) = (5, 3.3, 3.3)$ kpc.  The ionized fraction of the entire
+domain is zero.  In RT06, the test considered a plane parallel
+radiation field with a flux $F_0 = 10^6$ ph s$^{-1}$ cm$^{-2}$
+originating from the $y=0$ plane.  Our code can only consider point
+sources, so we use a single radiation source located in the centre of
+the $y=0$ boundary.  The luminosity of $\dot{N}_\gamma = 3 \times
+10^{51}$ ph s$^{-1}$ corresponds to the same flux $F_0$ at 5 kpc.  The
+location where the ionisation front trapping can be calculated
+analytically \citep{Shapiro04}, and with these parameters, it should
+halt at approximately the centre of the clump.  We use the same four
+energy groups as in Test 2.
 
 In Fig. \ref{fig:test3_1}, we show neutral fraction and temperature
 of a one-dimensional cut through the centre of the dense clump at $z =
@@ -1888,6 +1889,13 @@ boundary effects.
   \caption{\label{fig:test7_3} Test 7. (Photo-evaporation of a dense
     clump).  Same as Fig. \ref{fig:test7_1} but at $t = 50$ Myr.}
 \end{figure*}
+
+\begin{figure}
+  \plotone{test7_Mach}
+  \caption{\label{fig:test7_4} Test 7. (Photo-evaporation of a dense
+    clump).  Slices through the clump centre of the flow Mach number
+    at t = 10 Myr (left) and 50 Myr (right).}
+\end{figure}
 
 The photo-evaporation of a dense clump in a uniform medium proceeds
 very differently when radiation hydrodynamics is considered instead of

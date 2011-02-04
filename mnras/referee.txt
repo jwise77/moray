@@ -121,7 +121,15 @@ We no longer see this sharp edge at x ~ 0.86.
 >   initial setup is different this probably should be
 >   corrected). Showing the Mach number results here could also be
 >   beneficial to the reader.
-> 
+
+This was related to the different initial ionized fraction in Test 3.
+These differences vanished when we used an initial ionized fraction of
+zero.  With an initial x_e = 1e-2, the ambient medium was not heated
+to T = 30,000 K because the lower absorption, and thus less
+photo-heating, during the first few timesteps.
+
+We have added a figure showing the Mach number.
+
 > - Tests 8-14 involve very astrophysically-interesting situations,
 >   but are not really tests. Given that we have no analytical results
 >   to compare to, and neither have we any results from other,
@@ -137,7 +145,7 @@ We no longer see this sharp edge at x ~ 0.86.
 
 We have moved Tests 8-14 into their own section, labelled Radiation
 Hydrodynamical Applications, and refer to them as applications in the
-paper.
+paper, numbered from one to six.
  
 > - Finally, this paper needs some proof-reading. E.g. in Intro:
 >   "... we detail how physics other than photo-ionisation and
