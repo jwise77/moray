@@ -87,8 +87,8 @@ Figures 27 and 28.  Figure 27 only covers the domain x = 0.6 -> 0.85
 and does not show x = 0.86.  But in Figure 28, they show the
 temperature cuts in x = 0.6->1.  Here C2Ray and CRASH have the same
 behaviour as Enzo+Moray with the temperature gradually decreasing at x
-~ 0.82 and rapidly increasing at x ~ 0.88, which shows that these
-codes also have little hard radiation leaking into the shadow.
+~ 0.82, and they have a sharp increase at x ~ 0.88, which shows that
+these codes also have little hard radiation leaking into the shadow.
 
 Investigating this further, the Radiative Transfer Comparison Project
 paper did not specify the initial neutral fraction of the test, but
@@ -108,7 +108,10 @@ We no longer see this sharp edge at x ~ 0.86.
 >   some of the quantities involved, as done in the comparison project
 >   paper. This could help understand the origin of some observed
 >   differences.
-> 
+
+We agree that this diagnostic is very useful for comparisons.  We now
+present the same PDFs as the comparison papers for Tests 1-4 and 7.
+
 > - in Test 5 - why is there a density dip at x=0 even at the earliest
 >   times? t=10 Myr is quite a short time compared to the time it
 >   takes the gas to move and none of the comparison project codes
