@@ -26,7 +26,7 @@ statement in the paper?
 This maximum length of a ray of sqrt(3) of the box length was chosen
 so that the rays would always traverse the entire box, where the
 longest ray is from one corner of the domain to the opposite corner,
-i.e. (0,0,0) -> (1,1,1).
+e.g. (0,0,0) -> (1,1,1).
 
 > - in a related issue - other types of radiation like Lyman-Werner
 >   and X-ray photons have extremely long mean free paths, potentially
