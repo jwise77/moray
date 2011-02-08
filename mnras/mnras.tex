@@ -221,7 +221,7 @@ and it is also coupled with the newly added MHD solver in
 We have structured this paper as follows.  In Section 2, we describe
 the mathematical connections between adaptive ray tracing and the
 radiative transfer equation.  Furthermore, we detail how physics other
-than photo-ionisation and photo-heated are included.  We then derive a
+than photo-ionisation and photo-heating are included.  We then derive a
 geometric correction factor to any ray tracing method to improve
 accuracy.  We end the section by describing a new computational
 technique to approximate an optically-thin radiation field with ray
@@ -1699,17 +1699,10 @@ hardness of the $T = 10^5$ K blackbody spectrum.
 
 We next show results from radiation hydrodynamics test problems
 presented in \citet[][hereafter RT09]{Iliev09}.  They involve (1) the
-expansion of an \hii region in a uniform medium, similar to Test
-2, (2) an \hii region in an isothermal sphere, and (3) the
-photo-evaporation of a dense, cold clump, similar to Test 3.  We
-expand on this test suite to include more complex situations, such as
-a Rayleigh-Taylor problem illuminated by a radiation source, champagne
-flows, an irradiated blast wave, collimated radiation, and an
-\hii with a variable source.  For the \citeauthor{Iliev09}
-tests, we turn off self-gravity and AMR in accordance with them.  In
-the latter tests, we will indicate whether we use those capabilities
-of \enzo.  Last we use the new MHD implementation in \enzo~v2.0 in the
-problem of a growing \hii region in a magnetic field.
+expansion of an \hii region in a uniform medium, similar to Test 2,
+(2) an \hii region in an isothermal sphere, and (3) the
+photo-evaporation of a dense, cold clump, similar to Test 3.  We turn
+off self-gravity and AMR in accordance with RT09.
 
 \subsection{Test 5. Classical \hii region expansion}
 \label{sec:test5}
@@ -1986,8 +1979,13 @@ originate from the clump.
 \label{sec:apps}
 
 We have completed presenting results from the RT06 and RT09 test
-suites.  Next we test \moray~with six applications that further
-demonstrate its capabilities and accuracy.
+suites.  We expand on these test suites to include more complex
+situations, such as a Rayleigh-Taylor problem illuminated by a
+radiation source, champagne flows, an irradiated blast wave,
+collimated radiation, and an \hii with a variable source that further
+demonstrate its capabilities and accuracy.  Last we use the new MHD
+implementation in \enzo~v2.0 in the problem of a growing \hii region
+in a magnetic field.
 
 \subsection{Application 1. Champagne flow from a dense clump}
 
@@ -2177,6 +2175,22 @@ with 2 energy groups (16.0 and 22.8 eV).  The source turns on at 2.5
 Myr at which point the blastwave has a radius of 200 pc.  The
 simulation is run for 7.5 Myr.
 
+\begin{figure*}
+  %\epsscale{1}
+  \epsscale{2}
+  \plotone{f29}
+  \epsscale{1}
+  \caption{\label{fig:test11} Application 4 (Collimated radiation from a
+    dense clump).  Slices of density (top) and temperature (bottom) at
+    $t = 0.1, 3.25, 10.75, 23.25$ Myr.  The conical \hii region
+    drives shocks transversely into the overdense sphere and creates
+    polar champagne flows.  The ambient medium is heated to $T \sim 3
+    \times 10^4$ K as the ionisation front passes the
+    constant-pressure cloud surface.  The ionisation front changes
+    from D-type to R-type after it enters the ambient medium.}
+  %\epsscale{1}
+\end{figure*}
+
 Fig. \ref{fig:test10} shows the ionisation front overtaking and
 disrupting the blastwave.  We show the blastwave before the source is
 born at 2.5 Myr.  The interior is rarefied ($\rho \sim
@@ -2202,41 +2216,6 @@ shell of the blastwave is photo-evaporated, and a smooth overdensity
 is left in the initial blastwave centre.
 
 \subsection{Application 4. Collimated radiation from a dense clump}
-
-\begin{figure*}
-  %\epsscale{1}
-  \epsscale{2}
-  \plotone{f29}
-  \epsscale{1}
-  \caption{\label{fig:test11} Application 4 (Collimated radiation from a
-    dense clump).  Slices of density (top) and temperature (bottom) at
-    $t = 0.1, 3.25, 10.75, 23.25$ Myr.  The conical \hii region
-    drives shocks transversely into the overdense sphere and creates
-    polar champagne flows.  The ambient medium is heated to $T \sim 3
-    \times 10^4$ K as the ionisation front passes the
-    constant-pressure cloud surface.  The ionisation front changes
-    from D-type to R-type after it enters the ambient medium.}
-  %\epsscale{1}
-\end{figure*}
-
-Some astrophysical systems produce collimated radiation either
-intrinsically by relativistic beaming or by an optically-thick torus
-absorbing radiation in the equatorial plane.  The latter case would be
-applicable in a subgrid model of active galactic nuclei (AGN) or
-protostars, for example.  Simulating collimated radiation with ray
-tracing is trivially accomplished by only initialising rays that are
-within some opening angle $\theta_c$.
-
-We use a domain that is 2 kpc wide and has an ambient medium with
-$\rho_0 = 10^{-3}$ \cubecm, $T = 10^4$ K, $x_e = 0.99$.  We place a
-dense clump with $\rho/\rho_0 = 100$, $T = 100$ K, $x_e = 10^{-3}$,
-and $r = 250$ pc, at the centre of the box.  Radiation is emitted in
-two polar cones with $\theta_c = \pi/6$ with 768 (HEALPix level 3)
-initial rays, a total luminosity of $10^{49}$ erg s$^{-1}$, and a 17.6
-eV mono-chromatic spectrum.  This results in $t_{\rm rec} = 1.22$ Myr
-and $R_s = 315$ pc, just outside of the sphere.  The base grid has a
-resolution of 64$^3$, and it is refined with the same overdensity
-criterion as Application 1.  We run this test for 25 Myr.
 
 \begin{figure}
   %\epsscale{1.15}
@@ -2266,6 +2245,24 @@ criterion as Application 1.  We run this test for 25 Myr.
   %\epsscale{1}
 \end{figure}
 
+Some astrophysical systems produce collimated radiation either
+intrinsically by relativistic beaming or by an optically-thick torus
+absorbing radiation in the equatorial plane.  The latter case would be
+applicable in a subgrid model of active galactic nuclei (AGN) or
+protostars, for example.  Simulating collimated radiation with ray
+tracing is trivially accomplished by only initialising rays that are
+within some opening angle $\theta_c$.
+
+We use a domain that is 2 kpc wide and has an ambient medium with
+$\rho_0 = 10^{-3}$ \cubecm, $T = 10^4$ K, $x_e = 0.99$.  We place a
+dense clump with $\rho/\rho_0 = 100$, $T = 100$ K, $x_e = 10^{-3}$,
+and $r = 250$ pc, at the centre of the box.  Radiation is emitted in
+two polar cones with $\theta_c = \pi/6$ with 768 (HEALPix level 3)
+initial rays, a total luminosity of $10^{49}$ erg s$^{-1}$, and a 17.6
+eV mono-chromatic spectrum.  This results in $t_{\rm rec} = 1.22$ Myr
+and $R_s = 315$ pc, just outside of the sphere.  The base grid has a
+resolution of 64$^3$, and it is refined with the same overdensity
+criterion as Application 1.  We run this test for 25 Myr.
 
 We illustrate the expansion of the \hii region created by the
 beamed radiation in Fig. \ref{fig:test11}.  Before $t = 3$ Myr, the

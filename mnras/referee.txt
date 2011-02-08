@@ -116,7 +116,12 @@ present the same PDFs as the comparison papers for Tests 1-4 and 7.
 >   times? t=10 Myr is quite a short time compared to the time it
 >   takes the gas to move and none of the comparison project codes
 >   seem to show such a density dip.
-> 
+
+Thank you very much for catching this.  We accidentally plotted the
+data from t = 100 Myr instead of 10 Myr.  We have corrected the
+figure.  Now, the density dip at x=0 is insignificant and matches with
+the other codes in the comparison paper.
+
 > - in Test 7 - the initial setup here appears somewhat different from
 >   the one used in the comparison project, why is that? In
 >   particular, the gas outside is cooler and has lower pressure
@@ -131,7 +136,8 @@ zero.  With an initial x_e = 1e-2, the ambient medium was not heated
 to T = 30,000 K because the lower absorption, and thus less
 photo-heating, during the first few timesteps.
 
-We have added a figure showing the Mach number.
+We have added a figure showing slices of the Mach number at 10 and 50
+Myr.
 
 > - Tests 8-14 involve very astrophysically-interesting situations,
 >   but are not really tests. Given that we have no analytical results
