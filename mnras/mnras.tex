@@ -1373,12 +1373,19 @@ require a sampling of at least $\Phi_c = 5.1$ rays per cell.
 \end{figure}
 
 \begin{figure}
-  %\epsscale{0.8}
+  \plotone{test1_pdf.eps}
+  \caption{\label{fig:test1_pdf} Test 1 (\hii region expansion with a
+    monochromatic spectrum of 13.6 eV). Probability distribution
+    function for neutral fraction at 10 Myr (solid), 100 Myr (dashed),
+    and 500 Myr (dotted).  Recombination of hydrogren at T = $10^4$ K
+    causes the maximum neutral fraction to decrease from 1 to 0.75.}
+\end{figure}
+
+\begin{figure}
   \plotone{f6.eps}
   \caption{\label{fig:test1_HI} Test 1 (\hii region expansion
     with a monochromatic spectrum of 13.6 eV). Slice of neutral
     fraction at the origin at 500 Myr.}
-  %\epsscale{1.0}
 \end{figure}
 
 The expansion of an ionising region with a central source in a uniform
@@ -1426,7 +1433,7 @@ fraction at 1.5 and 3 kpc that corresponds to artifacts created by the
 photon package splitting at these radii.  However these do not affect
 the overall solution.  One difference between our results and the
 codes presented in RT06 is the increasing neutral fraction outside of
-the \hii.  This occurs because the initial ionised fraction and
+the \hii region.  This occurs because the initial ionised fraction and
 temperature is set to $1.2 \times 10^{-3}$ and $10^4$ K, which are not
 the equilibrium values.  Over the 500 Myr in the calculation, the
 neutral fraction increases to 0.2, which is close to its equilibrium
@@ -1439,10 +1446,12 @@ of radius can be analytically calculated \citep[e.g.][]{Osterbrock89,
   Petkova09}, causing the ionisation front radius to be slightly
 larger, increasing from 0 to 3\% in the interval 80--350 Myr.  Our
 results are in excellent agreement with this more accurate analytical
-solution.  In Fig. \ref{fig:test1_HI}, we show a slice of the neutral
-fraction through the origin.  Other than the ray splitting artifacts
-that generate the plateaus at 1.5 and 3 kpc, one sees spherical
-symmetry without any noise in our solution.
+solution.  We show the distribution of neutral fraction in the domain
+for $t$ = 10, 100, and 500 Myr in Fig. \ref{fig:test1_pdf} that agrees
+well with the results in RT06.  In Fig. \ref{fig:test1_HI}, we show a
+slice of the neutral fraction through the origin.  Other than the ray
+splitting artifacts that generate the plateaus at 1.5 and 3 kpc, one
+sees spherical symmetry without any noise in our solution.
 
 \subsection{Test 2. \hii region expansion: temperature evolution}
 
@@ -1459,6 +1468,14 @@ symmetry without any noise in our solution.
   \caption{\label{fig:test2_1b} Test 2. (\hii region expansion with a
     $T=10^5$ K blackbody spectrum).  Evolution of the average neutral
     fraction.}
+\end{figure}
+
+\begin{figure}
+  \plotone{test2_pdf}
+  \caption{\label{fig:test2_pdf} Test 2. (\hii region expansion with a
+    $T=10^5$ K blackbody spectrum).  Probability distribution function
+    for ionized fraction (left) and temperature (right) at 10 Myr
+    (solid), 100 Myr (dashed), and 500 Myr (dotted).}
 \end{figure}
 
 \begin{figure*}
@@ -1490,27 +1507,33 @@ use 4 energy groups with the following mean energies and relative
 luminosities: $E_i = (16.74, 24.65, 34.49, 52.06)$, $L_i/L = (0.277,
 0.335, 0.2, 0.188)$.
 
-In Fig. \ref{fig:test2_1a}, we show the radially averaged neutral
-and ionised fraction at $t = $ 10, 30, 100, and 500 Myr, and the total
+In Fig. \ref{fig:test2_1a}, we show the radially averaged neutral and
+ionised fraction at $t = $ 10, 30, 100, and 500 Myr, and the total
 neutral fraction of the domain in Fig. \ref{fig:test2_1b}.  Compared
 with Test 1, the ionisation front is thicker, as expected with the
-harder spectrum.  The total neutral fraction decreases to 0.67 over
-4$t_{\rm rec} = 500$ Myr, which is in agreement with the analytical
-expectation and other codes in RT06.  In Fig. \ref{fig:test2_2}, we
-show slices of neutral fraction and temperature through the origin at
-$t = $ 10 and 100 Myr.  Here one sees the spherically symmetric \hii
-regions and a smooth temperature transition to the neutral ambient
-medium.  In Fig. \ref{fig:test2_3}, we show the ratio of the
-ionisation front radius $r_{\rm IF}$ in our simulation and $R_s$.
-Before $1.5t_{\rm rec}$, $r_{\rm IF}$ lags behind $R_s$, initially by
-10\% and then increases to $R_s$; however afterwards, this ratio
-asymptotes to a solution that is 4\% greater than $R_s$.  This
-behavior is approximately the median result in RT06, where this ratio
-varies between 1 and 1.1, and the early evolution of $r_{\rm IF}$ is
-under-predicted by almost all of the codes.  If we use one energy
-group with the mean energy (29.6 eV) of a $T=10^5$ K blackbody, we
-find that $r_{\rm IF}/R_s$ = 1.08, which is representative of the
-codes in the upper range of RT06.
+harder spectrum.  Artifacts originating from ray splitting, similar to
+Test 1, appear at $r \sim 1$ and 3 kpc as kinks in the neutral
+fraction.  The total neutral fraction decreases to 0.67 over 4$t_{\rm
+  rec} = 500$ Myr, which is in agreement with the analytical
+expectation and other codes in RT06.  Fig. \ref{fig:test2_pdf} shows
+the distribution of ionized fraction and temperature in Test 2.  The
+overall trends agree with the codes presented in RT06 with the
+exception of the ray splitting artifacts that appear as slight rises
+in the distribution at $\log x_e \sim -1$ and $\log T \sim 3$. In
+Fig. \ref{fig:test2_2}, we show slices of neutral fraction and
+temperature through the origin at $t = $ 10 and 100 Myr.  Here one
+sees the spherically symmetric \hii regions and a smooth temperature
+transition to the neutral ambient medium.  In Fig. \ref{fig:test2_3},
+we show the ratio of the ionisation front radius $r_{\rm IF}$ in our
+simulation and $R_s$.  Before $1.5t_{\rm rec}$, $r_{\rm IF}$ lags
+behind $R_s$, initially by 10\% and then increases to $R_s$; however
+afterwards, this ratio asymptotes to a solution that is 4\% greater
+than $R_s$.  This behavior is approximately the median result in RT06,
+where this ratio varies between 1 and 1.1, and the early evolution of
+$r_{\rm IF}$ is under-predicted by almost all of the codes.  If we use
+one energy group with the mean energy (29.6 eV) of a $T=10^5$ K
+blackbody, we find that $r_{\rm IF}/R_s$ = 1.08, which is
+representative of the codes in the upper range of RT06.
 
 \subsection{Test 3. I-front trapping in a dense clump and the
   formation of a shadow}
@@ -1526,12 +1549,18 @@ codes in the upper range of RT06.
 \end{figure}
 
 \begin{figure}
-  %\epsscale{0.85}
   \plotone{f12}
   \caption{\label{fig:test3_2} Test 3. (I-front trapping in a dense
     clump and shadowing).  Evolution of the average ionised fraction
     (top) and temperature (bottom) of the overdense clump.}
-  %\epsscale{1}
+\end{figure}
+
+\begin{figure}
+  \plotone{test3_pdf}
+  \caption{\label{fig:test3_pdf} Test 3. (I-front trapping in a dense
+    clump and shadowing). Probability distribution function for
+    ionized fraction (left) and temperature (right) at 1 Myr (solid),
+    3 Myr (dashed), and 15 Myr (dotted) within the dense clump.}
 \end{figure}
 
 \begin{figure*}
@@ -1572,8 +1601,8 @@ analytically \citep{Shapiro04}, and with these parameters, it should
 halt at approximately the centre of the clump.  We use the same four
 energy groups as in Test 2.
 
-In Fig. \ref{fig:test3_1}, we show neutral fraction and temperature
-of a one-dimensional cut through the centre of the dense clump at $z =
+In Fig. \ref{fig:test3_1}, we show neutral fraction and temperature of
+a one-dimensional cut through the centre of the dense clump at $z =
 0.5$ at $t = 1, 3, 5, 15$ Myr.  The ionisation front is halted at a
 little more than halfway through the clump, which is consistent with
 the analytical expectation.  The hardness of the $T = 10^5$ K
@@ -1583,26 +1612,35 @@ be photo-heated.  Where the gas is ionised, the temperature is between
 Fig. \ref{fig:test3_2} depicts the average ionised fraction and
 temperature inside the dense clump, which both gradually increase as
 the ionisation front propagates through the overdensity.  Our results
-are consistent with RT06.  Finally we show slices of neutral fraction
-and temperature in the $z = 0.5$ plane in Fig. \ref{fig:test3_3}.
-The neutral fraction slices prominently show the sharp shadows created
-by the clump and demonstrates the non-diffusivity behavior of ray
-tracing.  The discretisation of the sphere creates one neutral cell on
-the left side of the sphere.  This inherent artifact to the initial
-setup carries through the calculation.  We did not smooth the clump
-surface like in some of the RT06 codes, in order to remove this
-artifact.  It is seen in the neutral fraction and temperature states
-at all times and is not a caused by our ray tracing algorithm.
+are consistent with RT06.  The distribution of ionized fraction and
+temperature within the clump are shown in Fig. \ref{fig:test3_pdf} and
+agree well with the other codes in RT06.  Finally we show slices of
+neutral fraction and temperature in the $z = 0.5$ plane in
+Fig. \ref{fig:test3_3}.  The neutral fraction slices prominently show
+the sharp shadows created by the clump and demonstrates the
+non-diffusivity behavior of ray tracing.  The discretisation of the
+sphere creates one neutral cell on the left side of the sphere.  This
+inherent artifact to the initial setup carries through the
+calculation.  We did not smooth the clump surface like in some of the
+RT06 codes, in order to remove this artifact.  It is seen in the
+neutral fraction and temperature states at all times and is not a
+caused by our ray tracing algorithm.
 
 \subsection{Test 4. Multiple sources in a cosmological density field}
 
 \begin{figure}
-  %\epsscale{0.75}
+  \plotone{test4_pdf}
+  \caption{\label{fig:test4_pdf} Test 4. (Multiple cosmological
+    sources). Probability distribution function for neutral fraction
+    (left) and temperature (right) at 50 kyr (solid) and 200 kyr
+    (dashed).}
+\end{figure}
+
+\begin{figure}
   \plotone{f14}
   \caption{\label{fig:test4_1} Test 4. (Multiple cosmological
     sources).  Evolution of the mass- (dashed) and volume-averaged
     (solid) ionised fraction.}
-  %\epsscale{1}
 \end{figure}
 
 \begin{figure*}
@@ -1635,24 +1673,26 @@ where $M$ is the halo mass, $\Omega_m = 0.27$, and $\Omega_b =
 leaves the box instead being shifted periodically.  The simulation is
 evolved for 0.4 Myr.
 
-We show the growth of the \hii regions by computing the
-mass-averaged $x_m$ and volume-averaged $x_v$ ionised fraction in
-Fig. \ref{fig:test4_1}.  Initially $x_m$ is larger than $x_v$, and
-at $t \sim 170$ kyr, the $x_v$ becomes larger.  This is indicative of
-inside-out reionisation \citep[e.g.][]{Gnedin00, Miralda00,
-  Sokasian03}, where the dense regions around haloes are ionised first,
-then the voids are ionised last.  At the end of the simulation, 65\%
-of the simulation is ionised.  However by visual inspection in the
-slices of electron fraction (Fig. \ref{fig:test4_2}), there appears to
-be very good agreement with C$^2$-ray and FTTE.  By first glance, our
-result appears to be different than the RT06 because of the
-color-mapping.  Our results are also in good agreement with the
-multi-frequency version of TRAPHIC \citep[][see also for better
-representations of the electron fraction slices]{Pawlik10}.  In the
-slices of electron fraction and temperature, Fig. \ref{fig:test4_2},
-the photo-heated regions are larger than the ionised regions by a
-factor of 2--3 because of the hardness of the $T = 10^5$ K blackbody
-spectrum.
+Fig. \ref{fig:test4_pdf} depicts the distribution of the neutral
+fraction and temperature of the entire domain and shows good agreement
+with the codes presented in RT06.  We show the growth of the \hii
+regions by computing the mass-averaged $x_m$ and volume-averaged $x_v$
+ionised fraction in Fig. \ref{fig:test4_1}.  Initially $x_m$ is larger
+than $x_v$, and at $t \sim 170$ kyr, the $x_v$ becomes larger.  This
+is indicative of inside-out reionisation \citep[e.g.][]{Gnedin00,
+  Miralda00, Sokasian03}, where the dense regions around haloes are
+ionised first, then the voids are ionised last.  At the end of the
+simulation, 65\% of the simulation is ionised.  However by visual
+inspection in the slices of electron fraction
+(Fig. \ref{fig:test4_2}), there appears to be very good agreement with
+C$^2$-ray and FTTE.  By first glance, our result appears to be
+different than the RT06 because of the color-mapping.  Our results are
+also in good agreement with the multi-frequency version of TRAPHIC
+\citep[][see also for better representations of the electron fraction
+slices]{Pawlik10}.  In the slices of electron fraction and
+temperature, Fig. \ref{fig:test4_2}, the photo-heated regions are
+larger than the ionised regions by a factor of 2--3 because of the
+hardness of the $T = 10^5$ K blackbody spectrum.
 
 \section{Radiation Hydrodynamics Tests}
 \label{sec:radhydro}
@@ -1891,6 +1931,14 @@ boundary effects.
 \end{figure*}
 
 \begin{figure}
+  \plotone{test7_pdf}
+  \caption{\label{fig:test7_pdf} Test 7. (Photo-evaporation of a dense
+    clump).  Probability distribution function for temperature (left)
+    and flow Mach number (right) at 10 Myr (solid) and 50 Myr
+    (dashed).}
+\end{figure}
+
+\begin{figure}
   \plotone{test7_Mach}
   \caption{\label{fig:test7_4} Test 7. (Photo-evaporation of a dense
     clump).  Slices through the clump centre of the flow Mach number
@@ -1926,9 +1974,13 @@ only the core and its associated shadow is neutral, seen in Fig.
 warm medium, thus causing the higher densities seen at $t = 50$ Myr.
 The non-spherical artifacts on the inner boundary of the warm
 outermost shell are caused by the initial discretisation of the
-sphere, as discussed in \S\ref{sec:test3}.  Lastly we show slices of
-the flow Mach number at 10 Myr and 50 Myr, showing the supersonic
-photo-evaporative flows that originate from the clump.
+sphere, as discussed in \S\ref{sec:test3}.  Next
+Fig. \ref{fig:test7_pdf} shows the distributions of temperature and
+flow Mach number in the entire domain at 10 Myr and 50 Myr, showing
+similar behavior as the codes in RT09.  Lastly in
+Fig. \ref{fig:test7_4}, we show slices of the flow Mach number at 10
+Myr and 50 Myr, showing the supersonic photo-evaporative flows that
+originate from the clump.
 
 \section{Radiation Hydrodynamics Applications}
 \label{sec:apps}
@@ -2995,13 +3047,14 @@ community with a full-featured radiation hydrodynamics AMR code.
 
 \section*{Acknowledgments}
 
-We thank Richard Klein for helpful comments on the manuscript.
-J.~H.~W. is supported by NASA through Hubble Fellowship grant
-\#120-6370 awarded by the Space Telescope Science Institute, which is
-operated by the Association of Universities for Research in Astronomy,
-Inc., for NASA, under contract NAS 5-26555.  Computational resources
-were provided by NASA/NCCS award SMD-09-1439.  The majority of the
-analysis and plots were done with \texttt{yt} \citep{yt_full_paper}.
+We thank Ji-hoon Kim, Richard Klein, and Jeff Oishi for helpful
+comments on the manuscript.  J.~H.~W. is supported by NASA through
+Hubble Fellowship grant \#120-6370 awarded by the Space Telescope
+Science Institute, which is operated by the Association of
+Universities for Research in Astronomy, Inc., for NASA, under contract
+NAS 5-26555.  Computational resources were provided by NASA/NCCS award
+SMD-09-1439.  The majority of the analysis and plots were done with
+\texttt{yt} \citep{yt_full_paper}.
 
 \bibliography{ms}
 
