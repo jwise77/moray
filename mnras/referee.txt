@@ -165,4 +165,4 @@ paper, numbered from one to six.
 
 Thank you for pointing this out.  We have proof-read the paper again.
 We have added the ArXiv numbers to the references.  This was a
-formatting error from ADS BibTeX listings.
+formatting error from the ADS BibTeX listings.
